@@ -2,10 +2,6 @@
 
 # workshop01
 
-
-
-
-
 ```
 당신은 RETAIL 업체에서 일하고 있으며, 개발팀과 DBA를 이끄는 Team Leader입니다.
 
@@ -14,25 +10,51 @@
 또한 새로 입사한 신규 개발자들은 Java보다는 경량화된 Python이나 JS를 개발에 이용하고 싶어합니다. 
 
 당신은 고객만족팀과의 미팅 후에 "CRM - 고객 상담 데이터"중 2019년 이전 Data들은 단순 조회 업무로만 사용됨을 알게 되었습니다.
+
 기존 Legacy Java Application에서는 "고객 상담 데이터"를 보여주기 위해서 여러개의 Table을 Join해야 했고, 
-이로 인해서 다음과 같은 문제점들이 있었습니다.
+이로 인해서 각 팀에서는 다음과 같은 불만 사항이 존재하고 있습니다. 
 
-1. DBA : Size가 큰 Table간의 다중 Join으로 인한 DB 부하 증가
-2. 개발자 : 변경/신규 업무를 위한 Schema 변경으로 인한 Side Effect 우려 증가 및 배포가 PM(Production Maintenance) Window에만  가능
+1. DBA : Size가 큰 Table간의 다중 Join으로 인한 Main Oracle 부하 증가
+2. 개발자 : 변경/신규 개발을 위한 Schema 변경이 필요하지만, 이로 인한 Main DB 영향도 때문에 배포를 특정 PM 시간에만 할 수 있음으로 개발 생산성에 대한 불만
 
-그래서 당신은 2019년 이전 데이터들을 다중 Join RDB Table 구조에서, 하나의 Document 형태로 변경하여 Main DB의 부하와 사용량을 줄이고 개발자들이 좀 더 유연하게 개발을 할 수 있도록 해야 합니다. 
+그래서 당신은 2019년 이전 데이터들을 다중 Join RDB Table 구조에서 하나의 Document 형태로 변경하는 아이디어를 떠올렸고, 
+이를 통해 Main DB의 부하와 사용량을 줄이고 개발자들이 좀 더 유연하게 개발을 할 수 있지 않을까 생각했습니다.
 
-기존에 존재하던 RDB Data를 어떻게 NoSQL(MongoDB) Database로 쉽게 이관할 수 있을까요?
+그러면 기존 RDB에 저장된 복잡한 구조의 Data를 어떻게 NoSQL(MongoDB) Database로 쉽게 이관할 수 있을까요?
 
 ```
 
 
 
-1. 작업을 위해 5개의 Session을 엽니다.
+# 작업에 필요한 Session 5개를 생성합니다.
 
+1. 작업을 위해 MobaXterm에서 Session을 5개를 만듭니다.
+
+![image-20220207142002894](images/image-20220207142002894.png)
+
+
+
+2. Session 5개 Open
+
+![image-20220207142223185](images/image-20220207142223185.png)
+
+
+
+3. Session Rename - Oracle-HR, AP-TOMCAT, AP-FLASK, MongoDB, Extra로 각각 변경
+
+![image-20220207142326844](images/image-20220207142326844.png)
+
+
+
+![image-20220309232532606](images/image-20220309232532606.png)
+
+
+
+
+
+1. 작업을 위해 MobaXterm에서 5개의 Session을 엽니다.
 2. Session을 Rename합니다. Oracle-HR, AP-TOMCAT, AP-FLASK, MongoDB, Extra
    1. Bastion 서버 접속 Page Link
-
 3. SQL Developer를 실행합니다.
 
 ![image-20220215154430833](images/image-20220215154430833.png)
