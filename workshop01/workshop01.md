@@ -1,322 +1,390 @@
- # 실습 환경 접속
 
-1. 전달 받은 접속 정보를 확인 합니다.
 
-![image-20220207095919980](images/image-20220207095919980.png)
+# workshop01
 
 
 
-**team-hash-login에서 개인별 접속 URL을 확인합니다.**
 
-![image-20220207102643956](images/image-20220207102643956.png)
-
-
-
-2. team-hash-login URL로 접속 후 "Accept Terms & Login"을 Click 합니다.
-
-![image-20220207102721865](images/image-20220207102721865.png)
-
-
-
-3. 사용자 인증 절차 수행
-
-   **"Email One-Time Password (OTP)"를 Click**
-
-![image-20220207100130480](images/image-20220207100130480.png)
-
-**사전에 등록한 email 주소를 입력 후  "send passcode" click** 
-
-![image-20220207100136517](images/image-20220207100136517.png)
-
-**email로 전송 된 one-time passcode를 확인**
-
-![image-20220207100305293](images/image-20220207100305293.png)
-
-
-
-4. Dashboard 접속 확인 및 Team이름 설정, SSH KEY Download
-
-**Team이름 설정**
-
-![image-20220207110206617](images/image-20220207110206617.png)
-
-
-
-![image-20220207110257108](images/image-20220207110257108.png)
-
-**Team Name이 변경되지 않았으면, 화면을 새로 고침 한번 합니다.**
-
-
-
-**Dashboard 접속 확인 및 "SSH KEY" Click**
-
-![image-20220207102326752](images/image-20220207102326752.png)
-
-**"Download Key"를 Click하여 SSH KEY 다운로드**
-
-![image-20220207102804035](images/image-20220207102804035.png)
-
-**Download된 KEY를 확인**
-
-![image-20220207102443065](images/image-20220207102443065.png)
-
-
-
-5. AWS Console Login
-
-**"Open AWS Console"을 Click하여 Login**
-
-![image-20220207102840119](images/image-20220207102840119.png)
-
-**Login 성공 확인 **
-
-![image-20220207102856649](images/image-20220207102856649.png)
-
-
-
-# 실습 환경 구성
-
-1. CloudFormation 으로 이동
-
-![image-20220207102938764](images/image-20220207102938764.png)
-
-
-
-2. "스택 작업" => "새 리소스" 선택
-
-![image-20220207103001305](images/image-20220207103001305.png)
-
-
-
-3. "Amazon S3 URL"에 https://shared-kiwony.s3.ap-northeast-2.amazonaws.com/OnPREM4.yml 을 입력 후 "다음" Click
-
-![image-20220207103043253](images/image-20220207103043253.png)
-
-
-
-4. "스택 이름"에 "DBforMSA"를 입력, KeyName에 전 Step에서 다운로드 받은 ee-default-keypair를 선택 후 "다음" Click
-
-![image-20220207103752370](images/image-20220207103752370.png)
-
-
-
-5. "AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다"를 체크 후 "스택 생성" Click
-
-![image-20220207103202153](images/image-20220207103202153.png)
-
-
-
-6. "이벤트"를 Click하여 CloudFormation Stack이 정상적으로 생성되는지 확인(약 5분 소요)
-
-![image-20220207103855903](images/image-20220207103855903.png)
-
-
-
-**Stack 생성이 완료되면 "CREATE_COMPLTE"로 표시 됨**
-
-![image-20220207103925083](images/image-20220207103925083.png)
-
-
-
-# 실습을 위해 Bastion Host로 접속
-
-### (모든 작업은 Bastion Host를 통해서 이뤄집니다.)
-
-
-
-1. CloudFormation => 출력 => IPWindowsPublicIP를 확인
-
-![image-20220207104312974](images/image-20220207104312974.png)
-
-
-
-2. "RDP Client"를 사용하여 Bastion 서버에 접속(Windows는 mstsc.exe, MAC은 Microsoft Remote Desktop 사용)
-
-**Windows Laptop**
-
-![image-20220207104404321](images/image-20220207104404321.png)
-
-![image-20220207105101422](images/image-20220207105101422.png)
-
-
-
-**MAC Laptop**
-
-![image-20220207105204837](images/image-20220207105204837.png)
-
-
-
-3. Bastion 접속 (Administrator // )
-
-![image-20220207105237250](images/image-20220207105237250.png)
-
-
-
-![image-20220207105240390](images/image-20220207105240390.png)
-
-
-
-4. 다운로드 받았던 ee-default-keypair.pem(사용중인 Laptop이나 PC에서) 파일을 Bastion Server로 복사 합니다.
-
-**MAC Laptop**
-
-![image-20220207105353640](images/image-20220207105353640.png)
-
-
-
-**Windows Laptop**
-
-![image-20220207133650908](images/image-20220207133650908.png)
-
-
-
-**복사한 pem 파일을 Bastion Server의 C:\keys 로 복사합니다.**
-
-![image-20220207133804585](images/image-20220207133804585.png)
-
-
-
-![image-20220207133837751](images/image-20220207133837751.png)
-
-
-
-5. MobaXterm(SSH Terminal Program)을 실행합니다.
-
-![image-20220207134018822](images/image-20220207134018822.png)
-
-
-
-6. "User Sessions"에서 "OracleServer"를 선택 후 "Edit session" 선택
-
-![image-20220207140508645](images/image-20220207140508645.png)
-
-
-
-7. Server접속을 위한 pem key 설정
-   1. "Advanced SSH Sessting" 선택
-   2. "Use private Key" Check
-   3. "Key 불러오기" 선택
-   4. "C:\keys"로 이동
-   5. "ee-default-keypair.pem"을 선택 후 open
-   6. "OK" Click
-
-![image-20220207141113681](images/image-20220207141113681.png)
-
-![image-20220207141343661](images/image-20220207141343661.png)
-
-
-
-8. Oracle Server 접속
-
-   **Execute"로 서버 접속**
-
-![image-20220207141433762](images/image-20220207141433762.png)
-
-**Fingerprint Alert Accept Click**
-
-![image-20220207141628256](images/image-20220207141628256.png)
-
-
-
-**서버 접속 확인**
-
-![image-20220207141741293](images/image-20220207141741293.png)
-
-
-
-
-
-# Workshop1 시작 
 
 ```
-당신은 Game을 개발하는 회사의 개발자 혹은 DBA입니다. 
-현재 Game(World) Server를 포함한 Login, Manager, Log, SHOP, Auction의 기능들은 하나의 RDBMS(Oracle)을 사용하고 있습니다.
-당신의 Game은 예상 이상의 놀라운 인기를 얻고 있으며, 이에 따라 Game APP Server와 Game DB Server는 큰 부하가 생기고 있습니다. 
+당신은 RETAIL 업체에서 일하고 있으며, 개발팀과 DBA를 이끄는 Team Leader입니다.
 
-최근 예정되었던 한정 수량 아이템 이벤트에 수 많은 사용자들이 모여들었고, 이로 인해 Main DB의 성능 저하가 발생하였습니다.
-인기가 높았던 만큼 사용자들의 불만도 폭증하였고, 당신은 예정되어 있는 두번째 한정 수량 아이템 이벤트 전에 이 문제를 해결해야 합니다.
-DB팀과 문제의 원인을 확인한 결과 Oracle DB의 HOT Block에 의한 성능 저하임을 확인하였습니다.
+고객만족팀에서는 기존에 Java와 Oracle로 만들어진 Legacy CRM 시스템을 사용하고 있습니다. 
+최근 몇년간 시스템을 이용하면서 데이터가 누적되면서 성능 이슈와 함께 Storage 이슈도 발생하고 있습니다.
+또한 새로 입사한 신규 개발자들은 Java보다는 경량화된 Python이나 JS를 개발에 이용하고 싶어합니다. 
 
-RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경우 Hot Block이 발생 할 수 있으며,
-이러한 문제는 Game내 Item Event뿐 아니라, 통신사 Billing System, Retail Order System등에서 자주 발생 합니다.
-이러한 문제를 해결 하기 위하여 Hash-partitioned reverse-index를 이용하는 방법도 있긴 하지만, 해결이 어려운 경우도 있습니다.
+당신은 고객만족팀과의 미팅 후에 "CRM - 고객 상담 데이터"중 2019년 이전 Data들은 단순 조회 업무로만 사용됨을 알게 되었습니다.
+기존 Legacy Java Application에서는 "고객 상담 데이터"를 보여주기 위해서 여러개의 Table을 Join해야 했고, 
+이로 인해서 다음과 같은 문제점들이 있었습니다.
 
-이 문제를 해결하기 위하여 당신은 당신의 개발팀과 DBA들과 이야기를 나누었고, HOT Block을 유발하는 부분을 In-Memory DB로 변경하기로 하였습니다. 
+1. DBA : Size가 큰 Table간의 다중 Join으로 인한 DB 부하 증가
+2. 개발자 : 변경/신규 업무를 위한 Schema 변경으로 인한 Side Effect 우려 증가 및 배포가 PM(Production Maintenance) Window에만  가능
+
+그래서 당신은 2019년 이전 데이터들을 다중 Join RDB Table 구조에서, 하나의 Document 형태로 변경하여 Main DB의 부하와 사용량을 줄이고 개발자들이 좀 더 유연하게 개발을 할 수 있도록 해야 합니다. 
+
+기존에 존재하던 RDB Data를 어떻게 NoSQL(MongoDB) Database로 쉽게 이관할 수 있을까요?
+
 ```
 
 
 
-1. 작업을 위해 MobaXterm에서 Session을 5개를 만듭니다.
+1. 작업을 위해 5개의 Session을 엽니다.
 
-![image-20220207142002894](images/image-20220207142002894.png)
+2. Session을 Rename합니다. Oracle-HR, AP-TOMCAT, AP-FLASK, MongoDB, Extra
+   1. Bastion 서버 접속 Page Link
 
+3. SQL Developer를 실행합니다.
 
+![image-20220215154430833](images/image-20220215154430833.png)
 
-2. Session 5개 Open
+4. oracle-hr을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
 
-![image-20220207142223185](images/image-20220207142223185.png)
-
-
-
-3. Session Rename - Oracle, Redis, APP, ApacheBench, extra로 각각 변경
-
-![image-20220207142326844](images/image-20220207142326844.png)
-
-![image-20220207142438065](images/image-20220207142438065.png)
+   ![image-20220215154626853](images/image-20220215154626853.png)
 
 
 
-4. Oracle Session에서 DB에 접속하여 Data 초기화 수행
+5. 바탕 화면의 Query3.txt를 Double Click하여 엽니다.
 
-```
-ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
-Last login: Tue Jan 25 08:14:31 UTC 2022 on pts/1
-root@ip-10-100-1-101:/root# su - oracle
-Last login: Mon Feb  7 04:55:48 UTC 2022
-oracle@ip-10-100-1-101:/home/oracle> sqlplus oshop/oshop
+![image-20220215155804896](images/image-20220215155804896.png)
 
-SQL*Plus: Release 11.2.0.2.0 Production on Mon Feb 7 05:26:23 2022
-Copyright (c) 1982, 2011, Oracle.  All rights reserved.
 
-Connected to:
-Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
 
-SQL> @purge
-1000 rows updated.
-Commit complete.
-Table truncated.
-SQL> 
+6. Query3.txt의 내용을 모두 복사해서 SQL Developer의 Worksheet에 붙여 넣습니다.
+
+![image-20220216113716659](images/image-20220216113716659.png)
+
+![image-20220216113816598](images/image-20220216113816598.png)
+
+
+
+7. 1~5번까지의 Query를 직접 수행해서 CRM DB의 Data를 확인합니다. 
 
 ```
+Query 1 : CUSTOMERS CUSTOEMR_SERVIE_HISTORY Table 의 일부 Data를 확인
 
-![image-20220207142734174](images/image-20220207142734174.png)
+Query 2 : CUSTOMERS 와 CUSTOMER_SERVICE_HISTORY Table을 Join한 결과를 확인(고객 상담 LOG Data)
+(실제 CRM System에서는 보통 Table이 6~14개까지 Join이 됩니다, 저희는 실습을 위해서 간략화하여 2개 Table만 Join합니다.)
 
+Query 3 : Query2(고객 상담 LOG Data)의 총 갯수를 확인
 
+Query 4 : Query2(고객 상담 LOG Data)의 Data 중 조회용으로만 사용 될 2019년 1월 1일 이전 데이터의 갯수 확인
+-- 4286건의 Data를 확인
 
-5. Redis에 접속하여 Data 초기화 수행
-
-```
-ec2-user@ip-10-100-1-101:/home/ec2-user> redis-cli
-127.0.0.1:6379> auth Welcome1234
-OK
-127.0.0.1:6379> set prod-001-quantity 10000
-OK
-127.0.0.1:6379> get prod-001-quantity
-"10000"
-127.0.0.1:6379>
+Query 5 : CUSTOMERS 와 CUSTOMER_SERVICE_HISTORY Table을 Join한 결과 중 2019년 1월 1일 이전 데이터 확인
 
 ```
 
-![image-20220207142911631](images/image-20220207142911631.png)
+Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 후 초록색 실행 버튼을 클릭합니다.
+
+![image-20220216131033286](images/image-20220216131033286.png)
+
+8. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. Query 6을 실행합니다. 
+
+   이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+
+   ```
+   -- 전환 대상인 2019년 이전 CUSTOMERS+CUSTOMER_SERVICE_HISTORY 데이터들을 MVIEW로 생성합니다. 
+   -- 실제 DB에서는 보통 6~14개 정도의 Table이 Join되지만, 워크샵에서는 2개의 Table만 Join 합니다.
+   create MATERIALIZED VIEW CSHARCH
+     NOLOGGING
+     CACHE
+     BUILD IMMEDIATE 
+     REFRESH ON DEMAND
+     as
+     select CSH.csh_id,CUS.CUST_ID, CUS.EMAIL, CUS.PHONE_NUMBER, CUS.ADDRESS, CUS.ROYALTY, CSH.CALL_DATE, CSH.DETAILS 
+     from customers CUS, CUSTOMER_SERVICE_HISTORY CSH
+     where CUS.cust_id=CSH.cust_id
+     and call_date < to_date('2019-01-01','yyyy-mm-dd');
+   ```
+
+   
+
+9. 연결된 "Remote Desktop"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. 
+
+   아래의 Page처럼 Legacy Java Application이 동작하고 있습니다. 
+
+   
+
+   고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회해 봅니다. 
+
+   "Customer Satisfaction" Page는 CUSTOMERS, CUSTOMER_SERVICE_HISTORY Table을 JOIN해서 보여줍니다.
+
+![image-20220215183908849](images/image-20220215183908849.png)
+
+![image-20220215184953998](images/image-20220215184953998.png)
+
+![image-20220215185020437](images/image-20220215185020437.png)
+
+10. 이제 "고객 상담 내역" Data 중에서 2019년 1월 1일 이전의 Data를 MongoDB로 Migration 해보겠습니다.
+
+    그리고 Legacy Java Appliation 중 crm-show.jsp에 해당하는 '고객 상담 내역 조회' 업무를 Python Flask로 변경하겠습니다. 
+
+    **우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
 
 
 
-6. Oracle을 Repository로 사용하고 있는 Legacy Game Application을 구동합니다.
+11. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다.
 
 ```
-ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop1/legacy
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy> source bin/activate
-(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy> flask run --host=0.0.0.0
+Database Migration Service을 이용하여 다음 과정을 통해 Oracle To MongoDB로 Data를 이관하게 됩니다.
+
+1. Replication Instance 생성 : Data 이관 작업을 수행 할 Instance 입니다.
+2. ENDPOINT 생성
+	- Source ENDPOINT 생성 : Legacy Oracle DB를 Source로 사용 할 ENDPOINT 입니다.
+	- Target ENDPOINT 생성 : 새로운 MongoDB를 Target으로 사용 할 ENDPOINT 입니다.
+3. DMS TASK 생성 
+  - Source Oracle DB의 이관 대상 Schema와 Table을 선택하고, Target MongoDB에 어떤 Collection으로 넣을지 설정합니다.
+  - 해당 설정을 토대로 Source to Target으로 Data 이관이 수행됩니다.
+```
+
+
+
+![image-20220216104215418](images/image-20220216104215418.png)
+
+12. 먼저 Replication Instance를 생성합니다. 
+
+"Replication Instances"를 Click합니다.
+
+"Create Replication Instances"를 Click합니다.
+
+![image-20220216105128847](images/image-20220216105128847.png)
+
+
+
+**다음의 화면처럼 "Replication Instance" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create"를 Click합니다.**
+
+```
+Name : ri-oracle-to-mongodb
+Description : Replication Instance for Migrating Data From Oracle to MongoDB
+Instance class : dms.t3.small 또는 dms.t3.medium
+Engine Version : 3.4.6
+Allocated Storage : 50
+VPC : OnPREM
+Multi AZ : Dev
+Publicly accessible : 체크 안함
+```
+
+![image-20220216112323871](images/image-20220216112323871.png)
+
+
+
+**ri-oracle-to-mongodb가 Available Status로 정상 생성됨을 확인합니다.(약 5분 소요)**
+
+![image-20220216112729391](images/image-20220216112729391.png)
+
+
+
+13. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
+
+![image-20220216132936892](images/image-20220216132936892.png)
+
+
+
+**다음의 화면처럼 "Endpoint" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create endpoint"를 Click합니다.**
+
+```
+Endpoint Type : Source endpoint
+
+Endpoint Identifier : source-oracle-crm
+Source Engine : Oracle
+
+Access to endpoint database : Provide access information manually
+Server Name : 10.100.1.101
+Port : 1521
+User name : dms
+Password : dms
+SID/Service name : XE
+
+% Database Migration Service를 사용하기 위해서는 사전에 Source DB에서 해줘야 하는 선행 작업들이 존재합니다.
+% Data Access를 위한 권한 설정과 CDC를 위한 권한 설정등입니다. 이번 워크샵에서는 해당 작업들을 사전에 해두었습니다.
+% 좀 더 자세한 내용은 https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html을 보시거나
+% 바탕화면의 Query.txt의 2번째 "SQL Developer를 이용하여 OnPREM Oracle 선행 작업"을 보시면 됩니다.
+
+```
+
+![image-20220216133538337](images/image-20220216133538337.png)
+
+
+
+**생성된 Source Endpoint와 "Replication Instance - ri-oracle-to-mongodb" 간의 connection을 확인**
+
+![image-20220216133749085](images/image-20220216133749085.png)
+
+![image-20220216134012293](images/image-20220216134012293.png)
+
+![image-20220216134056985](images/image-20220216134056985.png)
+
+
+
+14. Target이 되는 MongoDB용 Target Endpoint를 생성합니다.
+
+![image-20220216134237337](images/image-20220216134237337.png)
+
+**다음의 화면처럼 "Endpoint" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create endpoint"를 Click합니다.**
+
+```
+Endpoint Type : Target endpoint
+
+Endpoint Identifier : target-mongodb-csharch
+Target Engine : Amazon DocumentDB (with MongoDB compatibility)
+
+Access to endpoint database : Provide access information manually
+Server Name : 10.100.1.101
+Port : 27017
+User name : myadmin
+Password : Welcome1234
+Database Name : crm
+
+% Workshop에서는 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 실제 환경에서는 다른 서버에 설치된 MongoDB를 사용 할 수 있습니다.
+% Workshop같은 개발 환경에서는 설치형 Standalone을 사용하고, 실제 PROD환경에서는 HA, Security, Backup, 운영등을 위해서
+% Amazon DocumentDB나 MongoDB Atlas를 사용하시는 것이 좋습니다. 
+```
+
+![image-20220216134837777](images/image-20220216134837777.png)
+
+
+
+**생성된 Target Endpoint와 "Replication Instance - ri-oracle-to-mongodb" 간의 connection을 확인**
+
+![image-20220216135043817](images/image-20220216135043817.png)
+
+![image-20220216135144561](images/image-20220216135144561.png)
+
+![image-20220216135245187](images/image-20220216135245187.png)
+
+
+
+15. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
+
+    "Database migration tasks"를 Click 합니다. "Create task"를 Click 합니다.
+
+![image-20220216135451371](images/image-20220216135451371.png)
+
+**다음의 화면처럼 "Task" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create task"를 Click합니다.**
+
+**Task configuration**
+
+```
+Task identifier : oracle-csharch-to-mongodb
+Replication instance : ri-oracle-to-mongodb
+Source database endpoint : source-oracle-crm
+Target database endpoint : target-mongodb-csharch
+Migration type : Migrate existing data
+
+```
+
+**Task setting**
+
+```
+Target table preparation modeInfo : Drop tables on target
+Include LOB columns in replication : Limited LOB mode
+Enable CloudWatch logs : 체크 활성화
+```
+
+**Table mappings**
+
+```
+"Add new selection rule" Click
+
+Schema : Enter a schema
+Schema name : HR
+Table name : CSHARCH
+Action : include
+
+```
+
+**Migration task startup configuration**
+
+```
+Start migration task : Manually later
+```
+
+
+
+![image-20220216140046932](images/image-20220216140046932.png)
+
+![image-20220216140058342](images/image-20220216140058342.png)
+
+
+
+![image-20220216140109534](images/image-20220216140109534.png)
+
+![image-20220216140227065](images/image-20220216140227065.png)
+
+
+
+**Task Status가 "Ready"가 될때까지 기다립니다.**
+
+![image-20220216140643173](images/image-20220216140643173.png)
+
+
+
+**Task를 실행합니다.**
+
+![image-20220216140806184](images/image-20220216140806184.png)
+
+
+
+**Task Identifier : oracle-csh-to-mongodb Click을 Click하여 DMS TASK의 Migration 상황을 모니터링 합니다.**
+
+![image-20220216141021565](images/image-20220216141021565.png)
+
+
+
+**Table statiscis Tab을 눌러서 데이터 이관을 확인합니다, 조금 기다리면 대상 Data  4286건이 정상적으로 이관되었음을 확인합니다.**
+
+![image-20220216141842724](images/image-20220216141842724.png)
+
+
+
+16. 실제로 Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널을 이용하여 Bastion Server로 접속합니다.
+
+17. MobaXterm에서 MongoDB Session으로 이동합니다.
+
+18. 아래처럼 입력하여 mongodb로 접속 하고, Data 건수를 확인합니다.
+
+    CSHARCH collection의 document 숫자가 4286임을 확인합니다.
+
+    Data 중에서 CALL_DATE가 가장 오래된것 과 최신 것을 확인합니다. 
+
+    의도한대로 2019년 1월 1일 이전의 Data들만이 MongoDB로 이관 된 것을 확인 할 수 있습니다. 
+
+```
+ec2-user@ip-10-100-1-101:/home/ec2-user> mongoadmin
+MongoDB shell version v4.4.12
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("7904e03b-796a-4698-a088-cbc4d901ccd3") }
+MongoDB server version: 4.4.12
+> use crm
+switched to db crm
+> show collections
+CSHARCH
+> db.CSHARCH.find().count()
+4286
+> db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:+1}).limit(1)
+{ "_id" : ObjectId("620c930a0e83f26aca4a85e7"), "CUST_ID" : "8424", "EMAIL" : "KevinClayton@vance.com", "CALL_DATE" : ISODate("2016-08-19T14:21:58Z") }
+> db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:-1}).limit(1)
+{ "_id" : ObjectId("620c930a0e83f26aca4a8461"), "CUST_ID" : "7850", "EMAIL" : "JasonRobinson@taylor-jennings.com", "CALL_DATE" : ISODate("2018-12-31T14:21:56Z") }
+>
+
+
+% 참고
+ec2-user@ip-10-100-1-101:/home/ec2-user> alias |grep mongoadmin
+alias mongoadmin='mongo -u myadmin -p Welcome1234   --authenticationDatabase "admin"'
+```
+
+![image-20220217002628220](images/image-20220217002628220.png)
+
+19. 이제 Data이관이 완료되었습니다. 이제 Legacy Java Application에서 경량화된 Python Flask Application으로 바꿔보겠습니다.
+
+    MobaXterm에서 AP-FLASK Session으로 이동합니다. 
+
+20. 다음의 명령어를 실행하여 Flask Application을 실행합니다.
+
+```
+ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop11
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop11> source bin/activate
+(workshop11) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop11> flask run --host=0.0.0.0
  * Environment: production
    WARNING: This is a development server. Do not use it in a production deployment.
    Use a production WSGI server instead.
@@ -327,209 +395,85 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy> source bin/activate
 
 ```
 
+![image-20220217002917040](images/image-20220217002917040.png)
 
+21. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
 
-![image-20220207144437593](images/image-20220207144437593.png)
+    FLASK-1은 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회하는 Page입니다.
 
+    Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
+![image-20220217003114019](images/image-20220217003114019.png)
 
-7. "한정 수량 아이템" 이벤트가 시작되었습니다. apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 약 100초 정도가 걸렸습니다.
+22. FLASK-4를 눌러서 4번 고객의 상담 내역을 확인합니다.
 
-```
-ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order
-This is ApacheBench, Version 2.3 <$Revision: 1430300 $>
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
+![image-20220217003344072](images/image-20220217003344072.png)
 
-Benchmarking 10.100.1.101 (be patient)
-Completed 300 requests
-Completed 600 requests
-Completed 900 requests
-Completed 1200 requests
-Completed 1500 requests
-Completed 1800 requests
-Completed 2100 requests
-Completed 2400 requests
-Completed 2700 requests
-Completed 3000 requests
-Finished 3000 requests
+22. MobaXTerm으로 돌아와서 ctrl+c 를 눌러서 Flask App을 종료합니다.
+23. 다음처럼 실행하여 Flask Application을 확인합니다.
 
+![image-20220217003506158](images/image-20220217003506158.png)
 
-Server Software:        Werkzeug/2.0.2
-Server Hostname:        10.100.1.101
-Server Port:            5000
-
-Document Path:          /order
-Document Length:        4 bytes
-
-Concurrency Level:      150
-Time taken for tests:   100.827 seconds
-Complete requests:      3000
-Failed requests:        0
-Write errors:           0
-Total transferred:      468000 bytes
-HTML transferred:       12000 bytes
-Requests per second:    29.75 [#/sec] (mean)
-Time per request:       5041.344 [ms] (mean)
-Time per request:       33.609 [ms] (mean, across all concurrent requests)
-Transfer rate:          4.53 [Kbytes/sec] received
-
+**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 FLASK가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다.**
 
 ```
+import sys
+import time
+import json
+from flask import Flask, request, render_template
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import urllib.parse
+from bson import json_util
+from flask import jsonify
+from datetime import date
+from bson.json_util import loads
+from bson.json_util import dumps
 
-![image-20220220022820343](images/image-20220220022820343.png)
+## Connection String for MongoDB, credential hard coding is high risky.
+## This is only for workshop, MUST use AWS SECRET MANAGER to PROTEST YOUR SYSTEM
+username = urllib.parse.quote_plus('myadmin')
+password = urllib.parse.quote_plus('Welcome1234')
+client = MongoClient('mongodb://%s:%s@10.100.1.101' % (username, password))
 
+db = client.crm
+collection = db.CSHARCH
 
+app = Flask(__name__, static_url_path='')
+@app.route('/', methods=['GET'])
+def index():
+     return 'This is index page'
+@app.route('/select', methods=['GET'])
+def select():
+    paramCustID = request.args.get("CUST_ID")
+    docs = list(collection.find({"CUST_ID" : paramCustID},{"_id":0,"CUST_ID": 1,"EMAIL": 1, "PHONE_NUMBER": 1, "ROYALTY": 1, "CALL_DATE": 1,"DETAILS" :1}))
 
-8. MobaXterm - APP Session으로 돌아와서 CTRL+C를 눌러서 Legacy Game Application을 중지합니다.
+    return render_template(
+                'ShowDetails.html',
+                pCustID=docs[0]['CUST_ID'],
+                pEmail=docs[0]['EMAIL'],
+                pPhoneNumber=docs[0]['PHONE_NUMBER'],
+                pRoyalty=docs[0]['ROYALTY'],
+                pCallDate=docs[0]['CALL_DATE'],
+                #pDetails=docs[0]['DETAILS']
+                pDetails=docs[0]['DETAILS'].replace("\\n","<BR><BR>")
+            )
 
-![image-20220207145342620](images/image-20220207145342620.png)
-
-
-
-9. Oracle과 Redis의 Data를 초기화 합니다. 위의 Step 4, 5를 수행합니다.
-
-   
-
-   
-
-10. SHOP 의 모듈 중 "한정 수량 아이템" 의 로직을 별도의 Application으로 분리하였고, 사용하는 Repository를 In-Memory REDIS로 변경하였습니다.
-
-```
-# LEGACY Order의 Application logic
-# Workshop의 진행을 위해 Code에 Credential정보를 넣었습니다. 실제 환경에서는 AWS Secret Manager을 사용하면 Application Code에 사용자의 Credentail을 기술할 필요 없이, 안전하게 사용자 비밀번호를 보호하며 사용 할 수 있습니다.
-
-@app.route('/order', methods=['GET'])
-def order():
-    conn=cx_Oracle.connect("oshop/oshop@10.100.1.101:1521/XE")
-    cursor=conn.cursor() 
-    sql="select quantity from HOTDEAL_LIST where PROD_ID = 1 for update"
-    output=0
-    rs = cursor.execute(sql)
-    for record in rs:
-        currVal = record[0]
-        if(currVal > 0):
-            currVal = currVal - 1;
-            update_sql = "update HOTDEAL_LIST set quantity="+str(currVal)+" where PROD_ID=1"
-            cursor.execute(update_sql);
-            insert_sql = "insert into ORDER_HISTORY values (sysdate, 1,1)"
-            cursor.execute(insert_sql);
-            time.sleep(0.03);
-            conn.commit()
-
-            return str(currVal)
-        else:
-            return "Out Of Stock"
-
-    cursor.close()
-    conn.close()
-    return "Completed"
-
-```
-
-```
-# MSA로 ORDER module만 별도로 분리하고, 한정 수량을 체크하는 부분을 기존 Oracle의 HOTDEAL_LIST Table 대신 REDIS의 prod-001-quantity를 사용하도록 변경
-# Workshop의 진행을 위해 Code에 Credential정보를 넣었습니다. 실제 환경에서는 AWS Secret Manager을 사용하면 Application Code에 사용자의 Credentail을 기술할 필요 없이, 안전하게 사용자 비밀번호를 보호하며 사용 할 수 있습니다.
-
-@app.route('/order-redis', methods=['GET'])
-def order_redis():
-    conn=cx_Oracle.connect("oshop/oshop@10.100.1.101:1521/XE")
-    r = redis.Redis(host='localhost',port=6379,password='Welcome1234')
-    # You can use following statements when you want to use ElastiCache REDIS
-    #r = redis.StrictRedis(host='redis-test2.h3rll4.0001.apn2.cache.amazonaws.com',port=6379,db=0)
-    cursor=conn.cursor() 
-    currVal = int(r.get('prod-001-quantity'))
-    output=0
-   # rs = cursor.execute(sql)
-    print('START')
-    if(currVal > 0):
-        #print(currVal)
-        #currVal = currVal - 1;
-        #r.set('quantity',currVal)
-        r.decr('prod-001-quantity',1)
-        insert_sql = "insert into ORDER_HISTORY values (sysdate, 1,1)"
-        cursor.execute(insert_sql);
-        #time.sleep(1);
-        time.sleep(0.03);
-        conn.commit()
-
-        return str(currVal)
-    else:
-        print("Out of Stock")
-        return "Out Of Stock"
-
-    cursor.close()
-    conn.close()
-    return "Completed"
+if __name__ == '__main__':
+ if len(sys.argv) > 1:
+     app.debug = True
+     app.jinja_env.auto_reload = True
+     app.config['TEMPLATES_AUTO_RELOAD'] = True
+     app.run(host='0.0.0.0', port=4000)
+ else:
+     #select();
+     app.run(host='0.0.0.0')
 
 ```
 
 
 
-11. REDIS를 사용하는 MSA Application을 기동
-
-```
-(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy>  cd ../msa/
-(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/msa> source bin/activate
-(msa) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/msa> flask run --host=0.0.0.0
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
- * Debug mode: off
- * Running on all addresses.
-   WARNING: This is a development server. Do not use it in a production deployment.
- * Running on http://10.100.1.101:5000/ (Press CTRL+C to quit)
-
-```
 
 
 
-12. 두번째 "한정 수량 아이템" 이벤트가 시작되었습니다. apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 약 25초 정도가 걸렸습니다. 4배의 속도 개선이 이뤄졌습니다.
-
-```
-ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order-redis
-This is ApacheBench, Version 2.3 <$Revision: 1430300 $>
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
-
-Benchmarking 10.100.1.101 (be patient)
-Completed 300 requests
-Completed 600 requests
-Completed 900 requests
-Completed 1200 requests
-Completed 1500 requests
-Completed 1800 requests
-Completed 2100 requests
-Completed 2400 requests
-Completed 2700 requests
-Completed 3000 requests
-Finished 3000 requests
-
-
-Server Software:        Werkzeug/2.0.2
-Server Hostname:        10.100.1.101
-Server Port:            5000
-
-Document Path:          /order-redis
-Document Length:        12 bytes
-
-Concurrency Level:      150
-Time taken for tests:   24.927 seconds
-Complete requests:      3000
-Failed requests:        0
-Write errors:           0
-Total transferred:      495000 bytes
-HTML transferred:       36000 bytes
-Requests per second:    120.35 [#/sec] (mean)
-Time per request:       1246.356 [ms] (mean)
-Time per request:       8.309 [ms] (mean, across all concurrent requests)
-Transfer rate:          19.39 [Kbytes/sec] received
-
-```
-
-![image-20220220022745790](images/image-20220220022745790.png)
-
-
-
-## Standalone REDIS가 아닌 Amazon ElatiCache REDIS를 사용 할 수 있습니다. DEV 환경에서는 Standalone REDIS로 개발을 할 수 있지만, 실제 PRODUCTION에서는 HA와 Backup등이 고려되어야 하기 때문에...
 
