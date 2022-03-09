@@ -46,16 +46,15 @@
 
 
 
+4. Session 이름 변경 후 확인
+
 <img src="images/image-20220309232532606.png" alt="image-20220309232532606" width="882px" />
 
 
 
+# Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션 
 
-
-1. 작업을 위해 MobaXterm에서 5개의 Session을 엽니다.
-2. Session을 Rename합니다. Oracle-HR, AP-TOMCAT, AP-FLASK, MongoDB, Extra
-   1. Bastion 서버 접속 Page Link
-3. SQL Developer를 실행합니다.
+1. SQL Developer를 실행합니다.
 
 ![image-20220215154430833](images/image-20220215154430833.png)
 
@@ -103,6 +102,8 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 8. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. Query 6을 실행합니다. 
 
    이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+
+   % 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
 
    ```
    -- 전환 대상인 2019년 이전 CUSTOMERS+CUSTOMER_SERVICE_HISTORY 데이터들을 MVIEW로 생성합니다. 
@@ -165,9 +166,9 @@ Database Migration Service을 이용하여 다음 과정을 통해 Oracle To Mon
 
 12. 먼저 Replication Instance를 생성합니다. 
 
-"Replication Instances"를 Click합니다.
+"Replication Instances"(복제 인스턴스)를 Click합니다.
 
-"Create Replication Instances"를 Click합니다.
+"Create Replication Instances"(복제 인스턴스 생성)를 Click합니다.
 
 ![image-20220216105128847](images/image-20220216105128847.png)
 
@@ -198,6 +199,8 @@ Publicly accessible : 체크 안함
 
 13. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
 
+    화면 왼쪽 메뉴에서 "Endpoints"(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
+
 ![image-20220216132936892](images/image-20220216132936892.png)
 
 
@@ -210,7 +213,7 @@ Endpoint Type : Source endpoint
 Endpoint Identifier : source-oracle-crm
 Source Engine : Oracle
 
-Access to endpoint database : Provide access information manually
+Access to endpoint database : Provide access information manually(수동으로 액세스 정보 제공)
 Server Name : 10.100.1.101
 Port : 1521
 User name : dms
