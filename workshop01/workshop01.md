@@ -46,7 +46,7 @@
 
 
 
-![image-20220309232532606](images/image-20220309232532606.png)
+<img src="images/image-20220309232532606.png" alt="image-20220309232532606" width="882px" />
 
 
 
