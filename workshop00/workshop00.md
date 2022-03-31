@@ -74,7 +74,7 @@
 
 
 
-6. "이벤트"를 Click하여 CloudFormation Stack이 정상적으로 생성되는지 확인(약 5분 소요)
+6. "이벤트"를 Click하여 CloudFormation Stack이 정상적으로 생성되는지 확인(약 5~10분 소요)
 
 ![image-20220207103855903](images/image-20220207103855903.png)
 
@@ -99,6 +99,8 @@
 
 
 2. "RDP Client"를 사용하여 Bastion 서버에 접속(Windows는 mstsc.exe, MAC은 Microsoft Remote Desktop 사용)
+
+   아직 EC2 인스턴스가 구동 중이라서 접속이 안 될경우 1~2분 후에 다시 접속을 시도합니다.
 
 **Windows Laptop**
 
@@ -217,5 +219,4 @@
 ![image-20220207142326844](images/image-20220207142326844.png)
 
 ![image-20220207142438065](images/image-20220207142438065.png)
-
 
