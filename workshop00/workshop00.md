@@ -222,4 +222,4 @@
 
 
 
-[다음 워크샵으로 - workshop01 ](./workshop01.md) 
+[다음 워크샵으로 - workshop01 ](../workshop01/workshop01.md) 
