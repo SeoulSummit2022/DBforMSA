@@ -1,4 +1,4 @@
-# Workshop3 시작 1
+# Workshop3 시작
 
 ```
 당신은 Game을 개발하는 회사의 개발자 혹은 DBA입니다. 
