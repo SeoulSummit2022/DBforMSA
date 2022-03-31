@@ -164,7 +164,7 @@ Database Migration Service을 이용하여 다음 과정을 통해 Oracle To Mon
 
 ![image-20220216104215418](images/image-20220216104215418.png)
 
-12. 먼저 Replication Instance를 생성합니다. 
+12. 먼저 Replication Instance(복제 인스턴스)를 생성합니다. 
 
 "Replication Instances"(복제 인스턴스)를 Click합니다.
 
@@ -208,7 +208,7 @@ Publicly accessible : 체크 안함
 **다음의 화면처럼 "Endpoint" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create endpoint"를 Click합니다.**
 
 ```
-Endpoint Type : Source endpoint
+Endpoint Type : Source endpoint(소스 엔드포인트)
 
 Endpoint Identifier : source-oracle-crm
 Source Engine : Oracle
@@ -248,7 +248,7 @@ SID/Service name : XE
 **다음의 화면처럼 "Endpoint" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create endpoint"를 Click합니다.**
 
 ```
-Endpoint Type : Target endpoint
+Endpoint Type : Target endpoint(대상 엔드포인트)
 
 Endpoint Identifier : target-mongodb-csharch
 Target Engine : Amazon DocumentDB (with MongoDB compatibility)
@@ -260,7 +260,7 @@ User name : myadmin
 Password : Welcome1234
 Database Name : crm
 
-% Workshop에서는 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 실제 환경에서는 다른 서버에 설치된 MongoDB를 사용 할 수 있습니다.
+% Workshop에서는 편의를 위해서 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 실제 환경에서는 다른 서버에 설치된 MongoDB를 사용 할 수 있습니다.
 % Workshop같은 개발 환경에서는 설치형 Standalone을 사용하고, 실제 PROD환경에서는 HA, Security, Backup, 운영등을 위해서
 % Amazon DocumentDB나 MongoDB Atlas를 사용하시는 것이 좋습니다. 
 ```
@@ -281,7 +281,7 @@ Database Name : crm
 
 15. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
 
-    "Database migration tasks"를 Click 합니다. "Create task"를 Click 합니다.
+    "Database migration tasks(데이터베이스 마이그레이션 태스크)"를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
 
 ![image-20220216135451371](images/image-20220216135451371.png)
 
@@ -294,34 +294,34 @@ Task identifier : oracle-csharch-to-mongodb
 Replication instance : ri-oracle-to-mongodb
 Source database endpoint : source-oracle-crm
 Target database endpoint : target-mongodb-csharch
-Migration type : Migrate existing data
+Migration type : Migrate existing data(기존 데이터 마이그레이션)
 
 ```
 
 **Task setting**
 
 ```
-Target table preparation modeInfo : Drop tables on target
-Include LOB columns in replication : Limited LOB mode
-Enable CloudWatch logs : 체크 활성화
+Target table preparation modeInfo : Drop tables on target(대상에서 테이블 삭제)
+Include LOB columns in replication : Limited LOB mode (제한적 LOB 모드)
+Enable CloudWatch logs(CloudWatch 로그 활성화) : 체크 활성화
 ```
 
-**Table mappings**
+**Table mappings**(테이블 매핑)
 
 ```
-"Add new selection rule" Click
+"Add new selection rule(새 선택 규칙 추가)" Click
 
-Schema : Enter a schema
+Schema : Enter a schema(스키마를 입력하십시요)
 Schema name : HR
 Table name : CSHARCH
-Action : include
+Action : include(포함)
 
 ```
 
-**Migration task startup configuration**
+**Migration task startup configuration(마이그레이션 태스크 시작 구성)**
 
 ```
-Start migration task : Manually later
+Start migration task : Manually later(나중에 수동으로)
 ```
 
 
@@ -338,13 +338,13 @@ Start migration task : Manually later
 
 
 
-**Task Status가 "Ready"가 될때까지 기다립니다.**
+**Task Status가 "Ready(준비)"가 될때까지 기다립니다.**
 
 ![image-20220216140643173](images/image-20220216140643173.png)
 
 
 
-**Task를 실행합니다.**
+**Task를 실행합니다. Actions=>Restart/Resume(작업=>재시작/재개)**
 
 ![image-20220216140806184](images/image-20220216140806184.png)
 
@@ -407,8 +407,8 @@ alias mongoadmin='mongo -u myadmin -p Welcome1234   --authenticationDatabase "ad
 20. 다음의 명령어를 실행하여 Flask Application을 실행합니다.
 
 ```
-ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop11
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop11> source bin/activate
+ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop01
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop01> source bin/activate
 (workshop11) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop11> flask run --host=0.0.0.0
  * Environment: production
    WARNING: This is a development server. Do not use it in a production deployment.
@@ -420,7 +420,9 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop11> source bin/activate
 
 ```
 
-![image-20220217002917040](images/image-20220217002917040.png)
+![image-20220331112106030](images/image-20220331112106030.png)
+
+
 
 21. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
 
@@ -435,9 +437,12 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop11> source bin/activate
 ![image-20220217003344072](images/image-20220217003344072.png)
 
 22. MobaXTerm으로 돌아와서 ctrl+c 를 눌러서 Flask App을 종료합니다.
+
 23. 다음처럼 실행하여 Flask Application을 확인합니다.
 
-![image-20220217003506158](images/image-20220217003506158.png)
+    ![image-20220331112250026](images/image-20220331112250026.png)
+
+
 
 **Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 FLASK가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다.**
 
@@ -496,7 +501,7 @@ if __name__ == '__main__':
 
 ```
 
-
+[다음 워크샵으로 - workshop02 ](../workshop02/workshop02.md) 
 
 
 
