@@ -105,7 +105,9 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop03/legacy> source bin/activate
 
 7. "한정 수량 아이템" 이벤트를 시작하겠습니다. 사용자들의 주문을 시뮬레이션 하기 위해 ApacheBench Session을 이용합니다.
 
-   apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 약 100초 정도가 걸렸습니다.
+   apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 
+   
+   Oracle DB를 사용하는 Legacy System에서는 사용자 요청 처리에 약 100초 정도가 필요했습니다.
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order
@@ -159,9 +161,9 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
 
 
-9. 이번에는 REDIS를 이용한 Application을 테스트 하겠습니다. 
+9. 이번에는 기존의 Oracle DB 대신 REDIS를 이용한 새로운 Application을 이용해서 테스트 하겠습니다. 
 
-   이를 위해서 Oracle과 Redis의 Data를 초기화 합니다. 위의 Step 4, 5를 수행합니다.
+   이를 위해서 Oracle과 Redis의 Data를 초기화 합니다. 위의 Step 4를 다시 한번 수행하여 데이터를 초기화 합니다.
 
    
 
