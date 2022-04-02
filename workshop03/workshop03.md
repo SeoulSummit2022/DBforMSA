@@ -16,19 +16,19 @@ RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경�
 이 문제를 해결하기 위하여 당신은 당신의 개발팀과 DBA들과 이야기를 나누었고, HOT Block을 유발하는 부분을 In-Memory DB로 변경하기로 하였습니다. 
 ```
 
-
+---
 
 1. 작업을 위해 MobaXterm에서 Session을 5개를 만듭니다.
 
 ![image-20220207142002894](images/image-20220207142002894.png)
 
-
+---
 
 2. Session 5개 Open
 
 ![image-20220207142223185](images/image-20220207142223185.png)
 
-
+---
 
 3. Session Rename - Oracle, Redis, APP, ApacheBench, extra로 각각 변경
 
@@ -36,7 +36,7 @@ RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경�
 
 ![image-20220207142438065](images/image-20220207142438065.png)
 
-
+---
 
 4. Oracle Session에서 DB에 접속하여 Data 초기화 수행
 
@@ -63,7 +63,7 @@ SQL>
 
 ![image-20220207142734174](images/image-20220207142734174.png)
 
-
+---
 
 5. Redis Session에 접속하여 Data 초기화 수행
 
@@ -81,7 +81,7 @@ OK
 
 ![image-20220207142911631](images/image-20220207142911631.png)
 
-
+---
 
 6. APP Session에서 Oracle을 Repository로 사용하고 있는 Legacy Game Application을 구동합니다.
 
@@ -101,7 +101,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop03/legacy> source bin/activate
 
 ![image-20220308191650432](images/image-20220308191650432.png)
 
-
+---
 
 7. "한정 수량 아이템" 이벤트를 시작하겠습니다. 사용자들의 주문을 시뮬레이션 하기 위해 ApacheBench Session을 이용합니다.
 
@@ -153,19 +153,19 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
 ![image-20220220022820343](images/image-20220220022820343.png)
 
-
+---
 
 8. MobaXterm - APP Session으로 돌아와서 CTRL+C를 눌러서 Legacy Game Application을 중지합니다.
 
 ![image-20220308193447790](images/image-20220308193447790.png)
 
-
+---
 
 9. 이번에는 기존의 Oracle DB 대신 REDIS를 이용한 새로운 Application을 이용해서 테스트 하겠습니다. 
 
    이를 위해서 Oracle과 Redis의 Data를 초기화 합니다. 위의 Step 4를 다시 한번 수행하여 데이터를 초기화 합니다.
 
-   
+   ---
 
    
 
@@ -237,7 +237,7 @@ def order_redis():
 
 ```
 
-
+---
 
 11. REDIS를 사용하는 MSA Application을 기동
 
@@ -255,7 +255,7 @@ def order_redis():
 
 ```
 
-
+---
 
 12. 두번째 "한정 수량 아이템" 이벤트가 REDIS를 이용하여 시작되었습니다. 
 
@@ -306,7 +306,7 @@ Transfer rate:          19.39 [Kbytes/sec] received
 
 ![image-20220220022745790](images/image-20220220022745790.png)
 
-
+---
 
 ## Standalone REDIS가 아닌 Amazon ElatiCache REDIS를 사용 할 수 있습니다. DEV 환경에서는 Standalone REDIS로 개발을 할 수 있지만, 실제 PRODUCTION에서는 HA와 Backup등이 고려되어야 하기 때문에...
 
