@@ -302,7 +302,7 @@ Database Name : crm
 
 **다음의 화면처럼 "Task" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create task"를 Click합니다.**
 
-**Task configuration**
+**Task configuration(태스크 구성)**
 
 ```
 Task identifier : oracle-csharch-to-mongodb
@@ -313,15 +313,15 @@ Migration type : Migrate existing data(기존 데이터 마이그레이션)
 
 ```
 
-**Task setting**
+**Task setting(태스크 설정)**
 
 ```
-Target table preparation modeInfo : Drop tables on target(대상에서 테이블 삭제)
-Include LOB columns in replication : Limited LOB mode (제한적 LOB 모드)
+Target table preparation modeInfo(대상 테이블 준비 모드) : Drop tables on target(대상에서 테이블 삭제)
+Include LOB columns in replication(복제에 LOB 열 포함) : Limited LOB mode (제한적 LOB 모드)
 Enable CloudWatch logs(CloudWatch 로그 활성화) : 체크 활성화
 ```
 
-**Table mappings**(테이블 매핑)
+**Table mappings(테이블 매핑)**
 
 ```
 "Add new selection rule(새 선택 규칙 추가)" Click
@@ -336,7 +336,7 @@ Action : include(포함)
 **Migration task startup configuration(마이그레이션 태스크 시작 구성)**
 
 ```
-Start migration task : Manually later(나중에 수동으로)
+Start migration task(마이그레이션 태스크 시작) : Manually later(나중에 수동으로)
 ```
 
 
