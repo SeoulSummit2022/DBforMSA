@@ -124,15 +124,13 @@ create MATERIALIZED VIEW CSHARCH
 
 
 
-7. 연결된 "Remote Desktop"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. 
+7. "Bastion Server"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. (크롬은 TaskBar에 QuickStart로 있습니다.)
 
 아래의 Page처럼 Legacy Java Application이 동작하고 있습니다. 
 
-
-
 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회해 봅니다. 
 
-"Customer Satisfaction" Page는 CUSTOMERS, CUSTOMER_SERVICE_HISTORY Table을 JOIN해서 보여줍니다.
+"Customer Satisfaction" Page는 Oracle에서 2개의 테이블 CUSTOMERS, CUSTOMER_SERVICE_HISTORY를 JOIN해서 보여줍니다.
 
 ![image-20220215183908849](images/image-20220215183908849.png)
 
@@ -148,15 +146,16 @@ create MATERIALIZED VIEW CSHARCH
 
 
 
-9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다.
+9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. (Bastion 서버가 아닌 사용자 PC에서 작업!!)
 
 ```
-Database Migration Service을 이용하여 다음 과정을 통해 Oracle To MongoDB로 Data를 이관하게 됩니다.
+이제 여러분은 Database Migration Service을 이용하여 다음 과정을 통해 Oracle To MongoDB로 Data를 이관하게 됩니다.
+Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 
-1. Replication Instance 생성 : Data 이관 작업을 수행 할 Instance 입니다.
+1. Replication Instance 생성 : Data 이관 작업을 수행 할 Instance를 생성하는 과정입니다.
 2. ENDPOINT 생성
-	- Source ENDPOINT 생성 : Legacy Oracle DB를 Source로 사용 할 ENDPOINT 입니다.
-	- Target ENDPOINT 생성 : 새로운 MongoDB를 Target으로 사용 할 ENDPOINT 입니다.
+	- Source ENDPOINT 생성 : Legacy Oracle DB를 Source로 사용 할 ENDPOINT를 생성하는 과정입니다.
+	- Target ENDPOINT 생성 : 새로운 MongoDB를 Target으로 사용 할 ENDPOINT를 생성하는 과정입니다.
 3. DMS TASK 생성 
   - Source Oracle DB의 이관 대상 Schema와 Table을 선택하고, Target MongoDB에 어떤 Collection으로 넣을지 설정합니다.
   - 해당 설정을 토대로 Source to Target으로 Data 이관이 수행됩니다.
@@ -180,8 +179,8 @@ Database Migration Service을 이용하여 다음 과정을 통해 Oracle To Mon
 
 ```
 Name : ri-oracle-to-mongodb
-Description : Replication Instance for Migrating Data From Oracle to MongoDB
-Instance class : dms.t3.small 또는 dms.t3.medium
+Description : Replication Instance for Migration
+Instance class : dms.t3.small 또는 dms.t3.medium 또는 dms.t3.large
 Engine Version : 3.4.6
 Allocated Storage : 50
 VPC : OnPREM
