@@ -198,28 +198,6 @@
 
 
 
-# 작업에 필요한 Session 5개를 생성합니다.
 
 
-
-1. 작업을 위해 MobaXterm에서 Session을 5개를 만듭니다.
-
-![image-20220207142002894](images/image-20220207142002894.png)
-
-
-
-2. Session 5개 Open
-
-![image-20220207142223185](images/image-20220207142223185.png)
-
-
-
-3. Session Rename - Oracle, Redis, APP, ApacheBench, extra로 각각 변경
-
-![image-20220207142326844](images/image-20220207142326844.png)
-
-![image-20220207142438065](images/image-20220207142438065.png)
-
-
-
-[다음 워크샵으로 - workshop01 ](../workshop01/workshop01.md) 
+[다음 워크샵으로 - workshop01(MongoDB를 활용한 CRM 리포트 서비스 분리) ](../workshop01/workshop01.md) 
