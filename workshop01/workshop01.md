@@ -54,7 +54,7 @@
 
 # Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션 
 
-1. SQL Developer를 실행합니다.
+1. SQL Developer를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
 
 ![image-20220215154430833](images/image-20220215154430833.png)
 
@@ -99,11 +99,13 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
 ![image-20220216131033286](images/image-20220216131033286.png)
 
-6. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. Query 6을 실행합니다. 
+6. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. 
 
-이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+   Query 6을 실행합니다. 
 
-% 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
+​       이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+
+​       % 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
 
 ```
 -- 전환 대상인 2019년 이전 CUSTOMERS+CUSTOMER_SERVICE_HISTORY 데이터들을 MVIEW로 생성합니다. 
