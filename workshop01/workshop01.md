@@ -101,6 +101,10 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
 ![image-20220216131033286](images/image-20220216131033286.png)
 
+
+
+---
+
 6. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. 
 
    Query 6을 실행합니다. 
@@ -124,7 +128,7 @@ create MATERIALIZED VIEW CSHARCH
   and call_date < to_date('2019-01-01','yyyy-mm-dd');
 ```
 
-
+---
 
 7. "Bastion Server"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. (크롬은 TaskBar에 QuickStart로 있습니다.)
 
@@ -140,13 +144,15 @@ create MATERIALIZED VIEW CSHARCH
 
 ![image-20220215185020437](images/image-20220215185020437.png)
 
+---
+
 8. 이제 "고객 상담 내역" Data 중에서 2019년 1월 1일 이전의 Data를 MongoDB로 Migration 해보겠습니다.
 
 그리고 Legacy Java Appliation 중 crm-show.jsp에 해당하는 '고객 상담 내역 조회' 업무를 Python Flask로 변경하겠습니다. 
 
 **우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
 
-
+---
 
 9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. (Bastion 서버가 아닌 사용자 PC에서 작업!!)
 
@@ -166,6 +172,10 @@ Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 
 
 ![image-20220216104215418](images/image-20220216104215418.png)
+
+
+
+---
 
 10. 먼저 Replication Instance(복제 인스턴스)를 생성합니다. 
 
@@ -198,7 +208,7 @@ Publicly accessible : 체크 안함
 
 ![image-20220216112729391](images/image-20220216112729391.png)
 
-
+---
 
 11. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
 
@@ -242,7 +252,7 @@ SID/Service name : XE
 
 ![image-20220216134056985](images/image-20220216134056985.png)
 
-
+---
 
 12. Target이 되는 MongoDB용 Target Endpoint를 생성합니다.
 
@@ -365,11 +375,15 @@ Start migration task : Manually later(나중에 수동으로)
 
 ![image-20220216141842724](images/image-20220216141842724.png)
 
-
+---
 
 14. 실제로 Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널을 이용하여 Bastion Server로 접속합니다.
 
+---
+
 15. MobaXterm에서 MongoDB Session으로 이동합니다.
+
+---
 
 16. 아래처럼 입력하여 mongodb로 접속 하고, Data 건수를 확인합니다.
 
@@ -405,9 +419,13 @@ alias mongoadmin='mongo -u myadmin -p Welcome1234   --authenticationDatabase "ad
 
 ![image-20220217002628220](images/image-20220217002628220.png)
 
+---
+
 17. 이제 Data이관이 완료되었습니다. 이제 Legacy Java Application에서 경량화된 Python Flask Application으로 바꿔보겠습니다.
 
 MobaXterm에서 AP-FLASK Session으로 이동합니다. 
+
+---
 
 18. 다음의 명령어를 실행하여 Flask Application을 실행합니다.
 
@@ -427,7 +445,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop01> source bin/activate
 
 ![image-20220331112106030](images/image-20220331112106030.png)
 
-
+---
 
 19. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
 
@@ -437,11 +455,21 @@ Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
 ![image-20220217003114019](images/image-20220217003114019.png)
 
+
+
+---
+
 20. FLASK-4를 눌러서 4번 고객의 상담 내역을 확인합니다.
 
 ![image-20220217003344072](images/image-20220217003344072.png)
 
+
+
+---
+
 21. MobaXTerm으로 돌아와서 ctrl+c 를 눌러서 Flask App을 종료합니다.
+
+---
 
 22. 다음처럼 실행하여 Flask Application을 확인합니다.
 
