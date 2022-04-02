@@ -192,7 +192,7 @@ Publicly accessible : 체크 안함
 
 
 
-**ri-oracle-to-mongodb가 Available Status로 정상 생성됨을 확인합니다.(약 5분 소요)**
+**ri-oracle-to-mongodb가 Available(사용 가능) Status로 정상 생성될때까지 기다립니다.(약 5분 소요)**
 
 ![image-20220216112729391](images/image-20220216112729391.png)
 
@@ -209,7 +209,7 @@ Publicly accessible : 체크 안함
 **다음의 화면처럼 "Endpoint" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create endpoint"를 Click합니다.**
 
 ```
-Endpoint Type : Source endpoint(소스 엔드포인트)
+Endpoint Type(엔드포인트 유형) : Source endpoint(소스 엔드포인트)
 
 Endpoint Identifier : source-oracle-crm
 Source Engine : Oracle
@@ -249,12 +249,12 @@ SID/Service name : XE
 **다음의 화면처럼 "Endpoint" 정보를 입력합니다. 모두 입력 후 화면 맨 아래 "Create endpoint"를 Click합니다.**
 
 ```
-Endpoint Type : Target endpoint(대상 엔드포인트)
+Endpoint Type(엔드포인트 유형) : Target endpoint(대상 엔드포인트)
 
 Endpoint Identifier : target-mongodb-csharch
 Target Engine : Amazon DocumentDB (with MongoDB compatibility)
 
-Access to endpoint database : Provide access information manually
+Access to endpoint database : Provide access information manually(수동으로 액세스 정보 제공)
 Server Name : 10.100.1.101
 Port : 27017
 User name : myadmin
@@ -279,6 +279,8 @@ Database Name : crm
 ![image-20220216135245187](images/image-20220216135245187.png)
 
 
+
+---
 
 13. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
 
