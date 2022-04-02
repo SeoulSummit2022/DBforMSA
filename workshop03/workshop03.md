@@ -103,7 +103,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop03/legacy> source bin/activate
 
 
 
-7. "한정 수량 아이템" 이벤트가 시작되었습니다. ApacheBench Session을 이용합니다.
+7. "한정 수량 아이템" 이벤트를 시작하겠습니다. 사용자들의 주문을 시뮬레이션 하기 위해 ApacheBench Session을 이용합니다.
 
    apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 약 100초 정도가 걸렸습니다.
 
