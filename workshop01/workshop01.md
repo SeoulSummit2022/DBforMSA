@@ -12,10 +12,10 @@
 당신은 고객만족팀과의 미팅 후에 "CRM - 고객 상담 데이터"중 2019년 이전 Data들은 단순 조회 업무로만 사용됨을 알게 되었습니다.
 
 기존 Legacy Java Application에서는 "고객 상담 데이터"를 보여주기 위해서 여러개의 Table을 Join해야 했고, 
-이로 인해서 각 팀에서는 다음과 같은 불만 사항이 존재하고 있습니다. 
+이로 인해서 각 팀에서는 다음과 같은 불만 사항이 있습니다.
 
-1. DBA : Size가 큰 Table간의 다중 Join으로 인한 Main Oracle 부하 증가
-2. 개발자 : 변경/신규 개발을 위한 Schema 변경이 필요하지만, 이로 인한 Main DB 영향도 때문에 배포를 특정 PM 시간에만 할 수 있음으로 개발 생산성에 대한 불만
+1. DBA : Size가 큰 Table간의 다중 Join Report 생성으로 인한 Main Oracle Server 부하 증가
+2. 개발자 : 변경/신규 개발을 위한 Schema 변경이 필요하지만, 이로 인한 Main Oracle 영향도 때문에 배포를 특정 PM 시간에만 할 수 있음으로 개발 생산성이 떨어짐
 
 그래서 당신은 2019년 이전 데이터들을 다중 Join RDB Table 구조에서 하나의 Document 형태로 변경하는 아이디어를 떠올렸고, 
 이를 통해 Main DB의 부하와 사용량을 줄이고 개발자들이 좀 더 유연하게 개발을 할 수 있지 않을까 생각했습니다.
@@ -58,19 +58,19 @@
 
 ![image-20220215154430833](images/image-20220215154430833.png)
 
-4. oracle-hr을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
+2. oracle-hr을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
 
-   ![image-20220215154626853](images/image-20220215154626853.png)
+![image-20220215154626853](images/image-20220215154626853.png)
 
 
 
-5. 바탕 화면의 Query3.txt를 Double Click하여 엽니다.
+3. 바탕 화면의 Query3.txt를 Double Click하여 엽니다.
 
 ![image-20220215155804896](images/image-20220215155804896.png)
 
 
 
-6. Query3.txt의 내용을 모두 복사해서 SQL Developer의 Worksheet에 붙여 넣습니다.
+4. Query3.txt의 내용을 모두 복사해서 SQL Developer의 Worksheet에 붙여 넣습니다.
 
 ![image-20220216113716659](images/image-20220216113716659.png)
 
@@ -78,7 +78,7 @@
 
 
 
-7. 1~5번까지의 Query를 직접 수행해서 CRM DB의 Data를 확인합니다. 
+5. 1~5번까지의 Query를 직접 수행해서 CRM DB의 Data를 확인합니다. 
 
 ```
 Query 1 : CUSTOMERS CUSTOEMR_SERVIE_HISTORY Table 의 일부 Data를 확인
@@ -99,38 +99,38 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
 ![image-20220216131033286](images/image-20220216131033286.png)
 
-8. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. Query 6을 실행합니다. 
+6. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. Query 6을 실행합니다. 
 
-   이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
 
-   % 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
+% 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
 
-   ```
-   -- 전환 대상인 2019년 이전 CUSTOMERS+CUSTOMER_SERVICE_HISTORY 데이터들을 MVIEW로 생성합니다. 
-   -- 실제 DB에서는 보통 6~14개 정도의 Table이 Join되지만, 워크샵에서는 2개의 Table만 Join 합니다.
-   create MATERIALIZED VIEW CSHARCH
-     NOLOGGING
-     CACHE
-     BUILD IMMEDIATE 
-     REFRESH ON DEMAND
-     as
-     select CSH.csh_id,CUS.CUST_ID, CUS.EMAIL, CUS.PHONE_NUMBER, CUS.ADDRESS, CUS.ROYALTY, CSH.CALL_DATE, CSH.DETAILS 
-     from customers CUS, CUSTOMER_SERVICE_HISTORY CSH
-     where CUS.cust_id=CSH.cust_id
-     and call_date < to_date('2019-01-01','yyyy-mm-dd');
-   ```
+```
+-- 전환 대상인 2019년 이전 CUSTOMERS+CUSTOMER_SERVICE_HISTORY 데이터들을 MVIEW로 생성합니다. 
+-- 실제 DB에서는 보통 6~14개 정도의 Table이 Join되지만, 워크샵에서는 2개의 Table만 Join 합니다.
+create MATERIALIZED VIEW CSHARCH
+  NOLOGGING
+  CACHE
+  BUILD IMMEDIATE 
+  REFRESH ON DEMAND
+  as
+  select CSH.csh_id,CUS.CUST_ID, CUS.EMAIL, CUS.PHONE_NUMBER, CUS.ADDRESS, CUS.ROYALTY, CSH.CALL_DATE, CSH.DETAILS 
+  from customers CUS, CUSTOMER_SERVICE_HISTORY CSH
+  where CUS.cust_id=CSH.cust_id
+  and call_date < to_date('2019-01-01','yyyy-mm-dd');
+```
 
-   
 
-9. 연결된 "Remote Desktop"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. 
 
-   아래의 Page처럼 Legacy Java Application이 동작하고 있습니다. 
+7. 연결된 "Remote Desktop"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. 
 
-   
+아래의 Page처럼 Legacy Java Application이 동작하고 있습니다. 
 
-   고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회해 봅니다. 
 
-   "Customer Satisfaction" Page는 CUSTOMERS, CUSTOMER_SERVICE_HISTORY Table을 JOIN해서 보여줍니다.
+
+고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회해 봅니다. 
+
+"Customer Satisfaction" Page는 CUSTOMERS, CUSTOMER_SERVICE_HISTORY Table을 JOIN해서 보여줍니다.
 
 ![image-20220215183908849](images/image-20220215183908849.png)
 
@@ -138,15 +138,15 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
 ![image-20220215185020437](images/image-20220215185020437.png)
 
-10. 이제 "고객 상담 내역" Data 중에서 2019년 1월 1일 이전의 Data를 MongoDB로 Migration 해보겠습니다.
+8. 이제 "고객 상담 내역" Data 중에서 2019년 1월 1일 이전의 Data를 MongoDB로 Migration 해보겠습니다.
 
-    그리고 Legacy Java Appliation 중 crm-show.jsp에 해당하는 '고객 상담 내역 조회' 업무를 Python Flask로 변경하겠습니다. 
+그리고 Legacy Java Appliation 중 crm-show.jsp에 해당하는 '고객 상담 내역 조회' 업무를 Python Flask로 변경하겠습니다. 
 
-    **우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
+**우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
 
 
 
-11. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다.
+9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다.
 
 ```
 Database Migration Service을 이용하여 다음 과정을 통해 Oracle To MongoDB로 Data를 이관하게 됩니다.
@@ -164,7 +164,7 @@ Database Migration Service을 이용하여 다음 과정을 통해 Oracle To Mon
 
 ![image-20220216104215418](images/image-20220216104215418.png)
 
-12. 먼저 Replication Instance(복제 인스턴스)를 생성합니다. 
+10. 먼저 Replication Instance(복제 인스턴스)를 생성합니다. 
 
 "Replication Instances"(복제 인스턴스)를 Click합니다.
 
@@ -197,9 +197,9 @@ Publicly accessible : 체크 안함
 
 
 
-13. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
+11. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
 
-    화면 왼쪽 메뉴에서 "Endpoints"(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
+화면 왼쪽 메뉴에서 "Endpoints"(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
 
 ![image-20220216132936892](images/image-20220216132936892.png)
 
@@ -241,7 +241,7 @@ SID/Service name : XE
 
 
 
-14. Target이 되는 MongoDB용 Target Endpoint를 생성합니다.
+12. Target이 되는 MongoDB용 Target Endpoint를 생성합니다.
 
 ![image-20220216134237337](images/image-20220216134237337.png)
 
@@ -279,9 +279,9 @@ Database Name : crm
 
 
 
-15. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
+13. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
 
-    "Database migration tasks(데이터베이스 마이그레이션 태스크)"를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
+"Database migration tasks(데이터베이스 마이그레이션 태스크)"를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
 
 ![image-20220216135451371](images/image-20220216135451371.png)
 
@@ -362,11 +362,11 @@ Start migration task : Manually later(나중에 수동으로)
 
 
 
-16. 실제로 Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널을 이용하여 Bastion Server로 접속합니다.
+14. 실제로 Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널을 이용하여 Bastion Server로 접속합니다.
 
-17. MobaXterm에서 MongoDB Session으로 이동합니다.
+15. MobaXterm에서 MongoDB Session으로 이동합니다.
 
-18. 아래처럼 입력하여 mongodb로 접속 하고, Data 건수를 확인합니다.
+16. 아래처럼 입력하여 mongodb로 접속 하고, Data 건수를 확인합니다.
 
     CSHARCH collection의 document 숫자가 4286임을 확인합니다.
 
@@ -400,11 +400,11 @@ alias mongoadmin='mongo -u myadmin -p Welcome1234   --authenticationDatabase "ad
 
 ![image-20220217002628220](images/image-20220217002628220.png)
 
-19. 이제 Data이관이 완료되었습니다. 이제 Legacy Java Application에서 경량화된 Python Flask Application으로 바꿔보겠습니다.
+17. 이제 Data이관이 완료되었습니다. 이제 Legacy Java Application에서 경량화된 Python Flask Application으로 바꿔보겠습니다.
 
-    MobaXterm에서 AP-FLASK Session으로 이동합니다. 
+MobaXterm에서 AP-FLASK Session으로 이동합니다. 
 
-20. 다음의 명령어를 실행하여 Flask Application을 실행합니다.
+18. 다음의 명령어를 실행하여 Flask Application을 실행합니다.
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop01
@@ -424,21 +424,21 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop01> source bin/activate
 
 
 
-21. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
+19. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
 
-    FLASK-1은 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회하는 Page입니다.
+FLASK-1은 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회하는 Page입니다.
 
-    Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
+Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
 ![image-20220217003114019](images/image-20220217003114019.png)
 
-22. FLASK-4를 눌러서 4번 고객의 상담 내역을 확인합니다.
+20. FLASK-4를 눌러서 4번 고객의 상담 내역을 확인합니다.
 
 ![image-20220217003344072](images/image-20220217003344072.png)
 
-22. MobaXTerm으로 돌아와서 ctrl+c 를 눌러서 Flask App을 종료합니다.
+21. MobaXTerm으로 돌아와서 ctrl+c 를 눌러서 Flask App을 종료합니다.
 
-23. 다음처럼 실행하여 Flask Application을 확인합니다.
+22. 다음처럼 실행하여 Flask Application을 확인합니다.
 
     ![image-20220331112250026](images/image-20220331112250026.png)
 

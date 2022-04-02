@@ -1,4 +1,6 @@
+## % AWS Console UI는 고객 편의성을 위해서 계속 변경되고 있습니다. 
 
+## % Workshop Guide의 UI와 실제 AWS Console UI가 조금 다를 수 있습니다.
 
 # 키페어 생성
 
@@ -68,7 +70,8 @@
 
 
 
-5. "AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다"를 체크 후 "스택 생성" Click
+5. "스택 옵션 구성" Page에서 "다음" Click
+5. "검토" Page에서 맨 아래 AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다"를 체크 후 "스택 생성" Click
 
 ![image-20220207103202153](images/image-20220207103202153.png)
 
@@ -88,7 +91,7 @@
 
 # 실습을 위해 Bastion Host로 접속
 
-### (모든 작업은 Bastion Host를 통해서 이뤄집니다.)
+### (모든 Handson은 Bastion Host를 통해서 이뤄집니다.)
 
 
 
