@@ -58,17 +58,19 @@
 
 ![image-20220215154430833](images/image-20220215154430833.png)
 
+---
+
 2. oracle-hr을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
 
 ![image-20220215154626853](images/image-20220215154626853.png)
 
-
+---
 
 3. 바탕 화면의 Query3.txt를 Double Click하여 엽니다.
 
 ![image-20220215155804896](images/image-20220215155804896.png)
 
-
+---
 
 4. Query3.txt의 내용을 모두 복사해서 SQL Developer의 Worksheet에 붙여 넣습니다.
 
@@ -76,7 +78,7 @@
 
 ![image-20220216113816598](images/image-20220216113816598.png)
 
-
+---
 
 5. 1~5번까지의 Query를 직접 수행해서 CRM DB의 Data를 확인합니다. 
 
