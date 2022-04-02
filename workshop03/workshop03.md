@@ -320,7 +320,7 @@ Transfer rate:          19.39 [Kbytes/sec] received
 
 ---
 
-
+[다음 워크샵으로 - workshop04(DYNAMODB를 활용하여 구매내역 조회 서비스 전환하기) ](../workshop04/workshop04.md) 
 
 
 
