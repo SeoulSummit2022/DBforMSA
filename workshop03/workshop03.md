@@ -169,7 +169,7 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
    
 
-10. SHOP 의 모듈 중 "한정 수량 아이템 판매" 의 로직을 별도의 Application으로 분리하였고, 사용하는 Repository를 In-Memory REDIS로 변경하였습니다.
+10. SHOP 의 모듈 중 "한정 수량 아이템 판매" 의 로직을 별도의 Application으로 분리하였고, 사용하는 Repository를 In-Memory REDIS로 변경하였습니다. Legacy Code 와 REDIS를 사용한 새로운 코드를 한번 살펴 보겠습니다.
 
 ```
 # 기존 LEGACY ORDER Application중 order에 대한 logic 입니다. 
@@ -239,7 +239,7 @@ def order_redis():
 
 ---
 
-11. REDIS를 사용하는 MSA Application을 기동
+11. REDIS를 사용하는 새로운 Application을 실행하겠습니다.
 
 ```
 (legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy>  cd ../msa/
@@ -257,7 +257,7 @@ def order_redis():
 
 ---
 
-12. 두번째 "한정 수량 아이템" 이벤트가 REDIS를 이용하여 시작되었습니다. 
+12. 두번째 "한정 수량 아이템" 이벤트가 REDIS를 이용하여 시작하겠습니다. 마찬가지로 사용자 주문을 시뮬레이션 하기 위해 AB를 사용합니다. 
 
     apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 
 
@@ -307,6 +307,22 @@ Transfer rate:          19.39 [Kbytes/sec] received
 ![image-20220220022745790](images/image-20220220022745790.png)
 
 ---
+
+
+
+```
+이제 여러분은 RDBMS에서 성능 저하를 유발하는 HOT Block을 제거하고 전체 서비스의 성능과 품질을 개선하였습니다.
+
+이 작업을 통해서 Database 관점에서는 Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
+개발팀에서는 이제 비슷한 유형의 서비스 요청이 있을 경우 RDBMS보다 인메모리디비나 NoSQL DB를 이용할 수 있게 되었습니다.
+
+```
+
+---
+
+
+
+
 
 ## Standalone REDIS가 아닌 Amazon ElatiCache REDIS를 사용 할 수 있습니다. DEV 환경에서는 Standalone REDIS로 개발을 할 수 있지만, 실제 PRODUCTION에서는 HA와 Backup등이 고려되어야 하기 때문에...
 
