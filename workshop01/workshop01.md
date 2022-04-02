@@ -534,7 +534,19 @@ if __name__ == '__main__':
 
 ```
 
-[다음 워크샵으로 - workshop02 ](../workshop02/workshop02.md) 
+---
+
+```
+이제 여러분은 RDBMS의 복잡한 JOIN Table의 Data를 쉽게 Document Type의 몽고디비로 이관했습니다.
+또한 Legacy Java Application 중 "사용자 상담 내역" Report Application을 Flask로 변경하였습니다. 
+
+이 작업을 통해서 Database 관점에서는 복잡한 Join Query가 줄어들면서 Main Oracle 서버의 부하가 줄어들었고, 데이터 이관을 통해 스토리지 사용량도 줄어 들었습니다.
+Application 관점에서는 개발자들이 별도의 서비스와 디비로 분리되었기 때문에 보다 빠른 개발과 배포가 가능하게 되었습니다.
+```
+
+
+
+[다음 워크샵으로 - workshop02(REDIS를 활용한 실시간 리더보드 만들기) ](../workshop02/workshop02.md) 
 
 
 
