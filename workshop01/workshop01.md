@@ -486,7 +486,7 @@ Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
 
 
-**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 FLASK가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다.**
+**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 FLASK가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다. MongoDB에서 가져온 데이터를 render_template을 사용하여 사용자에게 page를 return합니다.**
 
 ```
 import sys
