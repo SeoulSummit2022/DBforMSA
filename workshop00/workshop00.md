@@ -2,29 +2,31 @@
 
 1. AWS Console에 Login 합니다.
 
+---
+
 2. 서비스 => EC2로 이동
 
 ![image-20220308150041344](images/image-20220308150041344.png)
 
-
+---
 
 3. 화면 좌측에서 "네트워크 및 보안" => "키 페어" Click
 
 ![image-20220308150436606](images/image-20220308150436606.png)
 
-
+---
 
 4. "키 페어 생성" Click
 
 ![image-20220308150745288](images/image-20220308150745288.png)
 
-
+---
 
 5. 이름 : "DBforMSA" 입력 후 "키 페어 생성" Click
 
 ![image-20220308150914899](images/image-20220308150914899.png)
 
-
+---
 
 6. 자동으로 Private Key인 DBforMSA.cer 혹은 DBforMSA.pem가 개인 Laptop으로 Download됩니다. 
 
@@ -36,9 +38,17 @@
 
 ![image-20220308151639076](images/image-20220308151639076.png)
 
+---
+
 7. Console에서도 방금 생성된 Key File을 확인합니다.
 
 ![image-20220308151833671](images/image-20220308151833671.png)
+
+
+
+---
+
+---
 
 # 실습 환경 구성
 
@@ -46,32 +56,32 @@
 
 ![image-20220207102938764](images/image-20220207102938764.png)
 
+---
 
-
-2. "스택 작업" => "새 리소스" 선택
+2. "스택 작업" => "새 리소스" 선택 또는 "스택 생성"  Click
 
 ![image-20220207103001305](images/image-20220207103001305.png)
 
-
+---
 
 3. "Amazon S3 URL"에 https://shared-kiwony.s3.ap-northeast-2.amazonaws.com/OnPREM4.yml 을 입력 후 "다음" Click
 
 ![image-20220207103043253](images/image-20220207103043253.png)
 
-
+---
 
 4. "스택 이름"에 "DBforMSA"를 입력, KeyName에 전 Step에서 다운로드 받은 DBforMSA를 선택 후 "다음" Click
 
 ![image-20220308160008365](images/image-20220308160008365.png)
 
-
+---
 
 5. "스택 옵션 구성" Page에서 "다음" Click
 5. "검토" Page에서 맨 아래 AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다"를 체크 후 "스택 생성" Click
 
 ![image-20220207103202153](images/image-20220207103202153.png)
 
-
+---
 
 6. "이벤트"를 Click하여 CloudFormation Stack이 정상적으로 생성되는지 확인(약 5~10분 소요)
 
@@ -83,19 +93,21 @@
 
 ![image-20220207103925083](images/image-20220207103925083.png)
 
+---
 
+---
 
 # 실습을 위해 Bastion Host로 접속
 
 ### (모든 Handson은 Bastion Host를 통해서 이뤄집니다.)
 
-
+---
 
 1. CloudFormation => 출력 => IPWindowsPublicIP를 확인
 
 ![image-20220207104312974](images/image-20220207104312974.png)
 
-
+---
 
 2. "RDP Client"를 사용하여 Bastion 서버에 접속(Windows는 mstsc.exe, MAC은 Microsoft Remote Desktop 사용)
 
@@ -113,9 +125,16 @@
 
 ![image-20220207105204837](images/image-20220207105204837.png)
 
+---
 
+3. Bastion 접속 
 
-3. Bastion 접속 (Administrator // Octank#1234)
+   ```
+   사용자명 : Administrator
+   비밀번호 : Octank#1234
+   ```
+
+   
 
 ![image-20220207105237250](images/image-20220207105237250.png)
 
@@ -123,7 +142,7 @@
 
 ![image-20220207105240390](images/image-20220207105240390.png)
 
-
+---
 
 4. 다운로드 받았던 DBforMSA.cer 파일을 개인 Laptop에서 Bastion Server로 복사 합니다.
 
@@ -147,7 +166,7 @@
 
 ![image-20220308161802763](images/image-20220308161802763.png)
 
-
+---
 
 5. MobaXterm(SSH Terminal Program)을 실행합니다.
 
@@ -155,13 +174,13 @@
 
 
 
-
+---
 
 6. "User Sessions"에서 "OracleServer"를 선택 후 "Edit session" 선택
 
 ![image-20220207140508645](images/image-20220207140508645.png)
 
-
+---
 
 7. Server접속을 위한 pem key 설정
    1. "Advanced SSH Sessting" 선택
@@ -177,7 +196,7 @@
 
 ![image-20220308170039842](images/image-20220308170039842.png)
 
-
+---
 
 8. Oracle Server 접속
 
@@ -197,6 +216,6 @@
 
 
 
-
+---
 
 [다음 워크샵으로 - workshop01(MongoDB를 활용한 CRM 리포트 서비스 분리) ](../workshop01/workshop01.md) 
