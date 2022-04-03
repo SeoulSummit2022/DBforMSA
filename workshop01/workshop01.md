@@ -226,7 +226,7 @@ Endpoint Type(엔드포인트 유형) : Source endpoint(소스 엔드포인트)
 Endpoint Identifier : source-oracle-crm
 Source Engine : Oracle
 
-Access to endpoint database : Provide access information manually(수동으로 액세스 정보 제공)
+Access to endpoint database(엔드포인트 데이터베이스에 액세스) : Provide access information manually(수동으로 액세스 정보 제공)
 Server Name : 10.100.1.101
 Port : 1521
 User name : dms
@@ -266,7 +266,7 @@ Endpoint Type(엔드포인트 유형) : Target endpoint(대상 엔드포인트)
 Endpoint Identifier : target-mongodb-csharch
 Target Engine : Amazon DocumentDB (with MongoDB compatibility)
 
-Access to endpoint database : Provide access information manually(수동으로 액세스 정보 제공)
+Access to endpoint database(엔드포인트 데이터베이스에 액세스) : Provide access information manually(수동으로 액세스 정보 제공)
 Server Name : 10.100.1.101
 Port : 27017
 User name : myadmin
