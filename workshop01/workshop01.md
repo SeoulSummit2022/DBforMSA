@@ -402,6 +402,7 @@ db.CSHARCH.find().count()
 db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:+1}).limit(1)
 db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:-1}).limit(1)
 
+## Command Output
 ec2-user@ip-10-100-1-101:/home/ec2-user> mongoadmin
 MongoDB shell version v4.4.12
 connecting to: mongodb://127.0.0.1:27017/?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
