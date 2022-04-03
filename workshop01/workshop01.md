@@ -378,7 +378,7 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
 ---
 
-14. 실제로 Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널(mstsc)을 이용하여 Bastion Server로 접속합니다.
+14. Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널(mstsc)을 이용하여 Bastion Server로 접속합니다.
 
 ---
 
@@ -395,6 +395,13 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
     의도한대로 2019년 1월 1일 이전의 Data들만이 MongoDB로 이관 된 것을 확인 할 수 있습니다. 
 
 ```
+mongoadmin
+use crm
+show collections
+db.CSHARCH.find().count()
+db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:+1}).limit(1)
+db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:-1}).limit(1)
+
 ec2-user@ip-10-100-1-101:/home/ec2-user> mongoadmin
 MongoDB shell version v4.4.12
 connecting to: mongodb://127.0.0.1:27017/?authSource=admin&compressors=disabled&gssapiServiceName=mongodb
