@@ -321,7 +321,7 @@ Include LOB columns in replication(복제에 LOB 열 포함) : Limited LOB mode 
 Enable CloudWatch logs(CloudWatch 로그 활성화) : 체크 활성화
 ```
 
-**Table mappings(테이블 매핑)**
+**Table mappings(테이블 매핑) - (Source DB의 Schema와 Table중에 마이그레이션 할 대상을 선택하는 부분입니다.)**
 
 ```
 "Add new selection rule(새 선택 규칙 추가)" Click
@@ -331,6 +331,7 @@ Schema name : HR
 Table name : CSHARCH
 Action : include(포함)
 
+% Source Oracle DB의 HR Schema(User)의 MVIEW CSHARCH(2019년 이전 고객 문의 데이터)를 대상으로 지정
 ```
 
 **Migration task startup configuration(마이그레이션 태스크 시작 구성)**
