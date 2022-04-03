@@ -1,4 +1,4 @@
-### 축하드립니다, 모든 Workshop을 완료하였습니다. 
+### 축하드립니다.  모든 Workshop을 완료하였습니다.  :)
 
 ### 이제 Workshop에서 사용한 Resource와 Service들을 모두 삭제 하겠습니다. 
 
@@ -31,6 +31,13 @@
 4. 화면 좌측의 "Endpoints(엔드포인트)"를 Click
 
 5. 다음 4개의 Endpoints를 모두 선택하고 삭제합니다. Actions(작업) => Delete(삭제)
+
+   ```
+   source-oracle-crm
+   s-seoulsummit-endpoint
+   target-mongodb-csharch
+   t-seoulsummit-dynamodb1
+   ```
 
 ![image-20220403143552228](images/image-20220403143552228.png)
 
