@@ -152,10 +152,6 @@ create MATERIALIZED VIEW CSHARCH
 
 **우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
 
----
-
-9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. (Bastion 서버가 아닌 사용자 PC에서 작업!!)
-
 ```
 이제 여러분은 Database Migration Service을 이용하여 다음 과정을 통해 Oracle To MongoDB로 Data를 이관하게 됩니다.
 Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
@@ -170,6 +166,10 @@ Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 ```
 
 
+
+---
+
+9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. (Bastion 서버가 아닌 사용자 PC에서 작업!!)
 
 ![image-20220216104215418](images/image-20220216104215418.png)
 

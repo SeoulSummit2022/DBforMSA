@@ -146,13 +146,13 @@
 
 4. 다운로드 받았던 DBforMSA.cer 파일을 개인 Laptop에서 Bastion Server로 복사 합니다.
 
-**MAC Laptop에서 키 파일 복사**
+**사용자 PC가 MAC Laptop일 경우 키 파일 복사 방법**
 
 ![image-20220308160910914](images/image-20220308160910914.png)
 
 
 
-**Windows Laptop에서 키 파일 복사**
+**사용자 PC가 Windows Laptop일 경우 키 파일 복사 방법**
 
 ![image-20220308161206849](images/image-20220308161206849.png)
 
