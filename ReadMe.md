@@ -1,6 +1,4 @@
----
 
----
 
 ```
 % AWS Console UI는 고객 편의성을 위해서 계속 변경되고 있습니다. 
@@ -24,3 +22,6 @@ workshop04 - DynamoDB를 활용하여 구매내역 조회 서비스  전환하�
 workshop99 - 실습 환경 및 리소스 삭제
 ```
 
+---
+
+[워크샵 시작 - workshop00(실습환경구성) ](../workshop00/workshop00.md) 
