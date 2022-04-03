@@ -305,11 +305,11 @@ Database Name : crm
 **Task configuration(태스크 구성)**
 
 ```
-Task identifier : oracle-csharch-to-mongodb
-Replication instance : ri-oracle-to-mongodb
-Source database endpoint : source-oracle-crm
-Target database endpoint : target-mongodb-csharch
-Migration type : Migrate existing data(기존 데이터 마이그레이션)
+Task identifier(태스크 식별자) : oracle-csharch-to-mongodb
+Replication instance(복제 인스턴스) : ri-oracle-to-mongodb
+Source database endpoint(소스 데이터베이스 엔드포인트) : source-oracle-crm
+Target database endpoint(대상 데이터베이스 엔드포인트) : target-mongodb-csharch
+Migration type(마이그레이션 유형) : Migrate existing data(기존 데이터 마이그레이션)
 
 ```
 
