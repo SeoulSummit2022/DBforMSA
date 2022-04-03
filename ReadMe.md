@@ -28,4 +28,4 @@ workshop99 - 실습 환경 및 리소스 삭제 (워크샵 수행 후 반드시 
 
 ---
 
-[워크샵 시작 - workshop00(실습환경구성) ](../workshop00/workshop00.md) 
+[워크샵 시작 - workshop00(실습환경구성) ](./workshop00/workshop00.md) 
