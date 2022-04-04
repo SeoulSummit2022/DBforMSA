@@ -19,7 +19,7 @@ Leaderboard 서비스의 데이터 저장소로 Oracle을 사용하고 있고, L
 ![sessions](./images/sessions.png)
 
 # Oracle의 Leaderboard 데이터를 Elasticache Redis로 마이그레이션 합니다.
-1. MobaXterm의 Oracle session으로 이동하여 Oracle DB에 접속 후 rank()를 사용하여 leaderboard 데이터를 조회해 봅니다.   
+1. MobaXterm의 Oracle session으로 이동하여 sqlplus로 Oracle DB에 접속 후 rank()를 사용하여 leaderboard 데이터를 조회해 봅니다.   
 USERLEVEL과 EXPOINT 기준으로 정렬된 30만건의 데이터가 표시됩니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
@@ -67,7 +67,8 @@ SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank 
 
 SQL>
 ```
-2. Redis로 데이터를 마이그레이션 하는데 필요한 스테이징 테이블과 데이터를 만듭니다.
+2. Redis로 데이터를 마이그레이션 하는데 필요한 스테이징 테이블과 데이터를 만듭니다.   
+sqlplus에 아래 쿼리를 붙여넣고 엔터를 입력합니다.
 ```
 CREATE TABLE "OSHOP"."USER_SCORE_REDIS_FORMAT" 
    (	"key" VARCHAR2(15), 
@@ -85,6 +86,8 @@ commit;
 ```
 [참고] 쿼리를 붙혀넣기하면 아래와 같은 팝업이 뜨는데 그냥 OK 클릭하시면 됩니다.
 ![image](./images/query_paste_popup.png)
+쿼리 수행이 정상적으로 완료되면 아래와 같이 화면에 표시됩니다.
+![image](./images/staging_table_result.png)
 
 3. 
 
