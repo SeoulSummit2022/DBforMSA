@@ -1,12 +1,8 @@
-# Workshop02 시작
+# Workshop02
 _엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기_ 세션의 Workshop2에 오신 것을 환영합니다.
-Workshop2 에서는 Oracle 데이터를 Elasticache Redis로 마이그레이션하여 실시간 리더보드를 구성해보는 실습을 해보도록 하겠습니다.
-이번 워크샵은 크게 3단계로 진행됩니다.
-1. Oracle 데이터베이스에서 데이터 변경이 지속적으로 발생하는 동안 Rank 함수를 사용하여 Ranking 데이터 생성하고 영향도 확인하기
-2. Ranking 데이터 CSV 파일을 Elasticache Redis의 Sorted Set으로 마이그레이션 하기
-3. Elasticache Redis에 데이터 변경이 지속적으로 발생하는 동안 Ranking 조회 후 영향도 확인하기
+Workshop2 에서는 리더보드 데이터를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 실시간 리더보드가 어떻게 구현되는지 실습을 통해 알아보겠습니다.
 
-실습 참가자들의 이해를 돕기 위해서 아래의 가상 시나리오를 생각하며 실습을 진행하도록 하겠습니다.
+아래의 가상 시나리오를 생각하며 실습을 진행하도록 하겠습니다.
 ```
 당신은 사용자의 레벨과 경험치를 기준으로 Leaderboard 제공하는 서비스를 담당하고 있습니다.
 Leaderboard 서비스의 데이터 저장소로 Oracle을 사용하고 있고, Leaderboard 생성으로 인한 시스템 자원 사용률 증가가 
@@ -17,13 +13,80 @@ Leaderboard 서비스의 데이터 저장소로 Oracle을 사용하고 있고, L
 
 이런 문제를 해결하기 위해서 Leaderboard 데이터 저장소를 In-Memory DB로 변경하려고 합니다.
 ```
-1. 사전 준비
-실습을 진행하기 위해서 '사전준비' 단계를 먼저 수행해주시기 바랍니다.
-Cloudformation ~ Windows Server 까지 접속하기
-
-2. MobaXterm을 실행하고 세션들을 활성화 합니다.  
-Oracle, Redis, Legacy_server, MSA_server 이렇게 4개의 세션을 만듭니다.
+# 작업에 필요한 MobaXterm Session 4개를 생성합니다.
+1. Session을 생성하는 방법은 Workshop01의 Session 생성 단계를 참고 합니다.
+2. Session의 이름을 각각 Oracle, Redis, Legacy_server, MSA_server 으로 변경합니다.
 ![sessions](./images/sessions.png)
+
+# Oracle의 Leaderboard 데이터를 Elasticache Redis로 마이그레이션 합니다.
+1. MobaXterm의 Oracle session으로 이동하여 Oracle DB에 접속 후 rank()를 사용하여 leaderboard 데이터를 조회해 봅니다.   
+USERLEVEL과 EXPOINT 기준으로 정렬된 30만건의 데이터가 표시됩니다.
+```
+ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
+Last login: Tue Feb  8 06:07:37 UTC 2022 on pts/0
+root@ip-10-100-1-101:/root# su - oracle
+Last login: Tue Feb  8 06:07:44 UTC 2022 on pts/0
+oracle@ip-10-100-1-101:/home/oracle> sqlplus oshop/oshop
+
+SQL*Plus: Release 11.2.0.2.0 Production on Tue Feb 8 06:12:37 2022
+
+Copyright (c) 1982, 2011, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank FROM USER_SCORE;
+...
+    USERID       RANK
+---------- ----------
+    260091     299982
+      6205     299983
+    192037     299984
+    220661     299985
+    144834     299986
+    110780     299987
+      6474     299988
+    128521     299989
+    231474     299990
+    110140     299991
+     52016     299992
+
+    USERID       RANK
+---------- ----------
+    162246     299993
+    187240     299994
+    188193     299995
+    225220     299996
+    152497     299997
+    117736     299998
+     86425     299999
+    245984     300000
+
+300000 rows selected.
+
+SQL>
+```
+2. Redis로 데이터를 마이그레이션 하는데 필요한 스테이징 테이블과 데이터를 만듭니다.
+```
+CREATE TABLE "OSHOP"."USER_SCORE_REDIS_FORMAT" 
+   (	"key" VARCHAR2(15), 
+	"score" NUMBER, 
+	"member" NUMBER, 
+	 CONSTRAINT "USER_SCORE_REDIS_FORMAT_PK" PRIMARY KEY ("member"));
+
+INSERT INTO USER_SCORE_REDIS_FORMAT
+SELECT 'leaderboard' AS key,  
+	userlevel||LPAD(expoint, 13, '0') AS score,
+	USERID AS MEMBER
+FROM USER_SCORE us;
+
+commit;
+```
+[참고] 쿼리를 붙혀넣기하면 아래와 같은 팝업이 뜨는데 그냥 OK 클릭하시면 됩니다.
+![image](./images/query_paste_popup.png)
+
+3. 
 
 3. Oracle database를 데이터 저장소로 사용하고 있는 Leaderboard Application을 구동합니다.  
 MobaXterm에서 Legacy_server tab으로 이동하여 아래 명령어를 수행합니다.
@@ -130,23 +193,9 @@ MobaXterm의 Legacy_server 세션으로 이동하여 CTRL+C 를 눌러 어플리
 ^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop2/legacy>
 ```
 
-5. Oracle의 Leaderboard 데이터를 Elasticache Redis로 마이그레이션 합니다.  
-MobaXterm에서 Oracle 세션으로 이동하여 Redis로 데이터를 마이그레이션 하기 위한 스테이징 테이블과 데이터를 만듭니다.
-~~~ SQL
-CREATE TABLE "OSHOP"."USER_SCORE_REDIS_FORMAT" 
-   (	"key" VARCHAR2(15), 
-	"score" NUMBER, 
-	"member" NUMBER, 
-	 CONSTRAINT "USER_SCORE_REDIS_FORMAT_PK" PRIMARY KEY ("member"));
+5.   
+MobaXterm에서 Oracle 세션으로 이동하여 
 
-INSERT INTO USER_SCORE_REDIS_FORMAT
-SELECT 'leaderboard' AS key,  
-	userlevel||LPAD(expoint, 13, '0') AS score,
-	USERID AS MEMBER
-FROM USER_SCORE us;
-
-commit;
-~~~
 스테이징 테이블을 CSV파일로 저장합니다.
 MobaXterm에서 MSA_Server 세션으로 이동하여 아래 명령어를 수행합니다.
 ~~~
