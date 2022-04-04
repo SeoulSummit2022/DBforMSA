@@ -83,9 +83,11 @@ SELECT 'leaderboard' AS key,
 FROM USER_SCORE us;
 
 commit;
-```
+```   
+
 [참고] 쿼리를 붙혀넣기하면 아래와 같은 팝업이 뜨는데 그냥 OK 클릭하시면 됩니다.
 ![image](./images/query_paste_popup.png)
+   
 쿼리 수행이 정상적으로 완료되면 아래와 같이 화면에 표시됩니다.
 ![image](./images/staging_table_result.png)
 
