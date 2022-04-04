@@ -206,12 +206,12 @@ MobaXterm의 Oracle session에서 아래 명령을 수행합니다.
 ```
 SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank FROM USER_SCORE;
 ```
-![image](./images/1.png)
+![image](./images/1.png)   
 부하가 끝나면 아래와 같이 통계정보를 확인할 수 있습니다.
-![image](./images/gatling_result.png)
-   
-Gatling은 웹기반의 리포팅을 제공합니다. 부하가 끝난 후 제공되는 html 링크(위 그림에서 빨간색 박스)를 웹브라우저를 사용하여 열어봅니다.
-Ranking 조회 쿼리가 수행된 구간에서 p95의 Response Time이 상승하고 요청 처리량이 감소하는 그래프를 볼 수 있습니다.
+![image](./images/gatling_result.png)   
+Gatling은 웹기반의 리포팅을 제공합니다. 부하가 끝난 후 제공되는 html 링크(위 그림에서 빨간색 박스)를 웹브라우저를 사용하여 열어봅니다.   
+Ranking 조회 쿼리가 수행된 구간에서 p95의 Response Time이 상승하고 요청 처리량이 감소하는 그래프를 볼 수 있습니다.   
+데이터가 많을 경우 Leaderboard를 조회하는 쿼리가 많은 리소스를 사용하게 되고 이로 인해 사용자 요청에 지연이 발생할 수 있기 때문에 이런 쿼리를 자주 수행하며 Leaderboard 데이터를 최산화하는 것은 부담스러운 작업입니다.   
 ![image2](./images/2.png)
 ![image2-1](./images/2-1.png)
 ![image3](./images/3.png)
@@ -221,13 +221,7 @@ MobaXterm의 Legacy_server 세션으로 이동하여 CTRL+C 를 눌러 어플리
 10.100.1.103 - - [08/Feb/2022 06:28:07] "GET /legacy/updateuserlevel HTTP/1.1" 200 -
 ^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop2/legacy>
 ```
-
-
-
-
-
-
-6. Redis에서 실시간 Leaderboard 서비스를 테스트 해봅니다.
+3. Redis에서 실시간 Leaderboard 서비스를 테스트 해봅니다.   
 MobaXterm의 MSA_server 세션으로 이동하여 Redis를 데이터 스토어로 사용하는 Leaderboard 서비스를 실행합니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> source bin/activate
@@ -241,7 +235,8 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> source bin/activate
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
  ```
 Legacy와 동일하게 Gatling을 활용하여 Leaderboard의 Level을 업데이트하면서 ranking을 조회해보고 영향도를 확인합니다.
-Windows 서버의 cmd 를 열고 아래 명령을 실행합니다.
+Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
+![image](./images/taskbar_cmd.png)
 ```
 C:\Users\Administrator> CD C:\gatling\bin
 C:\gatling\bin> gatling.bat
@@ -267,11 +262,11 @@ Simulation SeoulSummit.Workshop2_legacy started...
           active: 10     / done: 3034
 ================================================================================
 ```
-Leaderboard 데이터 변경 요청을 주입하는 동안 Elasticache에서 ranking 조회를 해봅니다.
-MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.
-데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.
+Leaderboard 데이터 변경 요청을 주입하는 동안 Elasticache에서 ranking 조회를 해봅니다.   
+MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.   
+데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.   
+Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.
 ```
-ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/msa
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 127.0.0.1:6379> zrevrange leaderboard 10000 10010
  1) "25408"
@@ -298,8 +293,8 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 10) "20594"
 11) "81012"
 ```
-부하 종료 후 통계 데이터를 확인합니다.
-데이터 변경 처리량이 Oracle보다 높은 것을 확인할 수 있습니다.
+부하 종료 후 통계 데이터를 확인합니다.   
+메모리에서 데이터 변경 처리가 일어나기 때문에 데이터 변경 처리량이 Oracle보다 높은 것을 확인할 수 있습니다.   
 ```
 ================================================================================
 ---- Global Information --------------------------------------------------------
@@ -329,3 +324,8 @@ Press any key to continue . . .
 ![image](./images/5.png)
 ![image](./images/5-1.png)
 ![image](./images/6.png)
+   
+```
+Leaderboard 서비스를 Oracle에서 Redis로 마이그레이션을 완료하였습니다.
+이를 통해 고객의 요구 사항인 실시간 리더보드 서비스를 제공할 수 있게 되었고, 리더보드 데이터를 만들기 위해서 별도로 구성해야 했던 시스템을 제거하여 비용을 절감하고 시스템 운영 부담을 줄일 수 있게 되었습니다.
+```
