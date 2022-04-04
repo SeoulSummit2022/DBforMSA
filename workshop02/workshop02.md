@@ -91,9 +91,69 @@ commit;
 쿼리 수행이 정상적으로 완료되면 아래와 같이 화면에 표시됩니다.
 ![image](./images/staging_table_result.png)
 
-3. 
-
-3. Oracle database를 데이터 저장소로 사용하고 있는 Leaderboard Application을 구동합니다.  
+3. 스테이징 테이블을 CSV파일로 저장합니다.   
+MobaXterm에서 MSA_Server 세션으로 이동하여 아래 명령어를 수행합니다.
+~~~
+ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/msa
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sudo su -
+Last login: Sun Mar  6 03:28:55 UTC 2022 on pts/3
+root@ip-10-100-1-101:/root# su - oracle
+Last login: Sun Mar  6 03:28:58 UTC 2022 on pts/3
+oracle@ip-10-100-1-101:/home/oracle> cd workshop02
+oracle@ip-10-100-1-101:/home/oracle/workshop02> sh 01-unload-data.sh
+oracle@ip-10-100-1-101:/home/oracle/workshop02> ls
+01-unload-data.sh  unload_user_score.sql  user_score.csv
+oracle@ip-10-100-1-101:/home/oracle/workshop02> tail user_score.csv
+leaderboard,     941645071728030,                              296488
+leaderboard,     931645071728030,                              296489
+leaderboard,     251645071728030,                              296490
+leaderboard,     121645071728030,                              296491
+leaderboard,     151645071728030,                              296492
+leaderboard,     961645071728030,                              296493
+leaderboard,     771645071728030,                              296494
+leaderboard,     601645071728030,                              296495
+leaderboard,     91645071728030,                               296496
+leaderboard,     211645071728030,                              296497
+~~~   
+4. user_score.csv 파일을 Redis서버로 마이그레이션 합니다.   
+MSA_Server session에서 아래 명령을 이어서 실행압니다.
+~~~
+oracle@ip-10-100-1-101:/home/oracle/workshop02> exit
+logout
+root@ip-10-100-1-101:/root# exit
+logout
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sh 01-copy-score.sh
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sh 02-transform.sh
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sh 03-load-data-to-redis.sh
+Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
+All data transferred. Waiting for the last reply...
+Last reply received from server.
+errors: 0, replies: 300000
+~~~   
+5. Redis에 접속하여 마이그레이션된 데이터를 확인합니다.
+~~~
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
+Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
+127.0.0.1:6379> zcard leaderboard
+(integer) 300000
+127.0.0.1:6379> zrevrange leaderboard 0 9
+ 1) "299830"
+ 2) "299827"
+ 3) "299472"
+ 4) "299265"
+ 5) "299209"
+ 6) "298755"
+ 7) "298525"
+ 8) "298502"
+ 9) "298233"
+10) "298162"
+127.0.0.1:6379> zrevrank leaderboard 299830
+(integer) 0
+127.0.0.1:6379> exit
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa>
+~~~
+# Oracle에서 leaderboard 조회 쿼리 영향도 확인
+1. Oracle database를 데이터 저장소로 사용하고 있는 Leaderboard Application을 구동합니다.  
 MobaXterm에서 Legacy_server tab으로 이동하여 아래 명령어를 수행합니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/legacy
@@ -107,12 +167,13 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/legacy> source bin/activate
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ```
-서버 어플리케이션이 구동되었습니다.
-
-4. Oracle database의 Real time leaderboard 구성에 대한 영향도를 확인해 봅니다.  
+   
+2. Oracle database의 Real time leaderboard 구성에 대한 영향도를 확인해 봅니다.  
 [Gatling](https://gatling.io/)을 사용하여 여러 유저들의 Level을 변경하는 요청을 보내고, 요청이 수행되는 동안 Oracle rank함수를 사용하여 ranking 데이터를 조회해 봅니다.
-부하 주입은 Windows 서버에서 실행하게 됩니다.  
-윈도우즈 서버에서 Command Prompt 윈도우를 실행합니다.  
+부하 주입은 Bastion Server에서 실행하게 됩니다.  
+Bastion Server에서 Command Prompt 윈도우를 실행합니다. 아래 Taskbar에서 아래 아이콘을 클릭합니다.
+![image](./images/taskbar_cmd.png)
+
 Command Prompt에서 아래 명령를 차례로 입력합니다.  
 부하 주입 시간은 3분으로 설정되어 있습니다.
 ```
@@ -198,70 +259,11 @@ MobaXterm의 Legacy_server 세션으로 이동하여 CTRL+C 를 눌러 어플리
 ^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop2/legacy>
 ```
 
-5.   
-MobaXterm에서 Oracle 세션으로 이동하여 
 
-스테이징 테이블을 CSV파일로 저장합니다.
-MobaXterm에서 MSA_Server 세션으로 이동하여 아래 명령어를 수행합니다.
-~~~
-ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/msa
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sudo su -
-Last login: Sun Mar  6 03:28:55 UTC 2022 on pts/3
-root@ip-10-100-1-101:/root# su - oracle
-Last login: Sun Mar  6 03:28:58 UTC 2022 on pts/3
-oracle@ip-10-100-1-101:/home/oracle> cd workshop02
-oracle@ip-10-100-1-101:/home/oracle/workshop02> sh 01-unload-data.sh
-oracle@ip-10-100-1-101:/home/oracle/workshop02> ls
-01-unload-data.sh  unload_user_score.sql  user_score.csv
-oracle@ip-10-100-1-101:/home/oracle/workshop02> tail user_score.csv
-leaderboard,     941645071728030,                              296488
-leaderboard,     931645071728030,                              296489
-leaderboard,     251645071728030,                              296490
-leaderboard,     121645071728030,                              296491
-leaderboard,     151645071728030,                              296492
-leaderboard,     961645071728030,                              296493
-leaderboard,     771645071728030,                              296494
-leaderboard,     601645071728030,                              296495
-leaderboard,     91645071728030,                               296496
-leaderboard,     211645071728030,                              296497
-~~~
-데이터가 CSV 파일로 저장되었습니다.
-이 파일을 Redis서버로 마이그레이션 합니다.
-~~~
-oracle@ip-10-100-1-101:/home/oracle/workshop02> exit
-logout
-root@ip-10-100-1-101:/root# exit
-logout
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sh 01-copy-score.sh
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sh 02-transform.sh
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sh 03-load-data-to-redis.sh
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-All data transferred. Waiting for the last reply...
-Last reply received from server.
-errors: 0, replies: 300000
-~~~
-Redis에 접속하여 마이그레이션된 데이터를 확인합니다.
-~~~
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
-Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
-127.0.0.1:6379> zcard leaderboard
-(integer) 300000
-127.0.0.1:6379> zrevrange leaderboard 0 9
- 1) "299830"
- 2) "299827"
- 3) "299472"
- 4) "299265"
- 5) "299209"
- 6) "298755"
- 7) "298525"
- 8) "298502"
- 9) "298233"
-10) "298162"
-127.0.0.1:6379> zrevrank leaderboard 299830
-(integer) 0
-127.0.0.1:6379> exit
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa>
-~~~
+
+
+
+
 6. Redis에서 실시간 Leaderboard 서비스를 테스트 해봅니다.
 MobaXterm의 MSA_server 세션으로 이동하여 Redis를 데이터 스토어로 사용하는 Leaderboard 서비스를 실행합니다.
 ```
