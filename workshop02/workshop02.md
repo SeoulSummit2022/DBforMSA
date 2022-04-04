@@ -171,7 +171,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/legacy> source bin/activate
 2. Oracle database의 Real time leaderboard 구성에 대한 영향도를 확인해 봅니다.  
 [Gatling](https://gatling.io/)을 사용하여 여러 유저들의 Level을 변경하는 요청을 보내고, 요청이 수행되는 동안 Oracle rank함수를 사용하여 ranking 데이터를 조회해 봅니다.
 부하 주입은 Bastion Server에서 실행하게 됩니다.  
-Bastion Server에서 Command Prompt 윈도우를 실행합니다. 아래 Taskbar에서 아래 아이콘을 클릭합니다.
+Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
 ![image](./images/taskbar_cmd.png)
 
 Command Prompt에서 아래 명령를 차례로 입력합니다.  
@@ -201,53 +201,16 @@ Simulation SeoulSummit.Workshop2_legacy started...
           active: 9      / done: 601
 ================================================================================
 ```
-Level update 요청이 수행되는 동안 Oracle에 접속하여 rank 함수를 호출하여 ranking data를 조회합니다.
+Level update 요청이 수행되는 동안 Oracle에 접속하여 rank 함수를 호출하여 ranking data를 조회합니다.   
 MobaXterm의 Oracle session에서 아래 명령을 수행합니다.
 ```
-ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
-Last login: Tue Feb  8 06:07:37 UTC 2022 on pts/0
-root@ip-10-100-1-101:/root# su - oracle
-Last login: Tue Feb  8 06:07:44 UTC 2022 on pts/0
-oracle@ip-10-100-1-101:/home/oracle> sqlplus oshop/oshop
-
-SQL*Plus: Release 11.2.0.2.0 Production on Tue Feb 8 06:12:37 2022
-
-Copyright (c) 1982, 2011, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
-
 SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank FROM USER_SCORE;
-
 ```
 ![image](./images/1.png)
 부하가 끝나면 아래와 같이 통계정보를 확인할 수 있습니다.
-```
-================================================================================
----- Global Information --------------------------------------------------------
-> request count                                      22320 (OK=22320  KO=0     )
-> min response time                                     23 (OK=23     KO=-     )
-> max response time                                    175 (OK=175    KO=-     )
-> mean response time                                    80 (OK=80     KO=-     )
-> std deviation                                         16 (OK=16     KO=-     )
-> response time 50th percentile                         79 (OK=79     KO=-     )
-> response time 75th percentile                         90 (OK=90     KO=-     )
-> response time 95th percentile                        107 (OK=107    KO=-     )
-> response time 99th percentile                        123 (OK=123    KO=-     )
-> mean requests/sec                                123.315 (OK=123.315 KO=-     )
----- Response Time Distribution ------------------------------------------------
-> t < 800 ms                                         22320 (100%)
-> 800 ms < t < 1200 ms                                   0 (  0%)
-> t > 1200 ms                                            0 (  0%)
-> failed                                                 0 (  0%)
-================================================================================
-
-Reports generated in 0s.
-Please open the following file: C:\gatling\results\workshop02-legacy-20220306065107937\index.html
-Press any key to continue . . .
-```
-Gatling은 웹기반의 리포팅을 제공합니다. 부하가 끝난 후 제공되는 html 링크를 웹브라우저를 사용하여 열어봅니다.
+![image](./images/gatling_result.png)
+   
+Gatling은 웹기반의 리포팅을 제공합니다. 부하가 끝난 후 제공되는 html 링크(위 그림에서 빨간색 박스)를 웹브라우저를 사용하여 열어봅니다.
 Ranking 조회 쿼리가 수행된 구간에서 p95의 Response Time이 상승하고 요청 처리량이 감소하는 그래프를 볼 수 있습니다.
 ![image2](./images/2.png)
 ![image2-1](./images/2-1.png)
