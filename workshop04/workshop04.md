@@ -29,7 +29,8 @@ oracle-oshop 오른쪽 마우스 클릭 후 팝업메뉴에서 Connect를 클릭
 오른쪽 Worksheet 아래 두개 쿼리를 붙혀넣고 각각 실행하여 데이터를 확인해 봅니다.   
 첫번째 쿼리는 여러 테이블을 조인하여 데이터를 확인하는 쿼리이고, 두번째 쿼리는 첫번째 결과를 피버팅한 데이터를 보여주는 쿼리입니다.   
 두번째 쿼리를 활용하여 DanamoDB로 데이터를 마이그레이션하기 위한 Staging 테이블을 구성할 것입니다.   
-~~~
+~~~ sql
+# 구매번호(purchaseid) 1번에 해당하는 상품들의 정보를 표시합니다.
 SELECT  c.customerid, pc.purchaseid, purchaseseq, pd.productname, pd.price, pc.quantity, s.telnumber, pc.purchasedate, c.name, c.address
 FROM purchase pc
 	INNER JOIN customer c
@@ -41,7 +42,9 @@ FROM purchase pc
 where pc.purchaseid=1;
 ~~~
 ![sessions](./images/query1_result.png)  
-~~~
+~~~ sql
+# 위의 쿼리결과를 피버팅하는 쿼리입니다. 
+# DynamoDB로 마이그레이션 하기 전에 이 쿼리를 통해 staging 테이블을 구성하게 됩니다.
 SELECT  c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address,
         MAX(case when purchaseseq = 1 then purchaseseq else 0 end) PURCHASE_SEQ_1,
         MAX(case when purchaseseq = 1 then pd.productname else '' end) PRODUCT_NAME_1,
@@ -73,7 +76,7 @@ group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
 Oracle에 있는 데이터를 DynamoDB에 마이그레이션 하기 위해 DynamodDB의 key-value 형태에 맞게 staging 테이블을 만들어 줍니다.   
 sqldeveloper에서 아래 쿼리를 수행합니다.   
 마지막 COMMIT; 문장까지 수행해야 합니다.
-~~~
+~~~ sql
 CREATE TABLE "OSHOP"."PURCHASE_DYNAMODB_FORMAT" 
 (
     "CUSTOMER_ID" VARCHAR2(20 BYTE),
