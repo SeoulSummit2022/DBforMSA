@@ -21,29 +21,58 @@ DynamoDB 로 데이터를 마이그레이션 하려고 합니다.
 
 
 # Oracle to DynamoDB migration
-### 1. Oracle에 staging 테이블 구성
-Oracle에 있는 데이터를 DynamoDB에 마이그레이션 하기 위해 DynamodDB의 key-value 형태에 맞는 staging 테이블을 만들어 줍니다.
-MobaXterm의 Oracle 세션으로 이동하여 아래 명령어를 수행합니다.
-
-
+### 1. Oracle 데이터 확인
+Bastion server에 Taskbar에서 sqldeveloper아이콘을 클릭하여 sqldeveloper를 실행합니다.
+![sessions](./images/taskbar.png)   
+oracle-oshop 오른쪽 마우스 클릭 후 팝업메뉴에서 Connect를 클릭합니다.
+![sessions](./images/connect.png)   
+오른쪽 Worksheet 아래 두개 쿼리를 붙혀넣고 각각 실행하여 데이터를 확인해 봅니다.   
+첫번째 쿼리는 여러 테이블을 조인하여 데이터를 확인하는 쿼리이고, 두번째 쿼리는 첫번째 결과를 피버팅한 데이터를 보여주는 쿼리입니다.   
+두번째 쿼리를 활용하여 DanamoDB로 데이터를 마이그레이션하기 위한 Staging 테이블을 구성할 것입니다.   
 ~~~
-ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
-Last login: Sun Mar  6 08:06:00 UTC 2022 on pts/0
-root@ip-10-100-1-101:/root# su - oracle
-Last login: Sun Mar  6 08:06:13 UTC 2022 on pts/0
-oracle@ip-10-100-1-101:/home/oracle> sqlplus oshop/oshop
-
-SQL*Plus: Release 11.2.0.2.0 Production on Sun Mar 6 08:55:01 2022
-
-Copyright (c) 1982, 2011, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
-
-SQL> 
+SELECT  c.customerid, pc.purchaseid, purchaseseq, pd.productname, pd.price, pc.quantity, s.telnumber, pc.purchasedate, c.name, c.address
+FROM purchase pc
+	INNER JOIN customer c
+	ON pc.customerid = c.customerid
+	INNER JOIN product pd
+	ON pc.productid = pd.productid
+    INNER JOIN seller s
+    ON pd.sellerid = s.sellerid
+where pc.purchaseid=1;
 ~~~
-오라클에 접속하였으면 아래 쿼리를 수행하여 테이블 및 데이터를 만듭니다.
+![sessions](./images/query1_result.png)  
+~~~
+SELECT  c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address,
+        MAX(case when purchaseseq = 1 then purchaseseq else 0 end) PURCHASE_SEQ_1,
+        MAX(case when purchaseseq = 1 then pd.productname else '' end) PRODUCT_NAME_1,
+        MAX(case when purchaseseq = 1 then pd.price else 0 end) PRODUCT_PRICE_1,
+        MAX(case when purchaseseq = 1 then pc.quantity else 0 end) QUANTITY_1,
+        MAX(case when purchaseseq = 1 then s.telnumber else '' end) SELLER_TEL_NUMBER_1,
+        MAX(case when purchaseseq = 2 then purchaseseq else 0 end) PURCHASE_SEQ_2,
+        MAX(case when purchaseseq = 2 then pd.productname else '' end) PRODUCT_NAME_2,
+        MAX(case when purchaseseq = 2 then pd.price else 0 end) PRODUCT_PRICE_2,
+        MAX(case when purchaseseq = 2 then pc.quantity else 0 end) QUANTITY_2,
+        MAX(case when purchaseseq = 2 then s.telnumber else '' end) SELLER_TEL_NUMBER_2,
+        MAX(case when purchaseseq = 3 then purchaseseq else 0 end) PURCHASE_SEQ_3,
+        MAX(case when purchaseseq = 3 then pd.productname else '' end) PRODUCT_NAME_3,
+        MAX(case when purchaseseq = 3 then pd.price else 0 end) PRODUCT_PRICE_3,
+        MAX(case when purchaseseq = 3 then pc.quantity else 0 end) QUANTITY_3,
+        MAX(case when purchaseseq = 3 then s.telnumber else '' end) SELLER_TEL_NUMBER_3
+FROM purchase pc
+	INNER JOIN customer c
+	ON pc.customerid = c.customerid
+	INNER JOIN product pd
+	ON pc.productid = pd.productid
+    INNER JOIN seller s
+    ON pd.sellerid = s.sellerid
+where pc.purchaseid=1
+group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
+~~~
+![sessions](./images/query2_result.png)   
+### 2. Oracle에 staging 테이블 구성
+Oracle에 있는 데이터를 DynamoDB에 마이그레이션 하기 위해 DynamodDB의 key-value 형태에 맞게 staging 테이블을 만들어 줍니다.   
+sqldeveloper에서 아래 쿼리를 수행합니다.   
+마지막 COMMIT; 문장까지 수행해야 합니다.
 ~~~
 CREATE TABLE "OSHOP"."PURCHASE_DYNAMODB_FORMAT" 
 (
@@ -96,95 +125,20 @@ FROM purchase pc
     ON pd.sellerid = s.sellerid
 group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
 
-commit;
-
+COMMIT;
 ~~~
-
-------------------------------------------------------------------------------------------------------
-
-
-
-### 1. 구매내역을 조회하는 Oracle 기반의 어플리케이션을 기동합니다.
-MobaXterm의 Legacy_server에서 아래의 명령어를 수행합니다.
-~~~
-ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/legacy
-ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> source bin/activate
-(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> flask run --host=0.0.0.0 --port=4000
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
- * Debug mode: off
- * Running on all addresses.
-   WARNING: This is a development server. Do not use it in a production deployment.
- * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
-~~~
-### 2. Gatling을 사용하여 legacy 시스템(오라클)에 구매내역 조회 부하를 주입하고 어플리케이션 성능을 측정합니다.
-아래 명령어는 Windows Server에서 cmd에서 수행합니다.
-~~~
-C:\Users\Administrator> CD C:\gatling\bin
-C:\gatling\bin> gatling.bat
-GATLING_HOME is set to "C:\gatling"
-JAVA = "java"
-Choose a simulation number:
-     [0] SeoulSummit.Workshop02_legacy
-     [1] SeoulSummit.Workshop02_msa
-     [2] SeoulSummit.Workshop04_legacy
-     [3] SeoulSummit.Workshop04_msa
-2(2번 시나리오를 수행합니다.)
-Select run description (optional)
-(엔터를 한번 더 입력합니다.)
-Simulation SeoulSummit.Workshop04_legacy started...
-
-================================================================================
-2022-03-06 20:42:11                                           5s elapsed
----- Requests ------------------------------------------------------------------
-> Global                                                   (OK=114    KO=0     )
-> selectPurchase                                           (OK=114    KO=0     )
-
----- Workshop04_legacy ---------------------------------------------------------
-          active: 2      / done: 114
-================================================================================
-~~~
-부하가 종료된 후 성능 통계정보를 확인합니다. p95의 평균 응답시간은 92ms 입니다.
-~~~
-================================================================================
----- Global Information --------------------------------------------------------
-> request count                                       4395 (OK=4395   KO=0     )
-> min response time                                     57 (OK=57     KO=-     )
-> max response time                                    111 (OK=111    KO=-     )
-> mean response time                                    81 (OK=81     KO=-     )
-> std deviation                                          8 (OK=8      KO=-     )
-> response time 50th percentile                         84 (OK=84     KO=-     )
-> response time 75th percentile                         88 (OK=88     KO=-     )
-> response time 95th percentile                         92 (OK=92     KO=-     )
-> response time 99th percentile                         95 (OK=95     KO=-     )
-> mean requests/sec                                 24.282 (OK=24.282 KO=-     )
----- Response Time Distribution ------------------------------------------------
-> t < 800 ms                                          4395 (100%)
-> 800 ms < t < 1200 ms                                   0 (  0%)
-> t > 1200 ms                                            0 (  0%)
-> failed                                                 0 (  0%)
-================================================================================
-
-Reports generated in 0s.
-Please open the following file: C:\gatling\results\workshop04-legacy-20220306114205590\index.html
-Press any key to continue . . .
-~~~
-위의 링크를 웹브라우저로 열어서 Web으로 제공되는 성능 보고서도 확인해 봅니다.
-![image 3](./images/3.png)
-![image 3-1](./images/3-1.png)
-![image 4](./images/4.png)
-
-MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합니다.
-
-
-스태이징 테이블을 구성하였으니 DMS를 통해서 DynamoDB로 데이터를 마이그레이션 합니다. DMS의 Replication Instance는 Workshop03에서 생성한 RI를 사용합니다. 만약 Workshop03을 수행하지 않았다면 Workshop03의 12.Replication Instance 생성 단계를 참고하여 Replicattion Instance를 생성합니다.  
+![image](./images/staging_table.png) 
+### 3. DynamoDB로 마이그레이션
+스태이징 테이블을 구성하였으니 DMS를 통해서 DynamoDB로 데이터를 마이그레이션 합니다.   
+DMS의 Replication Instance는 Workshop01에서 생성한 RI를 사용합니다.   
+만약 Workshop01을 수행하지 않았다면 Workshop01의 "Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션"의 10번 단계를 참고하여 Replication Instance를 생성합니다.  
 
 Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#dashboard) 에서 Source와 Target endpoint를 생성합니다.  
 왼쪽 메뉴에서 Endpoints로 이동 후 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Source endpoint에 대한 정보를 입력합니다.
 * Endpoint identifier : s-seoulsummit-endpoint
 * Source engine : Oracle
+* Provide access information manually 선택
 * Server name : 10.100.1.101
 * Port : 1521
 * User name : oshop
@@ -201,7 +155,7 @@ Target endpoint를 생성하기 위해서 Create endpoint 버튼을 클릭합니
 * Endpoint identifier : t-seoulsummit-dynamodb1
 * Target engine : Amazon DynamoDB
 * Service access role ARN : arn:aws:iam::111111111111:role/EC2SSMRole2  
-(Service access role ARN 은 CloudFormation의 seoul-summit 스택 Outputs 탭에서 확인할 수 있습니다.)  
+(Service access role ARN 은 AWS Console에서 [CloudFormation](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false)으로 이동 후 seoul-summit 스택 Outputs 탭에서 확인할 수 있습니다.)  
 ![image 9-1](./images/9-1.png)
 ![image 10](./images/10.png)
 
@@ -346,19 +300,96 @@ JSON editor 버튼을 선택하고 아래 editor에 JSON 을 입력합니다.
 Task 생성이 완료되었으면 Task를 실행합니다.  
 ![image 20](./images/20.png)
 
+10만건 데이터를 마이그레이션하는데 14분 43초 소요되었습니다.
+![image 20](./images/complete_dms.png)
+
 [DynamoDB](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#tables) 이동하여 purchase_t 를 클릭합니다.
 ![image 24](./images/24.png)
 
 purchase_t 를 선택한 후 오른쪽 위에 "Explore table items"를 클릭합니다.  
 ![image 21](./images/21.png)
 
-데이터 마이그레이션 된 것을 확인할 수 있습니다.
+데이터가 마이그레이션 된 것을 확인할 수 있습니다.
 ![image 22](./images/22.png)
 
 하나의 아이템을 선택하면 해당 아이템의 상세 데이터를 볼 수 있습니다.
 ![image 23](./images/23.png)
 
-### 4. Gatling을 이용하여 DynamoDB 기반의 구매 내역 조회 어플리케이션 성능을 확인합니다.
+# Oracle에서 구매내역 조회 테스트
+### 1. 구매내역을 조회하는 Oracle 기반의 어플리케이션을 기동합니다.
+MobaXterm의 Legacy_server에서 아래의 명령어를 수행합니다.
+~~~
+ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/legacy
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> source bin/activate
+(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> flask run --host=0.0.0.0 --port=4000
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
+~~~
+### 2. Gatling을 사용하여 legacy 시스템(오라클)에 구매내역 조회 부하를 주입하고 어플리케이션 성능을 측정합니다.
+아래 명령어는 Bastion Server cmd에서 수행합니다.
+~~~
+C:\Users\Administrator> CD C:\gatling\bin
+C:\gatling\bin> gatling.bat
+GATLING_HOME is set to "C:\gatling"
+JAVA = "java"
+Choose a simulation number:
+     [0] SeoulSummit.Workshop02_legacy
+     [1] SeoulSummit.Workshop02_msa
+     [2] SeoulSummit.Workshop04_legacy
+     [3] SeoulSummit.Workshop04_msa
+2(2번 시나리오를 수행합니다.)
+Select run description (optional)
+(엔터를 한번 더 입력합니다.)
+Simulation SeoulSummit.Workshop04_legacy started...
+
+================================================================================
+2022-03-06 20:42:11                                           5s elapsed
+---- Requests ------------------------------------------------------------------
+> Global                                                   (OK=114    KO=0     )
+> selectPurchase                                           (OK=114    KO=0     )
+
+---- Workshop04_legacy ---------------------------------------------------------
+          active: 2      / done: 114
+================================================================================
+~~~
+부하가 종료된 후 성능 통계정보를 확인합니다. p95의 평균 응답시간은 92ms 입니다.
+~~~
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                       4395 (OK=4395   KO=0     )
+> min response time                                     57 (OK=57     KO=-     )
+> max response time                                    111 (OK=111    KO=-     )
+> mean response time                                    81 (OK=81     KO=-     )
+> std deviation                                          8 (OK=8      KO=-     )
+> response time 50th percentile                         84 (OK=84     KO=-     )
+> response time 75th percentile                         88 (OK=88     KO=-     )
+> response time 95th percentile                         92 (OK=92     KO=-     )
+> response time 99th percentile                         95 (OK=95     KO=-     )
+> mean requests/sec                                 24.282 (OK=24.282 KO=-     )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                          4395 (100%)
+> 800 ms < t < 1200 ms                                   0 (  0%)
+> t > 1200 ms                                            0 (  0%)
+> failed                                                 0 (  0%)
+================================================================================
+
+Reports generated in 0s.
+Please open the following file: C:\gatling\results\workshop04-legacy-20220306114205590\index.html
+Press any key to continue . . .
+~~~
+위의 링크를 웹브라우저로 열어서 Web으로 제공되는 성능 보고서도 확인해 봅니다.
+![image 3](./images/3.png)
+![image 3-1](./images/3-1.png)
+![image 4](./images/4.png)
+
+MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합니다.
+
+### 3. Gatling을 이용하여 DynamoDB 기반의 구매 내역 조회 어플리케이션 성능을 확인합니다.
 MobaXterm MSA_Server 세션으로 이동하여 어플리케이션을 실행합니다.
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/msa
