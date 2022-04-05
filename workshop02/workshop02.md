@@ -130,7 +130,9 @@ All data transferred. Waiting for the last reply...
 Last reply received from server.
 errors: 0, replies: 300000
 ~~~   
-5. Redis에 접속하여 마이그레이션된 데이터를 확인합니다.
+5. Redis에 접속하여 마이그레이션된 데이터를 확인합니다.   
+zcard leaderboard : leaderboard key에 속한 멤버 개수를 리턴
+zrevrange leaderboard 0 9 : score가 큰 순서대로 10개(0~9)의 멤버를 리턴
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
@@ -203,7 +205,9 @@ Simulation SeoulSummit.Workshop2_legacy started...
 ```
 Level update 요청이 수행되는 동안 Oracle에 접속하여 rank 함수를 호출하여 ranking data를 조회합니다.   
 MobaXterm의 Oracle session에서 아래 명령을 수행합니다.
-```
+``` sql
+# 아래 쿼리는 Oracle에서 USER_SCORE 테이블의 전체 데이터의 ranking을 구하는 쿼리입니다.
+# 이 쿼리를 수행하여 별도의 ranking 테이블을 만들고 그 테이블을 조회하여 top 10 ranker나 유저의 ranking을 찾을 수 있습니다.
 SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank FROM USER_SCORE;
 ```
 ![image](./images/1.png)   
