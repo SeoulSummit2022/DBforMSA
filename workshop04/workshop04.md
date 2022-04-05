@@ -331,7 +331,8 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> source bin/activate
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ~~~
 ### 2. Gatling을 사용하여 legacy 시스템(오라클)에 구매내역 조회 부하를 주입하고 어플리케이션 성능을 측정합니다.
-아래 명령어는 Bastion Server cmd에서 수행합니다.
+아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
+![image](./images/commandPrompt.png)
 ~~~
 C:\Users\Administrator> CD C:\gatling\bin
 C:\gatling\bin> gatling.bat
@@ -405,7 +406,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/msa> source bin/activate
 ~~~
 Gatling으로 부하테스트를 수행합니다.   
 아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
-![image](./image/commandPrompt.png)
+![image](./images/commandPrompt.png)
 
 ~~~
 C:\Users\Administrator> CD C:\gatling\bin
@@ -461,8 +462,11 @@ Press any key to continue . . .
 ![image 25](./images/25.png)
 ![image 26](./images/26.png)
 ![image 27](./images/27.png)
+~~~
+이번 Workshop에서는 Oracle data를 DynamoDB로 DMS를 활용하여 마이그레이션해 보았습니다.
+또 Gatling을 통해 각각의 서비스에 대해서 구매상세조회 단위기능을 테스트 해보고 성능을 비교해 볼 수 있었습니다.
 
-
+~~~
 
 
 
