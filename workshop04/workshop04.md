@@ -1,13 +1,6 @@
-# Workshop04 시작
+# Workshop04
 엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기 세션의 Workshop04에 오신 것을 환영합니다.  
 Workshop04 에서는 Oracle의 주문 조회용 데이터를 Amazon DynamoDB 로 마이그레이션해 보고, Gatling을 활용하여 부하 주입 및 성능 측정을 해보도록 하겠습니다.
-
-이번 워크샵은 크게 3단계로 진행됩니다.
-1. Oracle 데이터베이스에서 구매내역 조회 및 성능 확인
-2. DMS를 활용하여 Oracle 데이터를 DynamoDB로 마이그레이션
-3. DynamoDB 에서 구매내역 조회 및 성능 확인
-
-실습 참가자들의 이해를 돕기 위해서 아래의 가상 시나리오를 생각하며 실습을 진행하도록 하겠습니다.
 ~~~
 당신은 온라인 마켓 서비스를 담당하고 있습니다.
 OLTP 서비스에서 가장 일반적으로 사용되는 Oracle Database를 데이터 저장소로 사용하고 있습니다.
@@ -21,9 +14,95 @@ DynamoDB 로 데이터를 마이그레이션 하려고 합니다.
 이번 실습을 통해 간단한 구매내역 조회 서비스를 대상으로 Oracle 과 DynamoDB 성능 비교를 해보고,
 데이터 마이그레이션은 DMS를 활용해봄으로서 RDB 에서 NoSQL 로 마이그레이션 하는 기본적인 방법을 배워봅니다.
 ~~~
-### 1. MobaXterm 세션들을 활성화 합니다.
-Oracle, Legacy_server, MSA_server 이렇게 3개의 세션을 만들어 줍니다.
+# 작업에 필요한 MobaXterm Session 3개를 생성합니다.
+1. Session을 생성하는 방법은 Workshop01의 Session 생성 단계를 참고 합니다.
+2. Session의 이름을 각각 Oracle, Legacy_server, MSA_server 으로 변경합니다.
 ![sessions](./images/sessions.png)
+
+
+# Oracle to DynamoDB migration
+### 1. Oracle에 staging 테이블 구성
+Oracle에 있는 데이터를 DynamoDB에 마이그레이션 하기 위해 DynamodDB의 key-value 형태에 맞는 staging 테이블을 만들어 줍니다.
+MobaXterm의 Oracle 세션으로 이동하여 아래 명령어를 수행합니다.
+
+
+~~~
+ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
+Last login: Sun Mar  6 08:06:00 UTC 2022 on pts/0
+root@ip-10-100-1-101:/root# su - oracle
+Last login: Sun Mar  6 08:06:13 UTC 2022 on pts/0
+oracle@ip-10-100-1-101:/home/oracle> sqlplus oshop/oshop
+
+SQL*Plus: Release 11.2.0.2.0 Production on Sun Mar 6 08:55:01 2022
+
+Copyright (c) 1982, 2011, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL> 
+~~~
+오라클에 접속하였으면 아래 쿼리를 수행하여 테이블 및 데이터를 만듭니다.
+~~~
+CREATE TABLE "OSHOP"."PURCHASE_DYNAMODB_FORMAT" 
+(
+    "CUSTOMER_ID" VARCHAR2(20 BYTE),
+    "PURCHASE_ID" VARCHAR2(20 BYTE), 
+    "PURCHASE_DATE" VARCHAR2(10 BYTE),
+    "CUSTOMER_NAME" VARCHAR2(10 BYTE),    
+    "CUSTOMER_ADDRESS" VARCHAR2(100 BYTE),
+    "PURCHASE_SEQ_1" VARCHAR2(20 BYTE), 
+    "PRODUCT_NAME_1" VARCHAR2(100 BYTE), 
+    "PRODUCT_PRICE_1" VARCHAR2(20 BYTE), 
+    "QUANTITY_1" VARCHAR2(20 BYTE), 
+    "SELLER_TEL_NUMBER_1" VARCHAR2(20 BYTE), 
+    "PURCHASE_SEQ_2" VARCHAR2(20 BYTE), 
+    "PRODUCT_NAME_2" VARCHAR2(100 BYTE), 
+    "PRODUCT_PRICE_2" VARCHAR2(20 BYTE), 
+    "QUANTITY_2" VARCHAR2(20 BYTE), 
+    "SELLER_TEL_NUMBER_2" VARCHAR2(20 BYTE), 
+    "PURCHASE_SEQ_3" VARCHAR2(20 BYTE), 
+    "PRODUCT_NAME_3" VARCHAR2(100 BYTE), 
+    "PRODUCT_PRICE_3" VARCHAR2(20 BYTE), 
+    "QUANTITY_3" VARCHAR2(20 BYTE), 
+    "SELLER_TEL_NUMBER_3" VARCHAR2(20 BYTE), 
+    CONSTRAINT "PURCHASE_DYNAMODB_FT_PK" PRIMARY KEY ("CUSTOMER_ID", "PURCHASE_ID")
+);
+
+INSERT INTO PURCHASE_DYNAMODB_FORMAT
+SELECT  c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address,
+        MAX(case when purchaseseq = 1 then purchaseseq else 0 end) PURCHASE_SEQ_1,
+        MAX(case when purchaseseq = 1 then pd.productname else '' end) PRODUCT_NAME_1,
+        MAX(case when purchaseseq = 1 then pd.price else 0 end) PRODUCT_PRICE_1,
+        MAX(case when purchaseseq = 1 then pc.quantity else 0 end) QUANTITY_1,
+        MAX(case when purchaseseq = 1 then s.telnumber else '' end) SELLER_TEL_NUMBER_1,
+        MAX(case when purchaseseq = 2 then purchaseseq else 0 end) PURCHASE_SEQ_2,
+        MAX(case when purchaseseq = 2 then pd.productname else '' end) PRODUCT_NAME_2,
+        MAX(case when purchaseseq = 2 then pd.price else 0 end) PRODUCT_PRICE_2,
+        MAX(case when purchaseseq = 2 then pc.quantity else 0 end) QUANTITY_2,
+        MAX(case when purchaseseq = 2 then s.telnumber else '' end) SELLER_TEL_NUMBER_2,
+        MAX(case when purchaseseq = 3 then purchaseseq else 0 end) PURCHASE_SEQ_3,
+        MAX(case when purchaseseq = 3 then pd.productname else '' end) PRODUCT_NAME_3,
+        MAX(case when purchaseseq = 3 then pd.price else 0 end) PRODUCT_PRICE_3,
+        MAX(case when purchaseseq = 3 then pc.quantity else 0 end) QUANTITY_3,
+        MAX(case when purchaseseq = 3 then s.telnumber else '' end) SELLER_TEL_NUMBER_3
+FROM purchase pc
+	INNER JOIN customer c
+	ON pc.customerid = c.customerid
+	INNER JOIN product pd
+	ON pc.productid = pd.productid
+    INNER JOIN seller s
+    ON pd.sellerid = s.sellerid
+group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
+
+commit;
+
+~~~
+
+------------------------------------------------------------------------------------------------------
+
+
 
 ### 1. 구매내역을 조회하는 Oracle 기반의 어플리케이션을 기동합니다.
 MobaXterm의 Legacy_server에서 아래의 명령어를 수행합니다.
@@ -98,82 +177,7 @@ Press any key to continue . . .
 
 MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합니다.
 
-### 3. DMS를 활용하여 Oracle data를 DynamoDB로 마이그레이션 합니다.
-DynamoDB에 데이터를 마이그레션을 하기전에 DynamoDB에 효율적인 key-value 형태로 스테이징 테이블 및 데이터를 생성합니다.  
-MobaXterm의 Oracle 세션으로 이동하여 오라클 서버에 접속합니다.
-~~~
-ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
-Last login: Sun Mar  6 08:06:00 UTC 2022 on pts/0
-root@ip-10-100-1-101:/root# su - oracle
-Last login: Sun Mar  6 08:06:13 UTC 2022 on pts/0
-oracle@ip-10-100-1-101:/home/oracle> sqlplus oshop/oshop
 
-SQL*Plus: Release 11.2.0.2.0 Production on Sun Mar 6 08:55:01 2022
-
-Copyright (c) 1982, 2011, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
-
-SQL> 
-~~~
-오라클에 접속하였으면 아래 쿼리를 수행하여 테이블 및 데이터를 만듭니다.
-~~~
-CREATE TABLE "OSHOP"."PURCHASE_DYNAMODB_FORMAT" 
-(
-    "CUSTOMER_ID" VARCHAR2(20 BYTE),
-    "PURCHASE_ID" VARCHAR2(20 BYTE), 
-    "PURCHASE_DATE" VARCHAR2(10 BYTE),
-    "CUSTOMER_NAME" VARCHAR2(10 BYTE),    
-    "CUSTOMER_ADDRESS" VARCHAR2(100 BYTE),
-    "PURCHASE_SEQ_1" VARCHAR2(20 BYTE), 
-    "PRODUCT_NAME_1" VARCHAR2(100 BYTE), 
-    "PRODUCT_PRICE_1" VARCHAR2(20 BYTE), 
-    "QUANTITY_1" VARCHAR2(20 BYTE), 
-    "SELLER_TEL_NUMBER_1" VARCHAR2(20 BYTE), 
-    "PURCHASE_SEQ_2" VARCHAR2(20 BYTE), 
-    "PRODUCT_NAME_2" VARCHAR2(100 BYTE), 
-    "PRODUCT_PRICE_2" VARCHAR2(20 BYTE), 
-    "QUANTITY_2" VARCHAR2(20 BYTE), 
-    "SELLER_TEL_NUMBER_2" VARCHAR2(20 BYTE), 
-    "PURCHASE_SEQ_3" VARCHAR2(20 BYTE), 
-    "PRODUCT_NAME_3" VARCHAR2(100 BYTE), 
-    "PRODUCT_PRICE_3" VARCHAR2(20 BYTE), 
-    "QUANTITY_3" VARCHAR2(20 BYTE), 
-    "SELLER_TEL_NUMBER_3" VARCHAR2(20 BYTE), 
-    CONSTRAINT "PURCHASE_DYNAMODB_FT_PK" PRIMARY KEY ("CUSTOMER_ID", "PURCHASE_ID")
-);
-
-INSERT INTO PURCHASE_DYNAMODB_FORMAT
-SELECT  c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address,
-        MAX(case when purchaseseq = 1 then purchaseseq else 0 end) PURCHASE_SEQ_1,
-        MAX(case when purchaseseq = 1 then pd.productname else '' end) PRODUCT_NAME_1,
-        MAX(case when purchaseseq = 1 then pd.price else 0 end) PRODUCT_PRICE_1,
-        MAX(case when purchaseseq = 1 then pc.quantity else 0 end) QUANTITY_1,
-        MAX(case when purchaseseq = 1 then s.telnumber else '' end) SELLER_TEL_NUMBER_1,
-        MAX(case when purchaseseq = 2 then purchaseseq else 0 end) PURCHASE_SEQ_2,
-        MAX(case when purchaseseq = 2 then pd.productname else '' end) PRODUCT_NAME_2,
-        MAX(case when purchaseseq = 2 then pd.price else 0 end) PRODUCT_PRICE_2,
-        MAX(case when purchaseseq = 2 then pc.quantity else 0 end) QUANTITY_2,
-        MAX(case when purchaseseq = 2 then s.telnumber else '' end) SELLER_TEL_NUMBER_2,
-        MAX(case when purchaseseq = 3 then purchaseseq else 0 end) PURCHASE_SEQ_3,
-        MAX(case when purchaseseq = 3 then pd.productname else '' end) PRODUCT_NAME_3,
-        MAX(case when purchaseseq = 3 then pd.price else 0 end) PRODUCT_PRICE_3,
-        MAX(case when purchaseseq = 3 then pc.quantity else 0 end) QUANTITY_3,
-        MAX(case when purchaseseq = 3 then s.telnumber else '' end) SELLER_TEL_NUMBER_3
-FROM purchase pc
-	INNER JOIN customer c
-	ON pc.customerid = c.customerid
-	INNER JOIN product pd
-	ON pc.productid = pd.productid
-    INNER JOIN seller s
-    ON pd.sellerid = s.sellerid
-group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
-
-commit;
-
-~~~
 스태이징 테이블을 구성하였으니 DMS를 통해서 DynamoDB로 데이터를 마이그레이션 합니다. DMS의 Replication Instance는 Workshop03에서 생성한 RI를 사용합니다. 만약 Workshop03을 수행하지 않았다면 Workshop03의 12.Replication Instance 생성 단계를 참고하여 Replicattion Instance를 생성합니다.  
 
 Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#dashboard) 에서 Source와 Target endpoint를 생성합니다.  
