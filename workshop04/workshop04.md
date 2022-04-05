@@ -403,8 +403,10 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/msa> source bin/activate
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ~~~
-Gatling으로 부하테스트를 수행합니다.
-아래 명령어는 Windows Server에서 cmd에서 실행합니다.
+Gatling으로 부하테스트를 수행합니다.   
+아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
+![image](./image/commandPrompt.png)
+
 ~~~
 C:\Users\Administrator> CD C:\gatling\bin
 C:\gatling\bin> gatling.bat
