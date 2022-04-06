@@ -421,6 +421,14 @@ Simulation SeoulSummit.Workshop04_msa started...
 ![image 25](./images/25.png)
 ![image 26](./images/26.png)
 ![image 27](./images/27.png)
+   
+[Cloudwatch지표](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#table?initialTagKey=&name=purchase_t&tab=monitoring)를 확인해 봅니다.   
+아래에 Latency 카테고리에 Get latency 지표 그래프를 확대합니다.   
+![image](./images/cloudwatch_latency.png)
+![image](./images/cloudwatch_latency_large.png)
+   
+
+
 ~~~
 이번 Workshop에서는 Oracle data를 DynamoDB로 DMS를 활용하여 마이그레이션해 보았습니다.
 또 Gatling을 통해 각각의 서비스에 대해서 구매상세조회 단위기능을 테스트 해보고 성능을 비교해 볼 수 있었습니다.
