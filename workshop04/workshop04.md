@@ -423,16 +423,16 @@ Simulation SeoulSummit.Workshop04_msa started...
 ![image 27](./images/27.png)
    
 [Cloudwatch지표](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#table?initialTagKey=&name=purchase_t&tab=monitoring)를 확인해 봅니다.   
-아래에 Latency 카테고리에 Get latency 지표 그래프를 확대합니다.   
+Latency 카테고리에 Get latency 지표 그래프를 확대합니다.   
 ![image](./images/cloudwatch_latency.png)
 ![image](./images/cloudwatch_latency_large.png)
-   
-
+처음에는 latency가 높지만 점점 낮아지며 2ms의 latency를 안정적으로 유지하는 것을 볼 수 있습니다.
+하지만 End to End의 전체 구간에 걸친 응답속도는 어플리케이션, 네트워크, 인스턴스의 리소스 상황 등 여러 요소에 영향을 받아 DynamoDB에서 보여주는 지표보다 더 높아진다는 것을 기억하시길 바랍니다.
 
 ~~~
 이번 Workshop에서는 Oracle data를 DynamoDB로 DMS를 활용하여 마이그레이션해 보았습니다.
 또 Gatling을 통해 각각의 서비스에 대해서 구매상세조회 단위기능을 테스트 해보고 성능을 비교해 볼 수 있었습니다.
-
+DynamoDB의 사용하여 사용자가 늘어나는 상황에서도 10ms 미만의 빠른 응답속도를 보장하고 schemaless특성을 활용하여 유연하고 빠른 어플리케이션 개발이 가능하게 되었습니다.
 ~~~
 
 
