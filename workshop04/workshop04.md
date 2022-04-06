@@ -362,30 +362,8 @@ Simulation SeoulSummit.Workshop04_legacy started...
 ================================================================================
 ~~~
 부하가 종료된 후 성능 통계정보를 확인합니다. p95의 평균 응답시간은 92ms 입니다.
-~~~
-================================================================================
----- Global Information --------------------------------------------------------
-> request count                                       4395 (OK=4395   KO=0     )
-> min response time                                     57 (OK=57     KO=-     )
-> max response time                                    111 (OK=111    KO=-     )
-> mean response time                                    81 (OK=81     KO=-     )
-> std deviation                                          8 (OK=8      KO=-     )
-> response time 50th percentile                         84 (OK=84     KO=-     )
-> response time 75th percentile                         88 (OK=88     KO=-     )
-> response time 95th percentile                         92 (OK=92     KO=-     )
-> response time 99th percentile                         95 (OK=95     KO=-     )
-> mean requests/sec                                 24.282 (OK=24.282 KO=-     )
----- Response Time Distribution ------------------------------------------------
-> t < 800 ms                                          4395 (100%)
-> 800 ms < t < 1200 ms                                   0 (  0%)
-> t > 1200 ms                                            0 (  0%)
-> failed                                                 0 (  0%)
-================================================================================
 
-Reports generated in 0s.
-Please open the following file: C:\gatling\results\workshop04-legacy-20220306114205590\index.html
-Press any key to continue . . .
-~~~
+![image](./images/gatling_oracle.png)   
 위의 링크를 웹브라우저로 열어서 Web으로 제공되는 성능 보고서도 확인해 봅니다.
 ![image 3](./images/3.png)
 ![image 3-1](./images/3-1.png)
@@ -437,30 +415,8 @@ Simulation SeoulSummit.Workshop04_msa started...
 ================================================================================
 ~~~
 부하가 종료된 후 성능 통계정보를 확인합니다. p95의 평균 응답시간은 56ms 입니다.
-~~~
-================================================================================
----- Global Information --------------------------------------------------------
-> request count                                       9464 (OK=9464   KO=0     )
-> min response time                                     20 (OK=20     KO=-     )
-> max response time                                    103 (OK=103    KO=-     )
-> mean response time                                    38 (OK=38     KO=-     )
-> std deviation                                          9 (OK=9      KO=-     )
-> response time 50th percentile                         36 (OK=36     KO=-     )
-> response time 75th percentile                         41 (OK=41     KO=-     )
-> response time 95th percentile                         56 (OK=56     KO=-     )
-> response time 99th percentile                         68 (OK=68     KO=-     )
-> mean requests/sec                                 52.287 (OK=52.287 KO=-     )
----- Response Time Distribution ------------------------------------------------
-> t < 800 ms                                          9464 (100%)
-> 800 ms < t < 1200 ms                                   0 (  0%)
-> t > 1200 ms                                            0 (  0%)
-> failed                                                 0 (  0%)
-================================================================================
-
-Reports generated in 0s.
-Please open the following file: C:\gatling\results\workshop04-msa-20220306115100267\index.html
-Press any key to continue . . .
-~~~
+![image](./images/gatling_dynamodb.png)
+   
 위의 링크를 웹브라우저로 열어서 Web으로 제공되는 성능 보고서도 확인해 봅니다.
 ![image 25](./images/25.png)
 ![image 26](./images/26.png)
