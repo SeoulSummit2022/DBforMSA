@@ -268,6 +268,7 @@ Simulation SeoulSummit.Workshop2_legacy started...
 ```   
 3. Leaderboard 데이터 변경 요청을 주입하는 동안 Elasticache에서 ranking 조회를 해봅니다.   
 MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.   
+zrevrange leaderboard 10000 10010 명령어는 랭킹 10000 ~ 10010 사이의 유저를 표시해 줍니다.
 데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.   
 Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.   
 ```
