@@ -139,6 +139,7 @@ DMS의 Replication Instance는 Workshop01에서 생성한 RI를 사용합니다.
 Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#dashboard) 에서 Source와 Target endpoint를 생성합니다.  
 왼쪽 메뉴에서 Endpoints로 이동 후 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Source endpoint에 대한 정보를 입력합니다.
+```
 * Endpoint type : Source endpoint 선택
 * Endpoint identifier : s-seoulsummit-endpoint
 * Source engine : Oracle
@@ -148,6 +149,7 @@ Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.
 * User name : oshop
 * Password : oshop
 * SID/Service name : xe   
+```
 ![image 8](./images/8.png)
 
 VPC와 Replication instance 정보를 입력하고 Run test 버튼을 클릭하여 연결테스트를 수행합니다.
@@ -156,9 +158,12 @@ Test 가 성공하였다면 Create endpoint 버튼을 클릭합니다.
 
 Target endpoint를 생성하기 위해서 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Target endpoint 에 대한 정보를 입력합니다.
+```
+* Endpoint type : Target endpoint 선택
 * Endpoint identifier : t-seoulsummit-dynamodb1
 * Target engine : Amazon DynamoDB
-* Service access role ARN : arn:aws:iam::111111111111:role/EC2SSMRole2  
+* Service access role ARN : arn:aws:iam::111111111111:role/EC2SSMRole2
+```
 (Service access role ARN 은 AWS Console에서 [CloudFormation](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false)으로 이동 후 seoul-summit 스택 Outputs 탭에서 확인할 수 있습니다.)  
 ![image 9-1](./images/9-1.png)
 ![image 10](./images/10.png)
