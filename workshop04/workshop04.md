@@ -176,6 +176,12 @@ Test endpoint connection을 수행합니다.
 Task configuration 항목에 값을 설정합니다.
 Replication instnace 는 CloudFormation outputs 항목의 ReplicationInstance를 참고합니다.
 Source와 Target endpoint는 이전 단계에서 만든 endpoint 정보를 입력합니다.  
+* Task Identifier : task-seoulsummit-oracle-dynamodb
+* Replication instance : ri-oracle-to-mongodb
+* Source database endpoint : s-seoulsummit-endpoint
+* Target database endpoint : t-seoulsummit-dynamodb1
+* Migration type : Migrate existing data
+   
 ![image 16](./images/16.png)
 
 Task settings를 아래와 같이 설정합니다.  
@@ -375,6 +381,10 @@ Simulation SeoulSummit.Workshop04_legacy started...
 ![image 4](./images/4.png)
 
 MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합니다.
+~~~
+10.100.1.103 - - [07/Apr/2022 15:05:29] "GET /legacy/selectPurchase HTTP/1.1" 200 -
+^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy>
+~~~
 
 ### 3. Gatling을 이용하여 DynamoDB 기반의 구매 내역 조회 어플리케이션 성능을 확인합니다.
 MobaXterm MSA_Server 세션으로 이동하여 어플리케이션을 실행합니다.
