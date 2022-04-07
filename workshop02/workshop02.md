@@ -268,9 +268,9 @@ Simulation SeoulSummit.Workshop2_legacy started...
 ```   
 3. Leaderboard 데이터 변경 요청을 주입하는 동안 Elasticache에서 ranking 조회를 해봅니다.   
 MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.   
-zrevrange leaderboard 10000 10010 명령어는 랭킹 10000 ~ 10010 사이의 유저를 표시해 줍니다.
+zrevrange leaderboard 10000 10010 명령어는 랭킹 10000 ~ 10010 사이의 유저를 표시해 줍니다.   
 데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.   
-Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.   
+Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 127.0.0.1:6379> zrevrange leaderboard 10000 10010
@@ -300,35 +300,19 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 ```   
 4. 부하 종료 후 통계 데이터를 확인합니다.   
 메모리에서 데이터 변경 처리가 일어나기 때문에 데이터 변경 처리량이 Oracle보다 높은 것을 확인할 수 있습니다.   
-```
-================================================================================
----- Global Information --------------------------------------------------------
-> request count                                     114373 (OK=114373 KO=0     )
-> min response time                                      2 (OK=2      KO=-     )
-> max response time                                     41 (OK=41     KO=-     )
-> mean response time                                    16 (OK=16     KO=-     )
-> std deviation                                          3 (OK=3      KO=-     )
-> response time 50th percentile                         15 (OK=15     KO=-     )
-> response time 75th percentile                         17 (OK=17     KO=-     )
-> response time 95th percentile                         20 (OK=20     KO=-     )
-> response time 99th percentile                         22 (OK=22     KO=-     )
-> mean requests/sec                                631.895 (OK=631.895 KO=-     )
----- Response Time Distribution ------------------------------------------------
-> t < 800 ms                                        114373 (100%)
-> 800 ms < t < 1200 ms                                   0 (  0%)
-> t > 1200 ms                                            0 (  0%)
-> failed                                                 0 (  0%)
-================================================================================
-
-Reports generated in 0s.
-Please open the following file: C:\gatling\results\workshop02-msa-20220306052215938\index.html
-Press any key to continue . . .
-```   
+![image](./images/redis_stat.png)
+   
 5. 웹기반의 보고서를 확인하기 위해 위의 링크를 웹브라우저로 열어봅니다.   
 평균 응답속도가 95%의 평균 응답속도가 20ms을 유지하며 ranking을 조회하더라도 초당 처리량은 변화가 없는 것을 확인할 수 있습니다.
 ![image](./images/5.png)
 ![image](./images/5-1.png)
 ![image](./images/6.png)
+   
+MobaXterm의 MSA_server 세션으로 이동하여 CTRL+C 를 눌러 어플리케이션을 종료합니다.
+```
+10.100.1.103 - - [07/Apr/2022 13:00:38] "GET /msa/updateuserlevel HTTP/1.1" 200 -
+^C(msa) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> 
+```
    
 ```
 Leaderboard 서비스를 Oracle에서 Redis로 마이그레이션을 완료하였습니다.
