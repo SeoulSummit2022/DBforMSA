@@ -26,7 +26,7 @@ Bastion server에 Taskbar에서 sqldeveloper아이콘을 클릭하여 sqldevelop
 ![sessions](./images/taskbar.png)   
 oracle-oshop 오른쪽 마우스 클릭 후 팝업메뉴에서 Connect를 클릭합니다.
 ![sessions](./images/connect.png)   
-오른쪽 Worksheet 아래 두개 쿼리를 붙혀넣고 각각 실행하여 데이터를 확인해 봅니다.   
+오른쪽 Worksheet에서 아래 두 쿼리를 각각 실행하여 데이터를 확인해 봅니다.   
 첫번째 쿼리는 여러 테이블을 조인하여 데이터를 확인하는 쿼리이고, 두번째 쿼리는 첫번째 결과를 피버팅한 데이터를 보여주는 쿼리입니다.   
 두번째 쿼리를 활용하여 DanamoDB로 데이터를 마이그레이션하기 위한 Staging 테이블을 구성할 것입니다.   
 ~~~ sql
