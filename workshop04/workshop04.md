@@ -139,6 +139,7 @@ DMS의 Replication Instance는 Workshop01에서 생성한 RI를 사용합니다.
 Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#dashboard) 에서 Source와 Target endpoint를 생성합니다.  
 왼쪽 메뉴에서 Endpoints로 이동 후 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Source endpoint에 대한 정보를 입력합니다.
+* Endpoint type : Source endpoint 선택
 * Endpoint identifier : s-seoulsummit-endpoint
 * Source engine : Oracle
 * Provide access information manually 선택
