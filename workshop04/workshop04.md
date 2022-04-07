@@ -158,12 +158,11 @@ Test 가 성공하였다면 Create endpoint 버튼을 클릭합니다.
 
 Target endpoint를 생성하기 위해서 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Target endpoint 에 대한 정보를 입력합니다.
-```
+
 * Endpoint type : Target endpoint 선택
 * Endpoint identifier : t-seoulsummit-dynamodb1
 * Target engine : Amazon DynamoDB
 * Service access role ARN : arn:aws:iam::111111111111:role/EC2SSMRole2
-```
 (Service access role ARN 은 AWS Console에서 [CloudFormation](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false)으로 이동 후 seoul-summit 스택 Outputs 탭에서 확인할 수 있습니다.)  
 ![image 9-1](./images/9-1.png)
 ![image 10](./images/10.png)
