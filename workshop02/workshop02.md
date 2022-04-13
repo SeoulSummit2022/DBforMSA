@@ -1,8 +1,10 @@
-# Workshop02
+# Workshop02(Redis를 활용한 실시간 리더보드 만들기)
 _엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기_ 세션의 Workshop2에 오신 것을 환영합니다.
 Workshop2 에서는 리더보드 데이터를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 실시간 리더보드가 어떻게 구현되는지 실습을 통해 알아보겠습니다.
+### Architecture Diagram
+![diagram](./images/workshop2_diagram.png)
 
-아래의 가상 시나리오를 생각하며 실습을 진행하도록 하겠습니다.
+### 시나리오 소개
 ```
 당신은 사용자의 레벨과 경험치를 기준으로 Leaderboard 제공하는 서비스를 담당하고 있습니다.
 Leaderboard 서비스의 데이터 저장소로 Oracle을 사용하고 있고, Leaderboard 생성으로 인한 시스템 자원 사용률 증가가 
