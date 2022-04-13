@@ -1,6 +1,6 @@
 
 
-# workshop01
+# Workshop01(MongoDB를 활용한 CRM 리포트 서비스 분리)
 
 
 
