@@ -404,7 +404,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/msa> source bin/activate
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ~~~
 Gatling으로 부하테스트를 수행합니다.   
-부하테스트는 Cloudwatch 지표를 표시하기 위해서 10분 동안 수행되도록 하였습니다.(Cloudwatch가 1분 평균 그래프이기 때문에 부하 시간이 너무 짧을 경우 그래프가 명확하게 표시되지 않습니다.)
+부하테스트는 Cloudwatch 지표를 표시하기 위해서 10분 동안 수행되도록 하였습니다.(Cloudwatch가 1분 평균 그래프이기 때문에 부하 시간이 너무 짧을 경우 그래프가 명확하게 표시되지 않습니다.)   
 아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
 ![image](./images/commandPrompt.png)
 
