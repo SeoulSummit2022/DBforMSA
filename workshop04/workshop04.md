@@ -1,6 +1,9 @@
-# Workshop04
+# Workshop04(DynamoDB를 활용하여 구매내역 조회 서비스  전환하기)
 엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기 세션의 Workshop04에 오신 것을 환영합니다.  
 Workshop04 에서는 Oracle의 주문 조회용 데이터를 Amazon DynamoDB 로 마이그레이션해 보고, Gatling을 활용하여 부하 주입 및 성능 측정을 해보도록 하겠습니다.
+### Architecture Diagram
+![sessions](./images/workshop4_diagram.png)
+### 시나리오 소개
 ~~~
 당신은 온라인 마켓 서비스를 담당하고 있습니다.
 OLTP 서비스에서 가장 일반적으로 사용되는 Oracle Database를 데이터 저장소로 사용하고 있습니다.
@@ -401,6 +404,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/msa> source bin/activate
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ~~~
 Gatling으로 부하테스트를 수행합니다.   
+부하테스트는 Cloudwatch 지표를 표시하기 위해서 10분 동안 수행되도록 하였습니다.(Cloudwatch가 1분 평균 그래프이기 때문에 부하 시간이 너무 짧을 경우 그래프가 명확하게 표시되지 않습니다.)
 아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
 ![image](./images/commandPrompt.png)
 
