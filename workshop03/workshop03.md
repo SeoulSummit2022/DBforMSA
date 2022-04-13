@@ -1,4 +1,16 @@
-# Workshop3 시작
+# Workshop03(Redis를 활용하여 한정판매 이벤트 처리하기)
+
+***엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기* 세션의 Workshop2에 오신 것을 환영합니다. Workshop2 에서는 리더보드 데이터를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 실시간 리더보드가 어떻게 구현되는지 실습을 통해 알아보겠습니다.**
+
+---
+
+Architecture Diagram
+
+![image-20220413131830391](images/image-20220413131830391.png)
+
+---
+
+**시나리오 소개**
 
 ```
 당신은 Game을 개발하는 회사의 개발자 혹은 DBA입니다. 
