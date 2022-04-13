@@ -33,7 +33,7 @@ Leaderboard 서비스의 데이터 저장소로 Oracle을 사용하고 있고, L
 
 ---
 
-# Oracle의 Leaderboard 데이터를 Elasticache Redis로 마이그레이션 합니다.
+# Oracle의 Leaderboard 데이터를 Redis로 마이그레이션 합니다.
 
 1. MobaXterm의 Oracle session으로 이동하여 sqlplus로 Oracle DB에 접속 후 rank()를 사용하여 leaderboard 데이터를 조회해 봅니다.   
 USERLEVEL과 EXPOINT 기준으로 정렬된 30만건의 데이터가 표시됩니다.
@@ -278,6 +278,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> source bin/activate
 ---
 
 2. Legacy와 동일하게 Gatling을 활용하여 Leaderboard의 Level을 업데이트하면서 ranking을 조회해보고 영향도를 확인합니다.   
+  사용자의 Level이 계속 변경되기 때문에 사용자의 순위도 실시간으로 계속 변경됩니다.
   Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
   ![image](./images/taskbar_cmd.png)   
 
@@ -308,10 +309,10 @@ Simulation SeoulSummit.Workshop2_legacy started...
 ```
 ---
 
-3. Leaderboard 데이터 변경 요청을 주입하는 동안 Elasticache에서 ranking 조회를 해봅니다.   
+3. Leaderboard 데이터 변경 요청을 주입하는 동안 Redis에서 ranking 조회를 해봅니다.   
   MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.   
   zrevrange leaderboard 10000 10010 명령어는 랭킹 10000 ~ 10010 사이의 유저를 표시해 줍니다.   
-  데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.   
+  사용자의 Level 값이 업데이트 되면서 ranking이 계속 바뀌고, "zrevrange leaderboard" 명령어를 활용하여 실시간으로 순위 정보를 확인할 수 있습니다.   
   Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.
 
 ```
