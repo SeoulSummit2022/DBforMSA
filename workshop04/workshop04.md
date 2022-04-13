@@ -206,11 +206,11 @@ Replication instnace 는 CloudFormation outputs 항목의 ReplicationInstance를
 Source와 Target endpoint는 이전 단계에서 만든 endpoint 정보를 입력합니다.  
 
 ```
-* Task Identifier : task-seoulsummit-oracle-dynamodb
-* Replication instance : ri-oracle-to-mongodb
-* Source database endpoint : s-seoulsummit-endpoint
-* Target database endpoint : t-seoulsummit-dynamodb1
-* Migration type : Migrate existing data
+* Task Identifier(태스크 식별자) : task-seoulsummit-oracle-dynamodb
+* Replication instance(복제 인스턴스) : ri-oracle-to-mongodb
+* Source database endpoint(소스 데이터베이스 엔드포인트) : s-seoulsummit-endpoint
+* Target database endpoint(대상 데이터베이스 엔드포인트) : t-seoulsummit-dynamodb1
+* Migration type(마이그레이션 유형) : Migrate existing data(기존 데이터 마이그레이션)
 ```
 
 ![image 16](./images/16.png)
