@@ -1,9 +1,18 @@
 # Workshop04(DynamoDB를 활용하여 구매내역 조회 서비스  전환하기)
+
+
+
 엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기 세션의 Workshop04에 오신 것을 환영합니다.  
 Workshop04 에서는 Oracle의 주문 조회용 데이터를 Amazon DynamoDB 로 마이그레이션해 보고, Gatling을 활용하여 부하 주입 및 성능 측정을 해보도록 하겠습니다.
+
+---
+
 ### Architecture Diagram
 ![sessions](./images/workshop4_diagram.png)
+---
+
 ### 시나리오 소개
+
 ~~~
 당신은 온라인 마켓 서비스를 담당하고 있습니다.
 OLTP 서비스에서 가장 일반적으로 사용되는 Oracle Database를 데이터 저장소로 사용하고 있습니다.
@@ -17,13 +26,18 @@ DynamoDB 로 데이터를 마이그레이션 하려고 합니다.
 이번 실습을 통해 간단한 구매내역 조회 서비스를 대상으로 Oracle 과 DynamoDB 성능 비교를 해보고,
 데이터 마이그레이션은 DMS를 활용해봄으로서 RDB 에서 NoSQL 로 마이그레이션 하는 기본적인 방법을 배워봅니다.
 ~~~
+---
+
 # 작업에 필요한 MobaXterm Session 3개를 생성합니다.
+
 1. Session을 생성하는 방법은 Workshop01의 Session 생성 단계를 참고 합니다.
 2. Session의 이름을 각각 Oracle, Legacy_server, MSA_server 으로 변경합니다.
 ![sessions](./images/sessions.png)
 
+---
 
 # Oracle to DynamoDB migration
+
 ### 1. Oracle 데이터 확인
 Bastion server에 Taskbar에서 sqldeveloper아이콘을 클릭하여 sqldeveloper를 실행합니다.
 ![sessions](./images/taskbar.png)   
@@ -75,10 +89,14 @@ where pc.purchaseid=1
 group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
 ~~~
 ![sessions](./images/query2_result.png)   
+---
+
 ### 2. Oracle에 staging 테이블 구성
+
 Oracle에 있는 데이터를 DynamoDB에 마이그레이션 하기 위해 DynamodDB의 key-value 형태에 맞게 staging 테이블을 만들어 줍니다.   
 sqldeveloper에서 아래 쿼리를 수행합니다.   
 마지막 COMMIT; 문장까지 수행해야 합니다.
+
 ~~~ sql
 CREATE TABLE "OSHOP"."PURCHASE_DYNAMODB_FORMAT" 
 (
@@ -134,7 +152,11 @@ group by c.customerid, pc.purchaseid, pc.purchasedate, c.name, c.address;
 COMMIT;
 ~~~
 ![image](./images/staging_table.png) 
+
+---
+
 ### 3. DynamoDB로 마이그레이션
+
 스태이징 테이블을 구성하였으니 DMS를 통해서 DynamoDB로 데이터를 마이그레이션 합니다.   
 DMS의 Replication Instance는 Workshop01에서 생성한 RI를 사용합니다.   
 만약 Workshop01을 수행하지 않았다면 Workshop01의 "Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션"의 10번 단계를 참고하여 Replication Instance를 생성합니다.  
@@ -184,7 +206,8 @@ Source와 Target endpoint는 이전 단계에서 만든 endpoint 정보를 입�
 * Source database endpoint : s-seoulsummit-endpoint
 * Target database endpoint : t-seoulsummit-dynamodb1
 * Migration type : Migrate existing data
-   
+  
+
 ![image 16](./images/16.png)
 
 Task settings를 아래와 같이 설정합니다.  
@@ -332,8 +355,14 @@ purchase_t 를 선택한 후 오른쪽 위에 "Explore table items"를 클릭합
 하나의 아이템을 선택하면 해당 아이템의 상세 데이터를 볼 수 있습니다.
 ![image 23](./images/23.png)
 
+----
+
 # Oracle에서 구매내역 조회 테스트
+
+---
+
 ### 1. 구매내역을 조회하는 Oracle 기반의 어플리케이션을 기동합니다.
+
 MobaXterm의 Legacy_server에서 아래의 명령어를 수행합니다.
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/legacy
@@ -347,7 +376,10 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> source bin/activate
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ~~~
+---
+
 ### 2. Gatling을 사용하여 legacy 시스템(오라클)에 구매내역 조회 부하를 주입하고 어플리케이션 성능을 측정합니다.
+
 아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
 ![image](./images/commandPrompt.png)
 ~~~
@@ -389,7 +421,10 @@ MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합�
 ^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy>
 ~~~
 
+---
+
 ### 3. Gatling을 이용하여 DynamoDB 기반의 구매 내역 조회 어플리케이션 성능을 확인합니다.
+
 MobaXterm MSA_Server 세션으로 이동하여 어플리케이션을 실행합니다.
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/msa
@@ -435,18 +470,20 @@ Simulation SeoulSummit.Workshop04_msa started...
 ~~~
 부하가 종료된 후 성능 통계정보를 확인합니다. p95의 평균 응답시간은 56ms 입니다.
 ![image](./images/gatling_dynamodb.png)
-   
+
 위의 링크를 웹브라우저로 열어서 Web으로 제공되는 성능 보고서도 확인해 봅니다.
 ![image 25](./images/25.png)
 ![image 26](./images/26.png)
 ![image 27](./images/27.png)
-   
+
 [Cloudwatch지표](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#table?initialTagKey=&name=purchase_t&tab=monitoring)를 확인해 봅니다.   
 Latency 카테고리에 Get latency 지표 그래프를 확대합니다.   
 ![image](./images/cloudwatch_latency.png)
 ![image](./images/cloudwatch_latency_large.png)
 처음에는 latency가 높지만 점점 낮아지며 2ms의 latency를 안정적으로 유지하는 것을 볼 수 있습니다.
 하지만 End to End의 전체 구간에 걸친 응답속도는 어플리케이션, 네트워크, 인스턴스의 리소스 상황 등 여러 요소에 영향을 받아 DynamoDB에서 보여주는 지표보다 더 높아진다는 것을 기억하시길 바랍니다.
+
+---
 
 ~~~
 이번 Workshop에서는 Oracle data를 DynamoDB로 DMS를 활용하여 마이그레이션해 보았습니다.
@@ -455,6 +492,7 @@ DynamoDB의 사용하여 사용자가 늘어나는 상황에서도 10ms 미만�
 schemaless특성을 활용하여 유연하고 빠른 어플리케이션 개발이 가능하게 되었습니다.
 ~~~
 
+---
 
-
+[다음 워크샵으로 - workshop99(워크샵 자원 삭제하기) ](../workshop99/workshop99.md) 
 

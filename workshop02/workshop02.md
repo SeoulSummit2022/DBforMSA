@@ -1,8 +1,16 @@
 # Workshop02(Redis를 활용한 실시간 리더보드 만들기)
+
+
+
 _엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기_ 세션의 Workshop2에 오신 것을 환영합니다.
 Workshop2 에서는 리더보드 데이터를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 실시간 리더보드가 어떻게 구현되는지 실습을 통해 알아보겠습니다.
+
+---
+
 ### Architecture Diagram
 ![diagram](./images/workshop2_diagram.png)
+
+---
 
 ### 시나리오 소개
 ```
@@ -15,12 +23,18 @@ Leaderboard 서비스의 데이터 저장소로 Oracle을 사용하고 있고, L
 
 이런 문제를 해결하기 위해서 Leaderboard 데이터 저장소를 In-Memory DB로 변경하려고 합니다.
 ```
+---
+
 # 작업에 필요한 MobaXterm Session 4개를 생성합니다.
+
 1. Session을 생성하는 방법은 Workshop01의 Session 생성 단계를 참고 합니다.
 2. Session의 이름을 각각 Oracle, Redis, Legacy_server, MSA_server 으로 변경합니다.
 ![sessions](./images/sessions.png)
 
+---
+
 # Oracle의 Leaderboard 데이터를 Elasticache Redis로 마이그레이션 합니다.
+
 1. MobaXterm의 Oracle session으로 이동하여 sqlplus로 Oracle DB에 접속 후 rank()를 사용하여 leaderboard 데이터를 조회해 봅니다.   
 USERLEVEL과 EXPOINT 기준으로 정렬된 30만건의 데이터가 표시됩니다.
 ```
@@ -69,8 +83,11 @@ SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank 
 
 SQL>
 ```
+---
+
 2. Redis로 데이터를 마이그레이션 하는데 필요한 스테이징 테이블과 데이터를 만듭니다.   
-sqlplus에 아래 쿼리를 붙여넣고 엔터를 입력합니다.
+  sqlplus에 아래 쿼리를 붙여넣고 엔터를 입력합니다.
+
 ```
 CREATE TABLE "OSHOP"."USER_SCORE_REDIS_FORMAT" 
    (	"key" VARCHAR2(15), 
@@ -85,16 +102,19 @@ SELECT 'leaderboard' AS key,
 FROM USER_SCORE us;
 
 commit;
-```   
+```
 
 [참고] 쿼리를 붙혀넣기하면 아래와 같은 팝업이 뜨는데 그냥 OK 클릭하시면 됩니다.
 ![image](./images/query_paste_popup.png)
-   
+
 쿼리 수행이 정상적으로 완료되면 아래와 같이 화면에 표시됩니다.
 ![image](./images/staging_table_result.png)
 
+---
+
 3. 스테이징 테이블을 CSV파일로 저장합니다.   
-MobaXterm에서 MSA_Server 세션으로 이동하여 아래 명령어를 수행합니다.
+  MobaXterm에서 MSA_Server 세션으로 이동하여 아래 명령어를 수행합니다.
+
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/msa
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> sudo su -
@@ -116,9 +136,12 @@ leaderboard,     771645071728030,                              296494
 leaderboard,     601645071728030,                              296495
 leaderboard,     91645071728030,                               296496
 leaderboard,     211645071728030,                              296497
-~~~   
+~~~
+---
+
 4. user_score.csv 파일을 Redis서버로 마이그레이션 합니다.   
-MSA_Server session에서 아래 명령을 이어서 실행압니다.
+  MSA_Server session에서 아래 명령을 이어서 실행압니다.
+
 ~~~
 oracle@ip-10-100-1-101:/home/oracle/workshop02> exit
 logout
@@ -131,10 +154,13 @@ Warning: Using a password with '-a' or '-u' option on the command line interface
 All data transferred. Waiting for the last reply...
 Last reply received from server.
 errors: 0, replies: 300000
-~~~   
+~~~
+---
+
 5. Redis에 접속하여 마이그레이션된 데이터를 확인합니다.   
-zcard leaderboard : leaderboard key에 속한 멤버 개수를 리턴   
-zrevrange leaderboard 0 9 : score가 큰 순서대로 10개(0~9)의 멤버를 리턴
+  zcard leaderboard : leaderboard key에 속한 멤버 개수를 리턴   
+  zrevrange leaderboard 0 9 : score가 큰 순서대로 10개(0~9)의 멤버를 리턴
+
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
@@ -156,7 +182,10 @@ Warning: Using a password with '-a' or '-u' option on the command line interface
 127.0.0.1:6379> exit
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa>
 ~~~
+---
+
 # Oracle에서 leaderboard 조회 쿼리 영향도 확인
+
 1. Oracle database를 데이터 저장소로 사용하고 있는 Leaderboard Application을 구동합니다.  
 MobaXterm에서 Legacy_server tab으로 이동하여 아래 명령어를 수행합니다.
 ```
@@ -171,15 +200,18 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/legacy> source bin/activate
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ```
-   
+
+---
+
 2. Oracle database의 Real time leaderboard 구성에 대한 영향도를 확인해 봅니다.  
-[Gatling](https://gatling.io/)을 사용하여 여러 유저들의 Level을 변경하는 요청을 보내고, 요청이 수행되는 동안 Oracle rank함수를 사용하여 ranking 데이터를 조회해 봅니다.
-부하 주입은 Bastion Server에서 실행하게 됩니다.  
-Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
-![image](./images/taskbar_cmd.png)
+  [Gatling](https://gatling.io/)을 사용하여 여러 유저들의 Level을 변경하는 요청을 보내고, 요청이 수행되는 동안 Oracle rank함수를 사용하여 ranking 데이터를 조회해 봅니다.
+  부하 주입은 Bastion Server에서 실행하게 됩니다.  
+  Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
+  ![image](./images/taskbar_cmd.png)
 
 Command Prompt에서 아래 명령를 차례로 입력합니다.  
 부하 주입 시간은 3분으로 설정되어 있습니다.
+
 ```
 C:\Users\Administrator> CD C:\gatling\bin
 C:\gatling\bin> gatling.bat
@@ -227,7 +259,10 @@ MobaXterm의 Legacy_server 세션으로 이동하여 CTRL+C 를 눌러 어플리
 10.100.1.103 - - [08/Feb/2022 06:28:07] "GET /legacy/updateuserlevel HTTP/1.1" 200 -
 ^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop2/legacy>
 ```
+---
+
 # Redis에서 실시간 Leaderboard 서비스를 테스트
+
 1. MobaXterm의 MSA_server 세션으로 이동하여 Redis를 데이터 스토어로 사용하는 Leaderboard 서비스를 실행합니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> source bin/activate
@@ -239,10 +274,13 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> source bin/activate
  * Running on all addresses.
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
- ```   
+```
+---
+
 2. Legacy와 동일하게 Gatling을 활용하여 Leaderboard의 Level을 업데이트하면서 ranking을 조회해보고 영향도를 확인합니다.   
-Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
-![image](./images/taskbar_cmd.png)   
+  Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
+  ![image](./images/taskbar_cmd.png)   
+
 ```
 C:\Users\Administrator> CD C:\gatling\bin
 C:\gatling\bin> gatling.bat
@@ -267,12 +305,15 @@ Simulation SeoulSummit.Workshop2_legacy started...
 ---- Workshop02_msa ------------------------------------------------------------
           active: 10     / done: 3034
 ================================================================================
-```   
+```
+---
+
 3. Leaderboard 데이터 변경 요청을 주입하는 동안 Elasticache에서 ranking 조회를 해봅니다.   
-MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.   
-zrevrange leaderboard 10000 10010 명령어는 랭킹 10000 ~ 10010 사이의 유저를 표시해 줍니다.   
-데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.   
-Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.
+  MobaXterm 에서 Redis 탭으로 이동하여 아래 명령을 수행합니다.   
+  zrevrange leaderboard 10000 10010 명령어는 랭킹 10000 ~ 10010 사이의 유저를 표시해 줍니다.   
+  데이터들이 업데이트 되면서 ranking이 실시간으로 계속 바뀌는 것을 확인할 수 있습니다.   
+  Redis의 sorted set을 사용하면 데이터의 입력이나 변경시점에 이미 정렬이 되기 때문에 별도의 정렬작업이 필요없고 실시간 leaderboard 조회가 가능합니다.
+
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 127.0.0.1:6379> zrevrange leaderboard 10000 10010
@@ -299,23 +340,29 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
  9) "29455"
 10) "20594"
 11) "81012"
-```   
+```
+---
+
 4. 부하 종료 후 통계 데이터를 확인합니다.   
-메모리에서 데이터 변경 처리가 일어나기 때문에 데이터 변경 처리량이 Oracle보다 높은 것을 확인할 수 있습니다.   
-![image](./images/redis_stat.png)
-   
+  메모리에서 데이터 변경 처리가 일어나기 때문에 데이터 변경 처리량이 Oracle보다 높은 것을 확인할 수 있습니다.   
+  ![image](./images/redis_stat.png)
+
+  ---
+
+  
+
 5. 웹기반의 보고서를 확인하기 위해 위의 링크를 웹브라우저로 열어봅니다.   
-평균 응답속도가 95%의 평균 응답속도가 20ms을 유지하며 ranking을 조회하더라도 초당 처리량은 변화가 없는 것을 확인할 수 있습니다.
-![image](./images/5.png)
-![image](./images/5-1.png)
-![image](./images/6.png)
-   
+  평균 응답속도가 95%의 평균 응답속도가 20ms을 유지하며 ranking을 조회하더라도 초당 처리량은 변화가 없는 것을 확인할 수 있습니다.
+  ![image](./images/5.png)
+  ![image](./images/5-1.png)
+  ![image](./images/6.png)
+
 MobaXterm의 MSA_server 세션으로 이동하여 CTRL+C 를 눌러 어플리케이션을 종료합니다.
 ```
 10.100.1.103 - - [07/Apr/2022 13:00:38] "GET /msa/updateuserlevel HTTP/1.1" 200 -
 ^C(msa) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> 
 ```
-   
+
 ```
 Leaderboard 서비스를 Oracle에서 Redis로 마이그레이션을 완료하였습니다.
 Oracle은 초당 123건 update, Redis는 초당 631건 update를 수행하여 전환 후 약 5배의 성능이 향상되었습니다.
