@@ -165,15 +165,15 @@ Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.
 왼쪽 메뉴에서 Endpoints로 이동 후 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Source endpoint에 대한 정보를 입력합니다.
 ```
-* Endpoint type : Source endpoint 선택
-* Endpoint identifier : s-seoulsummit-endpoint
-* Source engine : Oracle
-* Provide access information manually 선택
-* Server name : 10.100.1.101
-* Port : 1521
-* User name : oshop
-* Password : oshop
-* SID/Service name : xe   
+* Endpoint type(엔드포인트 유형) : Source endpoint 선택
+* Endpoint identifier(엔드포인트 식별자) : s-seoulsummit-endpoint
+* Source engine(소스 엔진) : Oracle
+* Access to endpoint database(엔드포인트 데이터베이스에 액세스) : Provide access information manually(수동으로 액세스 정보 제공) 선택
+* Server name(서버 이름) : 10.100.1.101
+* Port(포트) : 1521
+* User name(사용자 이름) : oshop
+* Password(암호) : oshop
+* SID/Service name(SID/서비스 이름) : xe   
 ```
 ![image 8](./images/8.png)
 
@@ -185,12 +185,12 @@ Target endpoint를 생성하기 위해서 Create endpoint 버튼을 클릭합니
 아래와 같이 Target endpoint 에 대한 정보를 입력합니다.
 
 ```
-* Endpoint type : Target endpoint 선택
-* Endpoint identifier : t-seoulsummit-dynamodb1
-* Target engine : Amazon DynamoDB
-* Service access role ARN : arn:aws:iam::111111111111:role/EC2SSMRole2
-  (Service access role ARN 은 AWS Console에서 [CloudFormation](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false)으로 이동 후 seoul-summit 스택 Outputs 탭에서 확인할 수 있습니다.)  
+* Endpoint type(엔드포인트 유형) : Target endpoint 선택
+* Endpoint identifier(엔드포인트 식별자) : t-seoulsummit-dynamodb1
+* Target engine(대상 엔진) : Amazon DynamoDB
+* Service access role ARN(서비스 액세스 역할 ARN) : arn:aws:iam::[사용자의 어카운트 번호(12자리 숫자)]:role/EC2SSMRole2 
 ```
+(참고) Amazon DynamoDB를 Target engine으로 지정할 경우 Service access role ARN에 DynamoDB 테이블에 접근할 수 있는 권한을 가진 Role을 지정해 주어야 합니다. 해당 Role은 미리 생성해 두었고 AWS Console에서 [CloudFormation](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks?filteringStatus=active&filteringText=&viewNested=true&hideStacks=false)으로 이동 후 DBforMSA 스택 Outputs 탭에서 확인할 수 있습니다.
 
 ![image 9-1](./images/9-1.png)
 ![image 10](./images/10.png)
@@ -220,6 +220,7 @@ Task settings를 아래와 같이 설정합니다.
 
 Table mappings 정보를 설정합니다.
 JSON editor 버튼을 선택하고 아래 editor에 JSON 을 입력합니다.
+![table_mappings](./images/table_mappings.png)
 ~~~json
 {
     "rules": [
