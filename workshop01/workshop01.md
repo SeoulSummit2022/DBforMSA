@@ -8,15 +8,13 @@
 
 ---
 
-#### Architecture 
+### Architecture Diagram
 
-![image-20220413131016534](images/image-20220413131016534.png)
+![image-20220413131156398](images/image-20220413131156398.png)
 
 ---
 
 ### 시나리오 소개
-
----
 
 ```
 당신은 RETAIL 업체에서 일하고 있으며, 개발팀과 DBA를 이끄는 Team Leader입니다.
