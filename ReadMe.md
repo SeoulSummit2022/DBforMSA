@@ -1,3 +1,17 @@
+# Seoul Summit 2022 - DBforMSA Workshop
+
+---
+
+**Seoul Summit 2022 - DBfor MSA Workshop에 오신 여러분 환영 합니다.**
+
+**오늘 Workshop에서는 엔터프라이즈 모놀리틱 디비를 목적에 맞는 다양한 디비로 분리하는 실습을 진행하시게 됩니다.**
+
+
+
+
+
+
+
 #### 주의 사항
 
 ```

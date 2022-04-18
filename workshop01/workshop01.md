@@ -4,7 +4,9 @@
 
 
 
-***엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기* 세션의 Workshop2에 오신 것을 환영합니다. Workshop2 에서는 리더보드 데이터를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 실시간 리더보드가 어떻게 구현되는지 실습을 통해 알아보겠습니다.**
+***엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기* 세션의 Workshop1에 오신 것을 환영합니다. **
+
+**Workshop1 에서는 CRM Report 성격의 Oracle Data를 MongoDB로 마이그레이션해보고, MongoDB에서  어떻게 구현되는지 실습을 통해 알아보겠습니다.**
 
 ---
 
