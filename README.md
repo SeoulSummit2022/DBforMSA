@@ -19,7 +19,7 @@ workshop02 - Redis를 활용한 실시간 리더보드 만들기
 
 workshop03 - Redis를 활용한 한정판매 이벤트 처리하기
 
-workshop04 - DynamoDB를 활용하여 구매내역 조회 서비스  전환하기
+workshop04 - DynamoDB를 활용하여 구매내역 조회 서비스 전환하기
 
 workshop99 - 실습 환경 및 리소스 삭제 (워크샵 수행 후 반드시 수행 필요)
 ```
