@@ -376,7 +376,7 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
 
 
-**Task Status가 "Ready(준비 완료)"가 될때까지 기다립니다.**
+**Task Status가 `Ready(준비 완료)`가 될때까지 기다립니다.**
 
 ![image-20220216140643173](images/image-20220216140643173.png)
 
@@ -400,7 +400,7 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
 ---
 
-14. Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널(mstsc)을 이용하여 Bastion Server로 접속합니다.
+14. Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. `원격 터미널(mstsc.exe)`을 이용하여 `Bastion Server`로 접속합니다.
 
 ---
 
@@ -416,6 +416,8 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
     의도한대로 2019년 1월 1일 이전의 Data들만이 MongoDB로 이관 된 것을 확인 할 수 있습니다. 
 
+**MongoDB 명령어**
+
 ```
 mongoadmin
 use crm
@@ -423,6 +425,12 @@ show collections
 db.CSHARCH.find().count()
 db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:+1}).limit(1)
 db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:-1}).limit(1)
+```
+
+**MongoDB 명령 실행 결과 및 Output Sample**
+
+```
+
 
 ## Command Output
 ec2-user@ip-10-100-1-101:/home/ec2-user> mongoadmin
@@ -452,9 +460,9 @@ alias mongoadmin='mongo -u myadmin -p Welcome1234   --authenticationDatabase "ad
 
 ---
 
-17. 이제 Data이관이 완료되었습니다. 이제 Legacy Java Application에서 경량화된 Python Flask Application으로 바꿔보겠습니다.
+17. 이제 Data이관이 완료되었습니다. 이제 `Legacy Java Application`에서 경량화된 `Python Flask Application`으로 바꿔보겠습니다.
 
-MobaXterm에서 AP-FLASK Session으로 이동합니다. 
+MobaXterm에서 `AP-FLASK Session`으로 이동합니다. 
 
 ---
 
@@ -478,7 +486,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop01> source bin/activate
 
 ---
 
-19. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
+19. `Chrome`을 실행하고 즐겨 찾기에서 `FLASK-1`을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
 
 FLASK-1은 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회하는 Page입니다.
 
@@ -508,7 +516,7 @@ Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
 
 
-**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 FLASK가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다. MongoDB에서 가져온 데이터를 render_template을 사용하여 사용자에게 page를 return합니다.**
+**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 API가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다. MongoDB에서 가져온 데이터를 render_template을 사용하여 사용자에게 page를 return합니다.**
 
 ```
 import sys
