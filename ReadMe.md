@@ -34,7 +34,13 @@ workshop99 - 실습 환경 및 리소스 삭제 (워크샵 수행 후 반드시 
 
 % Workshop을 끝내실 경우 꼭 Workshop99 과정을 수행하셔서, Resource를 삭제하셔야 합니다.
 % Resource를 삭제하지 않을 경우 AWS Service 이용 요금이 계속 과금 될 수 있습니다.
+
+% Workshop은 Seoul Region(ap-northeast-2) 에서 진행됩니다. 
+% 다른 Region에서 진행시 AMI 접근이 불가능합니다.
+% Console 우측 상단에서 Seoul(서울) Region을 선택합니다.
 ```
+
+![image-20220501144253304](images/image-20220501144253304.png)
 
 ---
 
