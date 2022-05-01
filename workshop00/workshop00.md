@@ -103,7 +103,7 @@
 
 ---
 
-1. CloudFormation => 출력 => IPWindowsPublicIP를 확인
+1. CloudFormation => 출력 => `IPWindowsPublicIP`를 확인
 
 ![image-20220207104312974](images/image-20220207104312974.png)
 
@@ -144,7 +144,7 @@
 
 ---
 
-4. 다운로드 받았던 DBforMSA.cer 파일을 개인 Laptop에서 Bastion Server로 복사 합니다.
+4. 다운로드 받았던 `DBforMSA.cer(또는 DBforMSA.pem)` 파일을 개인 Laptop에서 Bastion Server로 복사 합니다.
 
 **사용자 PC가 MAC Laptop일 경우 키 파일 복사 방법**
 
