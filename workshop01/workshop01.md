@@ -68,6 +68,10 @@
 
 
 
+---
+
+---
+
 # Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션 
 
 1. Bastion Host에서 `SQL Developer`를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
