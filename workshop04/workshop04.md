@@ -42,8 +42,11 @@ DynamoDB 로 데이터를 마이그레이션 하려고 합니다.
 
 ### 1. Oracle 데이터 확인
 Bastion server에 Taskbar에서 sqldeveloper아이콘을 클릭하여 sqldeveloper를 실행합니다.
+
 ![sessions](./images/taskbar.png)   
+
 oracle-oshop 오른쪽 마우스 클릭 후 팝업메뉴에서 Connect를 클릭합니다.
+
 ![sessions](./images/connect.png)   
 
 오른쪽 Worksheet에서 아래 두 쿼리를 각각 실행하여 데이터를 확인해 봅니다.   
