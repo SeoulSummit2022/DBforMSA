@@ -163,6 +163,28 @@ All data transferred. Waiting for the last reply...
 Last reply received from server.
 errors: 0, replies: 300000
 ~~~
+```
+
+## shell script command 내용 및 설명
+### unload한 data를 ec2-user directory 이동 및 ownership을 변경
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> cat 01-copy-score.sh
+sudo cp /home/oracle/workshop02/user_score.csv /home/ec2-user/workshop02/msa/user_score.csv
+sudo chown ec2-user:ec2-user /home/ec2-user/workshop02/msa/user_score.csv
+
+### raw data를 REDIS Insert 용 command로 변경
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> cat 02-transform.sh
+awk -F "," 'NR > 0{ print "ZADD "$1" "$2" "$3}' ./user_score.csv > redis-load.cmd
+
+### redis-cli를 사용하여 data를 loading
+ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> cat 03-load-data-to-redis.sh
+cat redis-load.cmd | redis-cli -a Welcome1234 --pipe
+
+
+
+```
+
+
+
 ---
 
 5. Redis에 접속하여 마이그레이션된 데이터를 확인합니다.   
