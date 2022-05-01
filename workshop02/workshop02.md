@@ -217,7 +217,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa>
 # Oracle에서 leaderboard 조회 쿼리 영향도 확인
 
 1. Oracle database를 데이터 저장소로 사용하고 있는 Leaderboard Application을 구동합니다.  
-MobaXterm에서 Legacy_server tab으로 이동하여 아래 명령어를 수행합니다.
+MobaXterm에서 `Legacy_server` Session으로 이동하여 아래 명령어를 수행합니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/legacy
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/legacy> source bin/activate
@@ -234,9 +234,9 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/legacy> source bin/activate
 ---
 
 2. Oracle database의 Real time leaderboard 구성에 대한 영향도를 확인해 봅니다.  
-    [Gatling](https://gatling.io/)을 사용하여 여러 유저들의 Level을 변경하는 요청을 보내고, 요청이 수행되는 동안 Oracle rank함수를 사용하여 ranking 데이터를 조회해 봅니다.
-    부하 주입은 Bastion Server에서 실행하게 됩니다.  
-    Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 Command Prompt 윈도우를 실행합니다.
+    [Gatling](https://gatling.io/)을 사용하여 여러 유저들의 Level 및 점수를 변경하는 요청을 보내고, 요청이 수행되는 동안 Oracle rank함수를 사용하여 ranking 데이터를 조회해 봅니다.
+    부하 생성은 `Bastion Server`에서 실행하게 됩니다.  
+    Bastion Server의 Taskbar에서 아래 아이콘을 클릭하여 `Command Prompt` 윈도우를 실행합니다.
     ![image](./images/taskbar_cmd.png)
 
 Command Prompt에서 아래 명령를 차례로 입력합니다.  
