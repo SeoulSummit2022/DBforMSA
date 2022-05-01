@@ -304,7 +304,7 @@ MobaXterm의 Legacy_server 세션으로 이동하여 CTRL+C 를 눌러 어플리
 
 # Redis에서 실시간 Leaderboard 서비스를 테스트
 
-1. MobaXterm의 MSA_server 세션으로 이동하여 Redis를 데이터 스토어로 사용하는 Leaderboard 서비스를 실행합니다.
+1. MobaXterm의 `MSA_server` 세션으로 이동하여 Redis를 데이터 스토어로 사용하는 Leaderboard 서비스를 실행합니다.
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> source bin/activate
 (msa) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> flask run --host=0.0.0.0 --port=4000
@@ -387,6 +387,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
 
 4. 부하 종료 후 통계 데이터를 확인합니다.   
     메모리에서 데이터 변경 처리가 일어나기 때문에 데이터 변경 처리량이 Oracle보다 높은 것을 확인할 수 있습니다.   
+  
     ![image](./images/redis_stat.png)
 
 ---
@@ -394,7 +395,8 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
   
 
 5. 웹기반의 보고서를 확인하기 위해 위의 링크를 웹브라우저로 열어봅니다.   
-    평균 응답속도가 95%의 평균 응답속도가 20ms을 유지하며 ranking을 조회하더라도 초당 처리량은 변화가 없는 것을 확인할 수 있습니다.
+    평균 응답속도가 95%의 평균 응답속도가 20ms을 유지하며 ranking을 조회하더라도 초당 처리량은 거의 변화가 없는 것을 확인할 수 있습니다.
+  
     ![image](./images/5.png)
     ![image](./images/5-1.png)
     ![image](./images/6.png)
