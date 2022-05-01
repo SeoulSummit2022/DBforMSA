@@ -2,7 +2,7 @@
 
 **엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기 세션의 Workshop3에 오신 것을 환영합니다.**
 
-**Workshop3 에서는 한정판매 서비스의 Repoistory를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 한정 판매 이벤트를 어떻게 효율적으로 사용 할 수 있는지 실습을 통해 알아보겠습니다.**
+**Workshop3 에서는 한정판매 서비스의 Repoistory를 Oracle에서 Redis로 마이그레이션해보고, 한정 판매 이벤트에서 REDIS를 어떻게 효율적으로 사용 할 수 있는지 실습을 통해 알아보겠습니다.**
 
 ---
 
@@ -16,6 +16,7 @@ Architecture Diagram
 
 ```
 당신은 Game을 개발하는 회사의 개발자 혹은 DBA입니다. 
+
 현재 Game(World) Server를 포함한 Login, Manager, Log, SHOP, Auction의 기능들은 하나의 RDBMS(Oracle)을 사용하고 있습니다.
 당신의 Game은 예상 이상의 놀라운 인기를 얻고 있으며, 이에 따라 Game APP Server와 Game DB Server는 큰 부하가 생기고 있습니다. 
 
@@ -44,7 +45,7 @@ RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경�
 
 ---
 
-3. Session Rename - Oracle, Redis, APP, ApacheBench, extra로 각각 변경
+3. Session Rename - `Oracle`,` Redis`, `APP`, `ApacheBench`, `extra`로 각각 변경
 
 ![image-20220207142326844](images/image-20220207142326844.png)
 
@@ -327,9 +328,17 @@ Transfer rate:          19.39 [Kbytes/sec] received
 ```
 이제 여러분은 RDBMS에서 성능 저하를 유발하는 HOT Block을 제거하고 전체 서비스의 성능과 품질을 개선하였습니다.
 
-이 작업을 통해서 Database 관점에서는 Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
+이 작업을 통해서 Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
 개발팀에서는 이제 비슷한 유형의 서비스 요청이 있을 경우 RDBMS보다 인메모리디비나 NoSQL DB를 이용할 수 있게 되었습니다.
 
+```
+
+---
+
+```
+% Workshop에서는 실습 비용을 줄이기 위해서 EC2에 REDIS를 설치해서 실습을 진행하였습니다.
+% 간단한 개발 환경의 경우 EC2 위에서 Standard Alone 방식으로 개발을 진행하고, 
+% 실제 운영 환경에서는 뛰어난 가용성과 성능, 백업 기능등을 관리형 서비스인 ElastiCache for REDIS 를 고려하실 수 있습니다.
 ```
 
 ---
@@ -338,5 +347,5 @@ Transfer rate:          19.39 [Kbytes/sec] received
 
 
 
-## Standalone REDIS가 아닌 Amazon ElatiCache REDIS를 사용 할 수 있습니다. DEV 환경에서는 Standalone REDIS로 개발을 할 수 있지만, 실제 PRODUCTION에서는 HA와 Backup등이 고려되어야 하기 때문에...
+## 
 
