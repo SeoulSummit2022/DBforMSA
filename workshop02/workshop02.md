@@ -240,7 +240,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/legacy> source bin/activate
     ![image](./images/taskbar_cmd.png)
 
 Command Prompt에서 아래 명령를 차례로 입력합니다.  
-부하 주입 시간은 3분으로 설정되어 있습니다.
+부하 생성 시간은 3분으로 설정되어 있습니다.
 
 ```
 C:\Users\Administrator> CD C:\gatling\bin
@@ -268,18 +268,25 @@ Simulation SeoulSummit.Workshop2_legacy started...
 ================================================================================
 ```
 Level update 요청이 수행되는 동안 Oracle에 접속하여 rank 함수를 호출하여 ranking data를 조회합니다.   
-MobaXterm의 Oracle session에서 아래 명령을 수행합니다.
+MobaXterm의 `Oracle` session에서 아래 명령을 수회 수행합니다.
+
 ``` sql
 # 아래 쿼리는 Oracle에서 USER_SCORE 테이블의 전체 데이터의 ranking을 구하는 쿼리입니다.
 # 이 쿼리를 수행하여 별도의 ranking 테이블을 만들고 그 테이블을 조회하여 top 10 ranker나 유저의 ranking을 찾을 수 있습니다.
 SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank FROM USER_SCORE;
 ```
 ![image](./images/1.png)   
+
+
+
 부하가 끝나면 아래와 같이 통계정보를 확인할 수 있습니다.
+
 ![image](./images/gatling_result.png)   
+
 Gatling은 웹기반의 보고서를 제공합니다. 부하가 끝난 후 제공되는 html 링크(위 그림에서 빨간색 박스)를 웹브라우저를 사용하여 열어봅니다.   
-Ranking 조회 쿼리가 수행된 구간에서 p95의 Response Time이 상승하고 요청 처리량이 감소하는 그래프를 볼 수 있습니다.   
+**Ranking 조회 쿼리가 수행된 구간에서 p95의 Response Time이 상승하고 요청 처리량이 감소하는 그래프를 볼 수 있습니다.   **
 데이터가 많을 경우 Leaderboard를 조회하는 쿼리가 많은 리소스를 사용하게 되고 이로 인해 사용자 요청에 지연이 발생할 수 있기 때문에 이런 쿼리를 자주 수행하며 Leaderboard 데이터를 최신화하는 것은 부담스러운 작업입니다.   
+
 ![image2](./images/2.png)
 ![image2-1](./images/2-1.png)
 ![image3](./images/3.png)
