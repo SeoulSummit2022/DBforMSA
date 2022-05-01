@@ -30,7 +30,7 @@
 기존 Legacy Java Application에서는 "고객 상담 데이터"를 보여주기 위해서 여러개의 Table을 Join해야 했고, 
 이로 인해서 각 팀에서는 다음과 같은 불만 사항이 있습니다.
 
-1. DBA : Size가 큰 Table간의 다중 Join Report 생성으로 인한 Main Oracle Server 부하 증가
+1. DBA : Size가 큰 Table간의 다중 Join Report 생성으로 인한 Main Oracle Server 부하 증가, 고객 응대 Data의 지속적 증가로 인한 Storage 공간 이슈
 2. 개발자 : 변경/신규 개발을 위한 Schema 변경이 필요하지만, 이로 인한 Main Oracle 영향도 때문에 배포를 특정 PM 시간에만 할 수 있음으로 개발 생산성이 떨어짐
 
 그래서 당신은 2019년 이전 데이터들을 다중 Join RDB Table 구조에서 하나의 Document 형태로 변경하는 아이디어를 떠올렸고, 
@@ -56,7 +56,7 @@
 
 
 
-3. Session Rename - Oracle-HR, AP-TOMCAT, AP-FLASK, MongoDB, Extra로 각각 변경
+3. Session Rename - `Oracle-HR`, `AP-TOMCAT`, `AP-FLASK`, `MongoDB`, `Extra`로 각각 변경
 
 ![image-20220207142326844](images/image-20220207142326844.png)
 
@@ -70,19 +70,19 @@
 
 # Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션 
 
-1. SQL Developer를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
+1. Bastion Host에서 `SQL Developer`를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
 
 ![image-20220215154430833](images/image-20220215154430833.png)
 
 ---
 
-2. oracle-hr을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
+2. `oracle-hr`을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
 
 ![image-20220215154626853](images/image-20220215154626853.png)
 
 ---
 
-3. 바탕 화면의 Query3.txt를 Double Click하여 엽니다.
+3. 바탕 화면의 `Query3.txt`를 Double Click하여 엽니다.
 
 ![image-20220215155804896](images/image-20220215155804896.png)
 
@@ -125,7 +125,7 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
    Query 6을 실행합니다. 
 
-​       이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+​       이제 `CSHARCH`라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
 
 ​       % 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
 
@@ -164,7 +164,7 @@ create MATERIALIZED VIEW CSHARCH
 
 8. 이제 "고객 상담 내역" Data 중에서 2019년 1월 1일 이전의 Data를 MongoDB로 Migration 해보겠습니다.
 
-그리고 Legacy Java Appliation 중 crm-show.jsp에 해당하는 '고객 상담 내역 조회' 업무를 Python Flask로 변경하겠습니다. 
+그리고 Legacy Java Appliation 중 `crm-show.jsp`에 해당하는 '고객 상담 내역 조회' 업무를 `Python Flask`로 변경하겠습니다. 
 
 **우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
 
@@ -185,7 +185,7 @@ Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 
 ---
 
-9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. (Bastion 서버가 아닌 사용자 PC에서 작업!!)
+9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. **(Bastion 서버가 아닌 사용자 PC에서 작업!!)**
 
 ![image-20220216104215418](images/image-20220216104215418.png)
 
@@ -195,7 +195,7 @@ Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 
 10. 먼저 Replication Instance(복제 인스턴스)를 생성합니다. 
 
-"Replication Instances"(복제 인스턴스)를 Click합니다.
+`Replication Instances`(복제 인스턴스)를 Click합니다.
 
 "Create Replication Instances"(복제 인스턴스 생성)를 Click합니다.
 
@@ -220,7 +220,7 @@ Publicly accessible : 체크 안함
 
 
 
-**ri-oracle-to-mongodb가 Available(사용 가능) Status로 정상 생성될때까지 기다립니다.(약 5분 소요)**
+**`ri-oracle-to-mongodb`가 Available(사용 가능) Status로 정상 생성될때까지 기다립니다.(약 5분 소요)**
 
 ![image-20220216112729391](images/image-20220216112729391.png)
 
@@ -228,7 +228,7 @@ Publicly accessible : 체크 안함
 
 11. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
 
-화면 왼쪽 메뉴에서 "Endpoints"(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
+화면 왼쪽 메뉴에서 `Endpoints`(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
 
 ![image-20220216132936892](images/image-20220216132936892.png)
 
@@ -270,7 +270,7 @@ SID/Service name : XE
 
 ---
 
-12. Target이 되는 MongoDB용 Target Endpoint를 생성합니다.
+12. Target이 되는 MongoDB용 `Target Endpoint`를 생성합니다.
 
 ![image-20220216134237337](images/image-20220216134237337.png)
 
@@ -312,7 +312,7 @@ Database Name : crm
 
 13. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
 
-"Database migration tasks(데이터베이스 마이그레이션 태스크)"를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
+`Database migration tasks`(데이터베이스 마이그레이션 태스크)를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
 
 ![image-20220216135451371](images/image-20220216135451371.png)
 
@@ -376,7 +376,7 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
 
 
-**Task를 실행합니다. Actions=>Restart/Resume(작업=>다시 시작/재개)**
+**Task를 실행합니다. `Actions` => `Restart/Resume`(작업=>다시 시작/재개)**
 
 ![image-20220216140806184](images/image-20220216140806184.png)
 
@@ -571,7 +571,13 @@ Application 관점에서는 개발자들이 별도의 서비스와 디비로 분
 
 ---
 
+```
+% Workshop에서는 실습 비용을 줄이기 위해서 EC2에 MongoDB를 설치해서 실습을 진행하였습니다.
+% 간단한 개발 환경의 경우 EC2 위에서 Standard Alone 방식으로 개발을 진행하고, 
+% 실제 운영 환경에서는 뛰어난 가용성과 성능, 백업 기능등을 관리형 서비스인 Amazon DocumentDB나 Atlas를 고려하실 수 있습니다.
+```
 
+---
 
 [다음 워크샵으로 - workshop02(REDIS를 활용한 실시간 리더보드 만들기) ](../workshop02/workshop02.md) 
 
