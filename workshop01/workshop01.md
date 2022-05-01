@@ -573,7 +573,7 @@ Application 관점에서는 개발자들이 별도의 서비스와 디비로 분
 
 ```
 % Workshop에서는 실습 비용을 줄이기 위해서 EC2에 MongoDB를 설치해서 실습을 진행하였습니다.
-% 간단한 개발 환경의 경우 EC2 위에서 Standard Alone 방식으로 개발을 진행하고, 
+% 간단한 개발 환경의 경우 EC2 위에서 MongoDB - Standard Alone 방식으로 개발을 진행하고, 
 % 실제 운영 환경에서는 뛰어난 가용성과 성능, 백업 기능등을 관리형 서비스인 Amazon DocumentDB나 Atlas를 고려하실 수 있습니다.
 ```
 
