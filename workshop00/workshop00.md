@@ -64,7 +64,7 @@
 
 ---
 
-3. "Amazon S3 URL"에 https://shared-kiwony.s3.ap-northeast-2.amazonaws.com/OnPREM4.yml 을 입력 후 "다음" Click
+3. "Amazon S3 URL"에 `https://shared-kiwony.s3.ap-northeast-2.amazonaws.com/OnPREM4.yml` 을 입력 후 "다음" Click
 
 ![image-20220207103043253](images/image-20220207103043253.png)
 
