@@ -163,7 +163,7 @@ All data transferred. Waiting for the last reply...
 Last reply received from server.
 errors: 0, replies: 300000
 ~~~
-아래는 내용은 위에서 실행한 shell 명령어에 대한 스크립트와 설명이니 참고해 주세요.
+아래 내용은 위에서 실행한 shell 명령어에 대한 스크립트와 설명이니 참고해 주세요.
 ```
 ## shell script command 내용 및 설명
 ### unload한 data를 ec2-user directory 이동 및 ownership을 변경
