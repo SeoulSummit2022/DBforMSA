@@ -22,7 +22,7 @@
 
 ---
 
-5. 이름 : "DBforMSA" 입력 후 "키 페어 생성" Click
+5. 이름 : `DBforMSA` 입력 후 "키 페어 생성" Click
 
 ![image-20220308150914899](images/image-20220308150914899.png)
 
