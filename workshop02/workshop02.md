@@ -284,8 +284,11 @@ SQL> SELECT userid, rank() OVER (ORDER BY USERLEVEL DESC, EXPOINT DESC) AS rank 
 ![image](./images/gatling_result.png)   
 
 Gatling은 웹기반의 보고서를 제공합니다. 부하가 끝난 후 제공되는 html 링크(위 그림에서 빨간색 박스)를 웹브라우저를 사용하여 열어봅니다.   
+
 **Ranking 조회 쿼리가 수행된 구간에서 p95의 Response Time이 상승하고 요청 처리량이 감소하는 그래프를 볼 수 있습니다.   **
-데이터가 많을 경우 Leaderboard를 조회하는 쿼리가 많은 리소스를 사용하게 되고 이로 인해 사용자 요청에 지연이 발생할 수 있기 때문에 이런 쿼리를 자주 수행하며 Leaderboard 데이터를 최신화하는 것은 부담스러운 작업입니다.   
+데이터가 많을 경우 Leaderboard를 조회하는 쿼리가 많은 리소스를 사용하게 되며,
+
+이로 인해 사용자 요청에 지연이 발생할 수 있기 때문에 이런 쿼리를 자주 수행하며 Leaderboard 데이터를 최신화하는 것은 DB의 Overhead를 증가시킵니다.
 
 ![image2](./images/2.png)
 ![image2-1](./images/2-1.png)
