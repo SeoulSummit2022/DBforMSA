@@ -186,8 +186,8 @@ cat redis-load.cmd | redis-cli -a Welcome1234 --pipe
 ---
 
 5. Redis에 접속하여 마이그레이션된 데이터를 확인합니다.   
-    zcard leaderboard : leaderboard key에 속한 멤버 개수를 리턴   
-    zrevrange leaderboard 0 9 : score가 큰 순서대로 10개(0~9)의 멤버를 리턴
+    * zcard leaderboard : leaderboard key에 속한 멤버 개수를 리턴   
+    * zrevrange leaderboard 0 9 : score가 큰 순서대로 10개(0~9)의 멤버를 리턴
 
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop02/msa> redis-cli -a Welcome1234
