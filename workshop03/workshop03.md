@@ -53,7 +53,7 @@ RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경�
 
 ---
 
-4. Oracle Session에서 DB에 접속하여 Data 초기화 수행
+4. MobaXterm  `Oracle` Session에서 DB에 접속하여 Data 초기화 수행
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
@@ -80,13 +80,13 @@ SQL>
 
 ---
 
-5. Redis Session에 접속하여 Data 초기화 수행
+5. MobaXterm  `Redis` Session에 접속하여 Data 초기화 수행
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> redis-cli
 127.0.0.1:6379> auth Welcome1234
 OK
-127.0.0.1:6379> set prod-001-quantity 10000
+127.0.0.1:6379> set prod-001-quantity 3000
 OK
 127.0.0.1:6379> get prod-001-quantity
 "10000"
@@ -96,9 +96,13 @@ OK
 
 ![image-20220207142911631](images/image-20220207142911631.png)
 
+
+
+![image-20220501185213731](images/image-20220501185213731.png)
+
 ---
 
-6. APP Session에서 Oracle을 Repository로 사용하고 있는 Legacy Game Application을 구동합니다.
+6. MobaXterm `APP` Session에서 Oracle을 Repository로 사용하고 있는 Legacy Game Application을 구동합니다.
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop03/legacy
