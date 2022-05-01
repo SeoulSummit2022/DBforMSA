@@ -45,11 +45,14 @@ Bastion server에 Taskbar에서 sqldeveloper아이콘을 클릭하여 sqldevelop
 
 ![sessions](./images/taskbar.png)   
 
-oracle-oshop 오른쪽 마우스 클릭 후 팝업메뉴에서 Connect를 클릭합니다.
+`oracle-oshop`  오른쪽 마우스 클릭 후 팝업메뉴에서 Connect를 클릭합니다.
 
 ![sessions](./images/connect.png)   
 
 오른쪽 Worksheet에서 아래 두 쿼리를 각각 실행하여 데이터를 확인해 봅니다.   
+
+---
+
 첫번째 쿼리는 여러 테이블을 조인하여 데이터를 확인하는 쿼리이고, 두번째 쿼리는 첫번째 결과를 피버팅한 데이터를 보여주는 쿼리입니다.   
 두번째 쿼리를 활용하여 DanamoDB로 데이터를 마이그레이션하기 위한 Staging 테이블을 구성할 것입니다.   
 
@@ -66,6 +69,9 @@ FROM purchase pc
 where pc.purchaseid=1;
 ~~~
 ![sessions](./images/query1_result.png)  
+
+---
+
 ~~~ sql
 # 위의 쿼리결과를 피버팅하는 쿼리입니다. 
 # DynamoDB로 마이그레이션 하기 전에 이 쿼리를 통해 staging 테이블을 구성하게 됩니다.
@@ -173,7 +179,7 @@ DMS의 Replication Instance는 `Workshop01에서 사용했던 RI`를 사용합�
 
 Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#dashboard) 에서 Source와 Target endpoint를 생성합니다.  
 왼쪽 메뉴에서 Endpoints로 이동 후 Create endpoint 버튼을 클릭합니다.
-아래와 같이 Source endpoint에 대한 정보를 입력합니다.
+아래와 같이 `Source endpoint`에 대한 정보를 입력합니다.
 
 ```
 * Endpoint type(엔드포인트 유형) : Source endpoint 선택
@@ -193,7 +199,9 @@ Test 가 성공하였다면 Create endpoint 버튼을 클릭합니다.
 
 ![image 9](./images/9.png)
 
-Target endpoint를 생성하기 위해서 Create endpoint 버튼을 클릭합니다.
+---
+
+`Target endpoint`를 생성하기 위해서 Create endpoint 버튼을 클릭합니다.
 아래와 같이 Target endpoint 에 대한 정보를 입력합니다.
 
 ```
@@ -362,7 +370,7 @@ Task 생성이 완료되었으면 Task를 실행합니다.
 10만건 데이터를 마이그레이션하는데 14분 43초 소요되었습니다.
 ![image 20](./images/complete_dms.png)
 
-[DynamoDB](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#tables) 이동하여 purchase_t 를 클릭합니다.
+[DynamoDB](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#tables) 이동하여 `purchase_t` 를 클릭합니다.
 ![image 24](./images/24.png)
 
 purchase_t 를 선택한 후 오른쪽 위에 "Explore table items"를 클릭합니다.  
@@ -382,7 +390,7 @@ purchase_t 를 선택한 후 오른쪽 위에 "Explore table items"를 클릭합
 
 ### 1. 구매내역을 조회하는 Oracle 기반의 어플리케이션을 기동합니다.
 
-MobaXterm의 Legacy_server에서 아래의 명령어를 수행합니다.
+MobaXterm의 `Legacy_server` Session에서 아래의 명령어를 수행합니다.
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/legacy
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> source bin/activate
@@ -401,6 +409,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy> source bin/activate
 
 아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
 ![image](./images/commandPrompt.png)
+
 ~~~
 C:\Users\Administrator> CD C:\gatling\bin
 C:\gatling\bin> gatling.bat
@@ -436,7 +445,7 @@ Simulation SeoulSummit.Workshop04_legacy started...
 ![image 3-1](./images/3-1.png)
 ![image 4](./images/4.png)
 
-MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합니다.
+MobaXterm `Legacy_server` Session 으로 이동 후 ctrl+C로 어플리케이션을 중지합니다.
 ~~~
 10.100.1.103 - - [07/Apr/2022 15:05:29] "GET /legacy/selectPurchase HTTP/1.1" 200 -
 ^C(legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/legacy>
@@ -446,7 +455,7 @@ MobaXterm Legacy_server로 이동 후 ctrl+C로 어플리케이션을 중지합�
 
 ### 3. Gatling을 이용하여 DynamoDB 기반의 구매 내역 조회 어플리케이션 성능을 확인합니다.
 
-MobaXterm MSA_Server 세션으로 이동하여 어플리케이션을 실행합니다.
+MobaXterm `MSA_Server` 세션으로 이동하여 어플리케이션을 실행합니다.
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop04/msa
 ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/msa> source bin/activate
@@ -459,9 +468,12 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop04/msa> source bin/activate
    WARNING: This is a development server. Do not use it in a production deployment.
  * Running on http://10.100.1.101:4000/ (Press CTRL+C to quit)
 ~~~
+
+
 Gatling으로 부하테스트를 수행합니다.   
 부하테스트는 Cloudwatch 지표를 표시하기 위해서 10분 동안 수행되도록 하였습니다.(Cloudwatch가 1분 평균 그래프이기 때문에 부하 시간이 너무 짧을 경우 그래프가 명확하게 표시되지 않습니다.)   
 아래 명령어는 Bastion Server의 Command Prompt에서 실행합니다.
+
 ![image](./images/commandPrompt.png)
 
 ~~~
@@ -492,13 +504,19 @@ Simulation SeoulSummit.Workshop04_msa started...
 부하가 종료된 후 성능 통계정보를 확인합니다. p95의 평균 응답시간은 56ms 입니다.
 ![image](./images/gatling_dynamodb.png)
 
+
+
 위의 링크를 웹브라우저로 열어서 Web으로 제공되는 성능 보고서도 확인해 봅니다.
+
 ![image 25](./images/25.png)
 ![image 26](./images/26.png)
 ![image 27](./images/27.png)
 
+
+
 [Cloudwatch지표](https://ap-northeast-2.console.aws.amazon.com/dynamodbv2/home?region=ap-northeast-2#table?initialTagKey=&name=purchase_t&tab=monitoring)를 확인해 봅니다.   
 Latency 카테고리에 Get latency 지표 그래프를 확대합니다.   
+
 ![image](./images/cloudwatch_latency.png)
 ![image](./images/cloudwatch_latency_large.png)
 
