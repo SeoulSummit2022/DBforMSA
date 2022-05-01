@@ -126,7 +126,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop03/legacy> source bin/activate
 
    apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 
    
-   Oracle DB를 사용하는 Legacy System에서는 사용자 요청 처리에 약 100초 정도가 필요했습니다.
+   **Oracle DB를 사용하는 Legacy System에서는 사용자 요청 처리에 약 100초 정도가 필요했습니다.**
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order
@@ -174,7 +174,7 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
 ---
 
-8. MobaXterm - APP Session으로 돌아와서 CTRL+C를 눌러서 Legacy Game Application을 중지합니다.
+8. MobaXterm - `APP` Session으로 돌아와서 CTRL+C를 눌러서 Legacy Game Application을 중지합니다.
 
 ![image-20220308193447790](images/image-20220308193447790.png)
 
@@ -258,7 +258,7 @@ def order_redis():
 
 ---
 
-11. REDIS를 사용하는 새로운 Application을 실행하겠습니다.
+11. MobaXterm `APP` Session에서 REDIS를 사용하는 새로운 Application을 실행하겠습니다.
 
 ```
 (legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy>  cd ../msa/
@@ -280,7 +280,9 @@ def order_redis():
 
     apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 
 
-    약 25초 정도가 걸렸으며, 기존의 Oracle Table 대비 4배의 속도 개선이 이뤄졌습니다.
+    MobaXterm `ApacheBench` Session에서 아래 ab Command를 수행합니다.
+    
+    **약 25초 정도가 걸렸으며, 기존의 Oracle Table 대비 4배의 속도 개선이 이뤄졌습니다.**
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order-redis
@@ -332,7 +334,10 @@ Transfer rate:          19.39 [Kbytes/sec] received
 ```
 이제 여러분은 RDBMS에서 성능 저하를 유발하는 HOT Block을 제거하고 전체 서비스의 성능과 품질을 개선하였습니다.
 
-이 작업을 통해서 Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
+기존 Oracle DB를 사용할 경우 약 100초가 걸리던 Request처리가, REDIS를 사용 할 경우 25초만에 처리 되었습니다.
+
+Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
+
 개발팀에서는 이제 비슷한 유형의 서비스 요청이 있을 경우 RDBMS보다 인메모리디비나 NoSQL DB를 이용할 수 있게 되었습니다.
 
 ```
