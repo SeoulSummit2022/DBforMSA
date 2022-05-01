@@ -70,14 +70,14 @@
 
 ---
 
-4. "스택 이름"에 "DBforMSA"를 입력, KeyName에 전 Step에서 다운로드 받은 DBforMSA를 선택 후 "다음" Click
+4. "스택 이름"에 `DBforMSA`를 입력, KeyName에 전 Step에서 다운로드 받은 `DBforMSA`를 선택 후 "다음" Click
 
 ![image-20220308160008365](images/image-20220308160008365.png)
 
 ---
 
 5. "스택 옵션 구성" Page에서 "다음" Click
-5. "검토" Page에서 맨 아래 AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다"를 체크 후 "스택 생성" Click
+5. "검토" Page에서 맨 아래 `AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다`를 체크 후 "스택 생성" Click
 
 ![image-20220207103202153](images/image-20220207103202153.png)
 
@@ -89,7 +89,7 @@
 
 
 
-**Stack 생성이 완료되면 "CREATE_COMPLTE"로 표시 됨**
+**Stack 생성이 완료되면 `CREATE_COMPLTE`로 표시 됨**
 
 ![image-20220207103925083](images/image-20220207103925083.png)
 
