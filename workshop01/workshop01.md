@@ -70,8 +70,6 @@
 
 ---
 
----
-
 # Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션 
 
 1. Bastion Host에서 `SQL Developer`를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
@@ -127,7 +125,7 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
 6. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. 
 
-   Query 6을 실행합니다. 
+   Query 6을 실행합니다. (10~15초 정도 소요)
 
 ​       이제 `CSHARCH`라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
 
@@ -148,15 +146,19 @@ create MATERIALIZED VIEW CSHARCH
   and call_date < to_date('2019-01-01','yyyy-mm-dd');
 ```
 
+![image-20220501153326525](images/image-20220501153326525.png)
+
 ---
 
-7. "Bastion Server"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. (크롬은 TaskBar에 QuickStart로 있습니다.)
+7. `Bastion Server`에서 `Chrome`을 실행하고, 즐겨 찾기에서 `CRM-LIST`를 Click합니다. (크롬은 TaskBar에 QuickStart로 있습니다.)
 
-아래의 Page처럼 Legacy Java Application이 동작하고 있습니다. 
+아래의 Page처럼 `Legacy Java Application`이 `Main DB인 Oracle` 과 연결되서 동작하고 있습니다. 
 
 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회해 봅니다. 
 
-"Customer Satisfaction" Page는 Oracle에서 2개의 테이블 CUSTOMERS, CUSTOMER_SERVICE_HISTORY를 JOIN해서 보여줍니다.
+"Customer Satisfaction" Page는 Oracle에서 2개의 테이블 `CUSTOMERS`, `CUSTOMER_SERVICE_HISTORY`를 JOIN해서 보여줍니다. (실제 CRM시스템은 더 많은 Table이 Join되지만, 실습에서는 2개 Table만을 Join 합니다.)
+
+![image-20220501153530978](images/image-20220501153530978.png)
 
 ![image-20220215183908849](images/image-20220215183908849.png)
 
@@ -293,7 +295,7 @@ User name : myadmin
 Password : Welcome1234
 Database Name : crm
 
-% Workshop에서는 편의를 위해서 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 실제 환경에서는 다른 서버에 설치된 MongoDB를 사용 할 수 있습니다.
+% Workshop에서는 실습 비용을 줄이고, 편의성을 높이기 위해서 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 
 % Workshop같은 개발 환경에서는 설치형 Standalone을 사용하고, 실제 PROD환경에서는 HA, Security, Backup, 운영등을 위해서
 % Amazon DocumentDB나 MongoDB Atlas를 사용하시는 것이 좋습니다. 
 ```
