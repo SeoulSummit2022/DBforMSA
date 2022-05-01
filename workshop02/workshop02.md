@@ -112,6 +112,7 @@ commit;
 ```
 
 [참고] 쿼리를 붙혀넣기하면 아래와 같은 팝업이 뜨는데 그냥 OK 클릭하시면 됩니다.
+
 ![image](./images/query_paste_popup.png)
 
 쿼리 수행이 정상적으로 완료되면 아래와 같이 화면에 표시됩니다.
@@ -120,7 +121,7 @@ commit;
 ---
 
 3. 스테이징 테이블을 CSV파일로 저장합니다.   
-    MobaXterm에서 MSA_Server 세션으로 이동하여 아래 명령어를 수행합니다.
+    MobaXterm에서 `MSA_Server` 세션으로 이동하여 아래 명령어를 수행합니다.
 
 ~~~
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop02/msa
@@ -389,3 +390,4 @@ Oracle은 초당 123건 update, Redis는 초당 631건 update를 수행하여 �
 ---
 
 [다음 워크샵으로 - workshop03(Redis를 활용하여 한정판매 이벤트 처리하기)](../workshop03/workshop03.md) 
+
