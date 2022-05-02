@@ -89,7 +89,7 @@ OK
 127.0.0.1:6379> set prod-001-quantity 3000
 OK
 127.0.0.1:6379> get prod-001-quantity
-"10000"
+"3000"
 127.0.0.1:6379>
 
 ```
@@ -180,7 +180,7 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
 9. 이번에는 기존의 Oracle DB 대신 REDIS를 이용한 새로운 Application을 이용해서 테스트 하겠습니다. 
 
-   이를 위해서 Oracle과 Redis의 Data를 초기화 합니다. 위의 Step 4를 다시 한번 수행하여 데이터를 초기화 합니다.
+   이를 위해서 Oracle의 Data를 초기화 합니다. 위의 Step 4를 다시 한번 수행하여 데이터를 초기화 합니다.
 
    ---
 
