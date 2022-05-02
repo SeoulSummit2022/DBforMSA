@@ -183,7 +183,7 @@ DMS의 Replication Instance는 `Workshop01에서 사용했던 RI`를 사용합�
 만약 Workshop01을 수행하지 않았다면 Workshop01의 "Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션"의 10번 단계를 참고하여 Replication Instance를 생성합니다.  
 
 Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#dashboard) 에서 Source와 Target endpoint를 생성합니다.  
-왼쪽 메뉴에서 Endpoints로 이동 후 Create endpoint 버튼을 클릭합니다.
+왼쪽 메뉴에서 `Endpoints`로 이동 후 `Create endpoint` 버튼을 클릭합니다.
 아래와 같이 `Source endpoint`에 대한 정보를 입력합니다.
 
 ```
@@ -199,14 +199,14 @@ Replication Instance를 생성하였다면 [DMS Console](https://ap-northeast-2.
 ```
 ![image 8](./images/8.png)
 
-VPC와 Replication instance 정보를 입력하고 Run test 버튼을 클릭하여 연결테스트를 수행합니다.
-Test 가 성공하였다면 Create endpoint 버튼을 클릭합니다.  
+VPC와 Replication instance 정보를 입력하고 `Run test` 버튼을 클릭하여 연결테스트를 수행합니다.
+Test 가 성공하였다면 `Create endpoint` 버튼을 클릭합니다.  
 
 ![image 9](./images/9.png)
 
 ---
 
-`Target endpoint`를 생성하기 위해서 Create endpoint 버튼을 클릭합니다.
+`Target endpoint`를 생성하기 위해서 `Create endpoint` 버튼을 클릭합니다.
 아래와 같이 Target endpoint 에 대한 정보를 입력합니다.
 
 ```
