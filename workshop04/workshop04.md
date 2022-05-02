@@ -4,7 +4,7 @@
 
 **엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기 세션의 Workshop04에 오신 것을 환영합니다.  **
 
-**Workshop04 에서는 Oracle의 주문 조회용 데이터를 Amazon DynamoDB 로 마이그레이션해 보고, Gatling을 활용하여 부하 주입 및 성능 측정을 해보도록 하겠습니다.**
+**Workshop04 에서는 Oracle의 주문 조회용 데이터를 Amazon DynamoDB 로 마이그레이션해 보고, Gatling을 활용하여 성능 테스트를 수행해 보도록 하겠습니다.**
 
 ---
 
