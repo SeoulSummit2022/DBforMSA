@@ -22,7 +22,7 @@
 
 ---
 
-5. 이름 : "DBforMSA" 입력 후 "키 페어 생성" Click
+5. 이름 : `DBforMSA` 입력 후 "키 페어 생성" Click
 
 ![image-20220308150914899](images/image-20220308150914899.png)
 
@@ -64,20 +64,20 @@
 
 ---
 
-3. "Amazon S3 URL"에 https://shared-kiwony.s3.ap-northeast-2.amazonaws.com/OnPREM4.yml 을 입력 후 "다음" Click
+3. "Amazon S3 URL"에 `https://shared-kiwony.s3.ap-northeast-2.amazonaws.com/OnPREM4.yml` 을 입력 후 "다음" Click
 
 ![image-20220207103043253](images/image-20220207103043253.png)
 
 ---
 
-4. "스택 이름"에 "DBforMSA"를 입력, KeyName에 전 Step에서 다운로드 받은 DBforMSA를 선택 후 "다음" Click
+4. "스택 이름"에 `DBforMSA`를 입력, KeyName에 전 Step에서 다운로드 받은 `DBforMSA`를 선택 후 "다음" Click
 
 ![image-20220308160008365](images/image-20220308160008365.png)
 
 ---
 
 5. "스택 옵션 구성" Page에서 "다음" Click
-5. "검토" Page에서 맨 아래 AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다"를 체크 후 "스택 생성" Click
+5. "검토" Page에서 맨 아래 `AWS CloudFormation에서 사용자 지정 이름으로 IAM 리소스를 생성할 수 있음을 승인합니다`를 체크 후 "스택 생성" Click
 
 ![image-20220207103202153](images/image-20220207103202153.png)
 
@@ -89,7 +89,7 @@
 
 
 
-**Stack 생성이 완료되면 "CREATE_COMPLTE"로 표시 됨**
+**Stack 생성이 완료되면 `CREATE_COMPLTE`로 표시 됨**
 
 ![image-20220207103925083](images/image-20220207103925083.png)
 
@@ -103,7 +103,7 @@
 
 ---
 
-1. CloudFormation => 출력 => IPWindowsPublicIP를 확인
+1. CloudFormation => 출력 => `IPWindowsPublicIP`를 확인
 
 ![image-20220207104312974](images/image-20220207104312974.png)
 
@@ -144,7 +144,7 @@
 
 ---
 
-4. 다운로드 받았던 DBforMSA.cer 파일을 개인 Laptop에서 Bastion Server로 복사 합니다.
+4. 다운로드 받았던 `DBforMSA.cer(또는 DBforMSA.pem)` 파일을 개인 Laptop에서 Bastion Server로 복사 합니다.
 
 **사용자 PC가 MAC Laptop일 경우 키 파일 복사 방법**
 

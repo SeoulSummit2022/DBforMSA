@@ -1,6 +1,8 @@
 # Workshop03(Redis를 활용하여 한정판매 이벤트 처리하기)
 
-***엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기* 세션의 Workshop2에 오신 것을 환영합니다. Workshop2 에서는 리더보드 데이터를 Oracle에서 Redis로 마이그레이션해보고, Redis에서 실시간 리더보드가 어떻게 구현되는지 실습을 통해 알아보겠습니다.**
+**엔터프라이즈 모놀리틱 DB를 MSA 구조로 전환하기 세션의 Workshop3에 오신 것을 환영합니다.**
+
+**Workshop3 에서는 한정판매 서비스의 Repoistory를 Oracle에서 Redis로 마이그레이션해보고, 한정 판매 이벤트에서 REDIS를 어떻게 효율적으로 사용 할 수 있는지 실습을 통해 알아보겠습니다.**
 
 ---
 
@@ -14,6 +16,7 @@ Architecture Diagram
 
 ```
 당신은 Game을 개발하는 회사의 개발자 혹은 DBA입니다. 
+
 현재 Game(World) Server를 포함한 Login, Manager, Log, SHOP, Auction의 기능들은 하나의 RDBMS(Oracle)을 사용하고 있습니다.
 당신의 Game은 예상 이상의 놀라운 인기를 얻고 있으며, 이에 따라 Game APP Server와 Game DB Server는 큰 부하가 생기고 있습니다. 
 
@@ -42,7 +45,7 @@ RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경�
 
 ---
 
-3. Session Rename - Oracle, Redis, APP, ApacheBench, extra로 각각 변경
+3. Session Rename - `Oracle`,` Redis`, `APP`, `ApacheBench`, `extra`로 각각 변경
 
 ![image-20220207142326844](images/image-20220207142326844.png)
 
@@ -50,7 +53,7 @@ RDBMS을 사용할 경우 특정 DB Block에 동시에 Access가 발생 할 경�
 
 ---
 
-4. Oracle Session에서 DB에 접속하여 Data 초기화 수행
+4. MobaXterm  `Oracle` Session에서 DB에 접속하여 Data 초기화 수행
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> sudo su -
@@ -77,25 +80,27 @@ SQL>
 
 ---
 
-5. Redis Session에 접속하여 Data 초기화 수행
+5. MobaXterm  `Redis` Session에 접속하여 Data 초기화 수행
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> redis-cli
 127.0.0.1:6379> auth Welcome1234
 OK
-127.0.0.1:6379> set prod-001-quantity 10000
+127.0.0.1:6379> set prod-001-quantity 3000
 OK
 127.0.0.1:6379> get prod-001-quantity
-"10000"
+"3000"
 127.0.0.1:6379>
 
 ```
 
-![image-20220207142911631](images/image-20220207142911631.png)
+
+
+![image-20220501185213731](images/image-20220501185213731.png)
 
 ---
 
-6. APP Session에서 Oracle을 Repository로 사용하고 있는 Legacy Game Application을 구동합니다.
+6. MobaXterm `APP` Session에서 Oracle을 Repository로 사용하고 있는 Legacy Game Application을 구동합니다.
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> cd workshop03/legacy
@@ -119,7 +124,7 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop03/legacy> source bin/activate
 
    apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 
    
-   Oracle DB를 사용하는 Legacy System에서는 사용자 요청 처리에 약 100초 정도가 필요했습니다.
+   **Oracle DB를 사용하는 Legacy System에서는 사용자 요청 처리에 약 100초 정도가 필요했습니다.**
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order
@@ -167,7 +172,7 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
 ---
 
-8. MobaXterm - APP Session으로 돌아와서 CTRL+C를 눌러서 Legacy Game Application을 중지합니다.
+8. MobaXterm - `APP` Session으로 돌아와서 CTRL+C를 눌러서 Legacy Game Application을 중지합니다.
 
 ![image-20220308193447790](images/image-20220308193447790.png)
 
@@ -175,7 +180,7 @@ Transfer rate:          4.53 [Kbytes/sec] received
 
 9. 이번에는 기존의 Oracle DB 대신 REDIS를 이용한 새로운 Application을 이용해서 테스트 하겠습니다. 
 
-   이를 위해서 Oracle과 Redis의 Data를 초기화 합니다. 위의 Step 4를 다시 한번 수행하여 데이터를 초기화 합니다.
+   이를 위해서 Oracle의 Data를 초기화 합니다. 위의 Step 4를 다시 한번 수행하여 데이터를 초기화 합니다.
 
    ---
 
@@ -251,7 +256,7 @@ def order_redis():
 
 ---
 
-11. REDIS를 사용하는 새로운 Application을 실행하겠습니다.
+11. MobaXterm `APP` Session에서 REDIS를 사용하는 새로운 Application을 실행하겠습니다.
 
 ```
 (legacy) ec2-user@ip-10-100-1-101:/home/ec2-user/workshop1/legacy>  cd ../msa/
@@ -273,7 +278,9 @@ def order_redis():
 
     apachebench를 사용하여 동시 150 사용자가 3000개의 한정 수량 아이템을 구매하는데 얼마나 걸리는지 확인합니다. 
 
-    약 25초 정도가 걸렸으며, 기존의 Oracle Table 대비 4배의 속도 개선이 이뤄졌습니다.
+    MobaXterm `ApacheBench` Session에서 아래 ab Command를 수행합니다.
+    
+    **약 25초 정도가 걸렸으며, 기존의 Oracle Table 대비 4배의 속도 개선이 이뤄졌습니다.**
 
 ```
 ec2-user@ip-10-100-1-101:/home/ec2-user> ab -c 150 -n 3000 http://10.100.1.101:5000/order-redis
@@ -325,9 +332,20 @@ Transfer rate:          19.39 [Kbytes/sec] received
 ```
 이제 여러분은 RDBMS에서 성능 저하를 유발하는 HOT Block을 제거하고 전체 서비스의 성능과 품질을 개선하였습니다.
 
-이 작업을 통해서 Database 관점에서는 Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
+기존 Oracle DB를 사용할 경우 약 100초가 걸리던 Request처리가, REDIS를 사용 할 경우 25초만에 처리 되었습니다.
+
+Hot Block이 제거되면서 "한정판매서비스"의 성능이 약 4배 개선되었으며, Main Oracle 서버의 부하도 줄어들게 되었습니다.
+
 개발팀에서는 이제 비슷한 유형의 서비스 요청이 있을 경우 RDBMS보다 인메모리디비나 NoSQL DB를 이용할 수 있게 되었습니다.
 
+```
+
+---
+
+```
+% Workshop에서는 실습 비용을 줄이기 위해서 EC2에 REDIS를 설치해서 실습을 진행하였습니다.
+% 간단한 개발 환경의 경우 EC2 위에서 Standard Alone 방식으로 개발을 진행하고, 
+% 실제 운영 환경에서는 뛰어난 가용성과 성능, 백업 기능등을 관리형 서비스인 ElastiCache for REDIS 를 고려하실 수 있습니다.
 ```
 
 ---
@@ -336,5 +354,5 @@ Transfer rate:          19.39 [Kbytes/sec] received
 
 
 
-## Standalone REDIS가 아닌 Amazon ElatiCache REDIS를 사용 할 수 있습니다. DEV 환경에서는 Standalone REDIS로 개발을 할 수 있지만, 실제 PRODUCTION에서는 HA와 Backup등이 고려되어야 하기 때문에...
+## 
 

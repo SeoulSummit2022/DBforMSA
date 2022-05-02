@@ -30,7 +30,7 @@
 기존 Legacy Java Application에서는 "고객 상담 데이터"를 보여주기 위해서 여러개의 Table을 Join해야 했고, 
 이로 인해서 각 팀에서는 다음과 같은 불만 사항이 있습니다.
 
-1. DBA : Size가 큰 Table간의 다중 Join Report 생성으로 인한 Main Oracle Server 부하 증가
+1. DBA : Size가 큰 Table간의 다중 Join Report 생성으로 인한 Main Oracle Server 부하 증가, 고객 응대 Data의 지속적 증가로 인한 Storage 공간 이슈
 2. 개발자 : 변경/신규 개발을 위한 Schema 변경이 필요하지만, 이로 인한 Main Oracle 영향도 때문에 배포를 특정 PM 시간에만 할 수 있음으로 개발 생산성이 떨어짐
 
 그래서 당신은 2019년 이전 데이터들을 다중 Join RDB Table 구조에서 하나의 Document 형태로 변경하는 아이디어를 떠올렸고, 
@@ -56,7 +56,7 @@
 
 
 
-3. Session Rename - Oracle-HR, AP-TOMCAT, AP-FLASK, MongoDB, Extra로 각각 변경
+3. Session Rename - `Oracle-HR`, `AP-TOMCAT`, `AP-FLASK`, `MongoDB`, `Extra`로 각각 변경
 
 ![image-20220207142326844](images/image-20220207142326844.png)
 
@@ -68,21 +68,23 @@
 
 
 
+---
+
 # Oracle DB의 JOIN DATA를 MongoDB로 마이그레이션 
 
-1. SQL Developer를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
+1. Bastion Host에서 `SQL Developer`를 실행합니다.(최초 실행 시 10~20초 정도 소요됩니다.)
 
 ![image-20220215154430833](images/image-20220215154430833.png)
 
 ---
 
-2. oracle-hr을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
+2. `oracle-hr`을 선택하고 마우스 우측 버튼을 누른 후 "Connect" 실행
 
 ![image-20220215154626853](images/image-20220215154626853.png)
 
 ---
 
-3. 바탕 화면의 Query3.txt를 Double Click하여 엽니다.
+3. 바탕 화면의 `Query3.txt`를 Double Click하여 엽니다.
 
 ![image-20220215155804896](images/image-20220215155804896.png)
 
@@ -123,9 +125,9 @@ Query 실행은 원하는 SQL문장에 커서를 가져가거나 Highlight한 �
 
 6. 이제 Query 5에서 확인한  2019년 이전 Data를 MongoDB로 이관하기 위해서 Materialized View를 생성하겠습니다. 
 
-   Query 6을 실행합니다. 
+   Query 6을 실행합니다. (10~15초 정도 소요)
 
-​       이제 CSHARCH라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
+​       이제 `CSHARCH`라는 MVIEW가 만들어졌으며, 이후 CSHARCH MVIEW의 DATA를 MongoDB로 이관 할 것입니다.
 
 ​       % 2019년 이전 Data뿐 아니라 전체 Data를 이관 할 경우 where 조건에서 call_date 조건절을 제거 하면 모든 데이터를 이관합니다.
 
@@ -144,15 +146,19 @@ create MATERIALIZED VIEW CSHARCH
   and call_date < to_date('2019-01-01','yyyy-mm-dd');
 ```
 
+![image-20220501153326525](images/image-20220501153326525.png)
+
 ---
 
-7. "Bastion Server"에서 Chrome을 실행하고, 즐겨 찾기에서 CRM-LIST를 Click합니다. (크롬은 TaskBar에 QuickStart로 있습니다.)
+7. `Bastion Server`에서 `Chrome`을 실행하고, 즐겨 찾기에서 `CRM-LIST`를 Click합니다. (크롬은 TaskBar에 QuickStart로 있습니다.)
 
-아래의 Page처럼 Legacy Java Application이 동작하고 있습니다. 
+아래의 Page처럼 `Legacy Java Application`이 `Main DB인 Oracle` 과 연결되서 동작하고 있습니다. 
 
 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회해 봅니다. 
 
-"Customer Satisfaction" Page는 Oracle에서 2개의 테이블 CUSTOMERS, CUSTOMER_SERVICE_HISTORY를 JOIN해서 보여줍니다.
+"Customer Satisfaction" Page는 Oracle에서 2개의 테이블 `CUSTOMERS`, `CUSTOMER_SERVICE_HISTORY`를 JOIN해서 보여줍니다. (실제 CRM시스템은 더 많은 Table이 Join되지만, 실습에서는 2개 Table만을 Join 합니다.)
+
+![image-20220501153530978](images/image-20220501153530978.png)
 
 ![image-20220215183908849](images/image-20220215183908849.png)
 
@@ -164,7 +170,7 @@ create MATERIALIZED VIEW CSHARCH
 
 8. 이제 "고객 상담 내역" Data 중에서 2019년 1월 1일 이전의 Data를 MongoDB로 Migration 해보겠습니다.
 
-그리고 Legacy Java Appliation 중 crm-show.jsp에 해당하는 '고객 상담 내역 조회' 업무를 Python Flask로 변경하겠습니다. 
+그리고 Legacy Java Appliation 중 `crm-show.jsp`에 해당하는 '고객 상담 내역 조회' 업무를 `Python Flask`로 변경하겠습니다. 
 
 **우선 Oracle Data를 MongoDB로 Migration 해보겠습니다.**
 
@@ -185,7 +191,7 @@ Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 
 ---
 
-9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. (Bastion 서버가 아닌 사용자 PC에서 작업!!)
+9. 사용중인 PC의 AWS Console에서 Database Migration Service로 이동합니다. **(Bastion 서버가 아닌 사용자 PC에서 작업!!)**
 
 ![image-20220216104215418](images/image-20220216104215418.png)
 
@@ -195,7 +201,7 @@ Data 이관은 크게 아래 3가지 작업을 통해서 이뤄집니다.
 
 10. 먼저 Replication Instance(복제 인스턴스)를 생성합니다. 
 
-"Replication Instances"(복제 인스턴스)를 Click합니다.
+`Replication Instances`(복제 인스턴스)를 Click합니다.
 
 "Create Replication Instances"(복제 인스턴스 생성)를 Click합니다.
 
@@ -220,7 +226,7 @@ Publicly accessible : 체크 안함
 
 
 
-**ri-oracle-to-mongodb가 Available(사용 가능) Status로 정상 생성될때까지 기다립니다.(약 5분 소요)**
+**`ri-oracle-to-mongodb`가 Available(사용 가능) Status로 정상 생성될때까지 기다립니다.(약 5분 소요)**
 
 ![image-20220216112729391](images/image-20220216112729391.png)
 
@@ -228,7 +234,7 @@ Publicly accessible : 체크 안함
 
 11. Oracle DB를 읽어 올 Source Endpoint를 생성합니다.
 
-화면 왼쪽 메뉴에서 "Endpoints"(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
+화면 왼쪽 메뉴에서 `Endpoints`(엔드포인트)를 클립합니다. "Create endpoint"(엔드포인트 생성)을 클릭합니다. 
 
 ![image-20220216132936892](images/image-20220216132936892.png)
 
@@ -270,7 +276,7 @@ SID/Service name : XE
 
 ---
 
-12. Target이 되는 MongoDB용 Target Endpoint를 생성합니다.
+12. Target이 되는 MongoDB용 `Target Endpoint`를 생성합니다.
 
 ![image-20220216134237337](images/image-20220216134237337.png)
 
@@ -289,7 +295,7 @@ User name : myadmin
 Password : Welcome1234
 Database Name : crm
 
-% Workshop에서는 편의를 위해서 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 실제 환경에서는 다른 서버에 설치된 MongoDB를 사용 할 수 있습니다.
+% Workshop에서는 실습 비용을 줄이고, 편의성을 높이기 위해서 같은 서버에 설치된 MongoDB를 사용하고 있습니다. 
 % Workshop같은 개발 환경에서는 설치형 Standalone을 사용하고, 실제 PROD환경에서는 HA, Security, Backup, 운영등을 위해서
 % Amazon DocumentDB나 MongoDB Atlas를 사용하시는 것이 좋습니다. 
 ```
@@ -312,7 +318,7 @@ Database Name : crm
 
 13. Source Oracle Data를 Target MongoDB로 전환 시킬 DMS Task를 생성합니다.
 
-"Database migration tasks(데이터베이스 마이그레이션 태스크)"를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
+`Database migration tasks`(데이터베이스 마이그레이션 태스크)를 Click 합니다. "Create task(태스크 생성)"를 Click 합니다.
 
 ![image-20220216135451371](images/image-20220216135451371.png)
 
@@ -370,13 +376,13 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
 
 
-**Task Status가 "Ready(준비 완료)"가 될때까지 기다립니다.**
+**Task Status가 `Ready(준비 완료)`가 될때까지 기다립니다.**
 
 ![image-20220216140643173](images/image-20220216140643173.png)
 
 
 
-**Task를 실행합니다. Actions=>Restart/Resume(작업=>다시 시작/재개)**
+**Task를 실행합니다. `Actions` => `Restart/Resume`(작업=>다시 시작/재개)**
 
 ![image-20220216140806184](images/image-20220216140806184.png)
 
@@ -394,7 +400,7 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
 ---
 
-14. Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. 원격 터미널(mstsc)을 이용하여 Bastion Server로 접속합니다.
+14. Target MongoDB에 접속하여 데이터 이관이 되었는지 확인합니다. `원격 터미널(mstsc.exe)`을 이용하여 `Bastion Server`로 접속합니다.
 
 ---
 
@@ -410,6 +416,8 @@ Start migration task(마이그레이션 태스크 시작) : Manually later(나�
 
     의도한대로 2019년 1월 1일 이전의 Data들만이 MongoDB로 이관 된 것을 확인 할 수 있습니다. 
 
+**MongoDB 명령어**
+
 ```
 mongoadmin
 use crm
@@ -417,6 +425,12 @@ show collections
 db.CSHARCH.find().count()
 db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:+1}).limit(1)
 db.CSHARCH.find({},{CUST_ID:1,EMAIL:1,CALL_DATE:1}).sort({CALL_DATE:-1}).limit(1)
+```
+
+**MongoDB 명령 실행 결과 및 Output Sample**
+
+```
+
 
 ## Command Output
 ec2-user@ip-10-100-1-101:/home/ec2-user> mongoadmin
@@ -446,9 +460,9 @@ alias mongoadmin='mongo -u myadmin -p Welcome1234   --authenticationDatabase "ad
 
 ---
 
-17. 이제 Data이관이 완료되었습니다. 이제 Legacy Java Application에서 경량화된 Python Flask Application으로 바꿔보겠습니다.
+17. 이제 Data이관이 완료되었습니다. 이제 `Legacy Java Application`에서 경량화된 `Python Flask Application`으로 바꿔보겠습니다.
 
-MobaXterm에서 AP-FLASK Session으로 이동합니다. 
+MobaXterm에서 `AP-FLASK Session`으로 이동합니다. 
 
 ---
 
@@ -472,11 +486,9 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop01> source bin/activate
 
 ---
 
-19. Chrome을 실행하고 즐겨 찾기에서 FLASK-1을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
+19. `Chrome`을 실행하고 즐겨 찾기에서 `FLASK-1`을 Click합니다. Python FLASK App에서 사용자별 상담 내역을 확인 할 수 있습니다. 
 
 FLASK-1은 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회하는 Page입니다.
-
-Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
 ![image-20220403002805726](images/image-20220403002805726.png)
 
@@ -502,7 +514,7 @@ Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
 
 
 
-**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 FLASK가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다. MongoDB에서 가져온 데이터를 render_template을 사용하여 사용자에게 page를 return합니다.**
+**Source Code는 다음과 같습니다. Parameter로 넘어온 고객번호를 이용하여 API가 MongoDB의 Data를 가져오고 결과를 사용자에게 보여줍니다. MongoDB에서 가져온 데이터를 render_template을 사용하여 사용자에게 page를 return합니다.**
 
 ```
 import sys
@@ -562,16 +574,26 @@ if __name__ == '__main__':
 ---
 
 ```
-이제 여러분은 RDBMS의 복잡한 JOIN Table의 Data를 쉽게 Document Type의 몽고디비로 이관했습니다.
+이제 여러분은 복잡한 Join이 필요한 고객상담 업무 Data를 쉽게 Document 형태의 몽고디비로 이관했습니다.
+Document 형태의 Data를 사용함으로써 하나의 Page를 위해 여러번의 Query를 하거나, 여러 Table을 조회 할 필요가 없어졌습니다.
 또한 Legacy Java Application 중 "사용자 상담 내역" Report Application을 Flask로 변경하였습니다. 
 
-이 작업을 통해서 Database 관점에서는 복잡한 Join Query가 줄어들면서 Main Oracle 서버의 부하가 줄어들었고, 데이터 이관을 통해 스토리지 사용량도 줄어 들었습니다.
-Application 관점에서는 개발자들이 별도의 서비스와 디비로 분리되었기 때문에 보다 빠른 개발과 배포가 가능하게 되었습니다.
+이 작업을 통해서 Database 관점에서는 복잡한 Join Query가 줄어들면서 Main Oracle 서버의 부하가 줄어들었고, 
+데이터 이관을 통해 스토리지 사용량도 줄어 들었습니다.
+
+Application 관점에서는 개발자들이 별도의 서비스와 디비로 분리되었기 때문에 보다 빠른 개발과 배포가 가능하게 되었으며,
+Schema-less한 NOSQL의 특성으로 개발 편의성이 증가하였습니다.
 ```
 
 ---
 
+```
+% Workshop에서는 실습 비용을 줄이기 위해서 EC2에 MongoDB를 설치해서 실습을 진행하였습니다.
+% 간단한 개발 환경의 경우 EC2 위에서 MongoDB - Standard Alone 방식으로 개발을 진행하고, 
+% 실제 운영 환경에서는 뛰어난 가용성과 성능, 백업 기능등을 관리형 서비스인 Amazon DocumentDB나 Atlas를 고려하실 수 있습니다.
+```
 
+---
 
 [다음 워크샵으로 - workshop02(REDIS를 활용한 실시간 리더보드 만들기) ](../workshop02/workshop02.md) 
 
