@@ -225,9 +225,9 @@ Test endpoint connection을 수행합니다.
 ![image 11](./images/11.png)
 
 다음으로 데이터 마이그레이션을 위한 Task를 생성합니다. 
-[Task](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#tasks) 페이지로 이동하여 Create task 버튼을 클릭합니다.
+[Task](https://ap-northeast-2.console.aws.amazon.com/dms/v2/home?region=ap-northeast-2#tasks) 페이지로 이동하여 `Create task` 버튼을 클릭합니다.
 
-Task configuration 항목에 값을 설정합니다.
+`Task configuration` 항목에 값을 설정합니다.
 Replication instnace 는 CloudFormation outputs 항목의 ReplicationInstance를 참고합니다.
 Source와 Target endpoint는 이전 단계에서 만든 endpoint 정보를 입력합니다.  
 
@@ -241,10 +241,10 @@ Source와 Target endpoint는 이전 단계에서 만든 endpoint 정보를 입�
 
 ![image 16](./images/16.png)
 
-Task settings를 아래와 같이 설정합니다.  
+`Task settings`를 아래와 같이 설정합니다.  
 ![image 17](./images/17.png)
 
-Table mappings 정보를 설정합니다.
+`Table mappings` 정보를 설정합니다.
 JSON editor 버튼을 선택하고 아래 editor에 JSON 을 입력합니다.
 ![table_mappings](./images/table_mappings.png)
 ~~~json
@@ -366,7 +366,7 @@ JSON editor 버튼을 선택하고 아래 editor에 JSON 을 입력합니다.
 }
 ~~~
 
-마지막으로 Manually later를 선택하고 Create task 버튼을 클릭합니다.  
+마지막으로 `Manually later`를 선택하고 `Create task` 버튼을 클릭합니다.  
 ![image 19](./images/19.png)
 
 Task 생성이 완료되었으면 Task를 실행합니다.  
