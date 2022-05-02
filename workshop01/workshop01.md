@@ -490,8 +490,6 @@ ec2-user@ip-10-100-1-101:/home/ec2-user/workshop01> source bin/activate
 
 FLASK-1은 고객 중에서 1번 'Mary Schaefer'의 고객 상담 내역을 조회하는 Page입니다.
 
-Backend FLASK => MongoDB => FLASK => Rendring HTML (추후 아키텍처 추가)
-
 ![image-20220403002805726](images/image-20220403002805726.png)
 
 
