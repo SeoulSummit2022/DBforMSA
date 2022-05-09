@@ -33,7 +33,8 @@ workshop99 - 실습 환경 및 리소스 삭제 (워크샵 수행 후 반드시 
 % Workshop Guide의 UI와 실제 AWS Console UI가 조금 다를 수 있습니다.
 
 % 오늘 Workshop은 실습 비용을 줄이기 위해서 하나의 EC2 위에 Oracle, Redis, MongoDB를 모두 설치해서 사용하게 됩니다.
-% 실제 Production 환경에서는 Managed 서비스인 RDS, ElatiCache, DocumentDB를 사용하게 되면 HA, Backup, Security, Replication등 다양한 기능을 손쉽게 사용 하실 수 있습니다. 
+% 실제 Production 환경에서 AWS가 제공하는 Managed 서비스인 RDS, ElatiCache, DocumentDB를 사용하게 되면 
+% HA, Backup, Security, Replication등 다양한 기능을 손쉽게 사용 하실 수 있습니다. 
 
 % Workshop을 끝내실 경우 꼭 Workshop99 과정을 수행하셔서, Resource를 삭제하셔야 합니다.
 % Resource를 삭제하지 않을 경우 AWS Service 이용 요금이 계속 과금 될 수 있습니다.
