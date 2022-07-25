@@ -1,4 +1,4 @@
-# 키페어 생성
+# 키페어 생성-1(개인 계정 사용시, Event Engine사용자는 키페어 생성-2로 이동)
 
 1. AWS Console에 Login 합니다.
 
@@ -45,6 +45,26 @@
 ![image-20220308151833671](images/image-20220308151833671.png)
 
 
+
+---
+
+# 키페어 생성-2(EventEngine 사용시)
+
+1. Event Engine Dashboard에서 **SSH KEY**를 Click합니다.
+
+![image-20220726072840876](images/image-20220726072840876.png)
+
+2. **Download Key**를  Click합니다.
+
+![image-20220726073133808](images/image-20220726073133808.png)
+
+3. 저장 파일명을 "DBforMSA"로 변경하고 저장합니다. 중요한 파일이기 때문에 잘 보관해야 합니다.
+
+![image-20220726073553515](images/image-20220726073553515.png)
+
+---
+
+4. AWS Console에 Login 합니다.
 
 ---
 
