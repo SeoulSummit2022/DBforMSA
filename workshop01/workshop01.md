@@ -345,16 +345,31 @@ Enable CloudWatch logs(CloudWatch 로그 활성화) : 체크 활성화
 
 **Table mappings(테이블 매핑) - (Source DB의 Schema와 Table중에 마이그레이션 할 대상을 선택하는 부분입니다.)**
 
-```
-"Add new selection rule(새 선택 규칙 추가)" Click
+Editing mode : JSON Editor 선택 
 
-Schema : Enter a schema(스키마를 입력하십시요)
-Schema name : HR
-Table name : CSHARCH
-Action : include(포함)
+**Text 부분에 아래 JSON을 복사해서 입력**
 
-% Source Oracle DB의 HR Schema(User)의 MVIEW CSHARCH(2019년 이전 고객 문의 데이터)를 대상으로 지정
 ```
+{
+  "rules": [
+    {
+      "rule-type": "selection",
+      "rule-id": "558247518",
+      "rule-name": "558247518",
+      "object-locator": {
+        "schema-name": "HR",
+        "table-name": "CSHARCH"
+      },
+      "rule-action": "include",
+      "filters": []
+    }
+  ]
+}
+```
+
+![image-20221116092657343](images/image-20221116092657343.png)
+
+
 
 **Migration task startup configuration(마이그레이션 태스크 시작 구성)**
 
