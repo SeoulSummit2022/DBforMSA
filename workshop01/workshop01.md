@@ -222,6 +222,20 @@ Multi AZ : Dev
 Publicly accessible : 체크 안함
 ```
 
+### 주의 사항
+
+```
+DMS가 최근 Update 되면서 아래와 같은 dms-vpc-role이 없다는 에러가 발생 할 수 있습니다.
+아래 Error Message가 나올 경우 약 5초 후에 다시 한번 "Create Replication Instance"를 Click하면 RI 생성이 가능합니다.
+내부적으로 dms-vpc-role가 없을 경우 자동으로 IAM에서 Role을 생성해주게 됩니다.
+```
+
+![image-20221208072455678.png](https://github.com/kiwonyoon0701/datalake-workshop/blob/master/images/image-20221208072455678.png?raw=true)
+
+
+
+
+
 ![image-20220216112323871](images/image-20220216112323871.png)
 
 
