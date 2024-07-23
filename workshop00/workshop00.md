@@ -215,7 +215,7 @@
 ![image-20220207141741293](images/image-20220207141741293.png)
 
 
-
+20240723
 ---
 
 [다음 워크샵으로 - workshop01(MongoDB를 활용한 CRM 리포트 서비스 분리) ](../workshop01/workshop01.md) 
